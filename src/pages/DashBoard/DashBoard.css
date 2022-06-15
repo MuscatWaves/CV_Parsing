@@ -49,6 +49,11 @@
     margin-bottom: 0.5rem;
 }
 
+.hover{
+    color: #fff;
+}
+
+
 .go-corner {
     display: flex;
     align-items: center;
