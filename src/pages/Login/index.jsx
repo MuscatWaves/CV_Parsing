@@ -3,6 +3,7 @@ import { UserOutlined, EyeTwoTone,  EyeInvisibleOutlined} from '@ant-design/icon
 import { Input, Button } from 'antd';
 import ojimage from "../../images/oj.png"
 import "./Login.css"
+import {RiLockPasswordLine} from "react-icons/ri"
 
 const Login = () => {
   return (
@@ -19,7 +20,7 @@ const Login = () => {
           <Input.Password
           size='large'
           placeholder="Enter your password"
-          prefix={<UserOutlined />}
+          prefix={<RiLockPasswordLine />}
           iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
           />
         </div>

@@ -1,6 +1,7 @@
 @import '~antd/dist/antd.css';
 
 /* Primary - #f69f00 */
+/* Primary - 2 - #f07d00 */
 /* Secondary - #888787 */
 
 p{
@@ -8,7 +9,7 @@ p{
 }
 
 .button-primary{
-    background-color: #f69f00;
+    background-color: #f07d00;
     border: none;
     border-radius: 20px;
     margin-top: 1rem;
@@ -16,12 +17,12 @@ p{
 
 .button-primary:hover{
     background-color: #fff;
-    color: #f69f00;
-    border: 1px solid #f69f00;
+    color: #f07d00;
+    border: 1px solid #f07d00;
 }
 
 .button-primary:focus{
-    background-color: #f69f00;
+    background-color: #f07d00;
     color: #fff;
 }
 
@@ -73,4 +74,10 @@ p{
     font-weight: 700;
     font-size: 2rem;
     color: #888787a4;
+}
+
+.input-holder{
+    font-size: 18px;
+    font-weight: 600;
+    color: #2f2f2f;
 }
