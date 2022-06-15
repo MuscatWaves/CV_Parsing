@@ -13,6 +13,7 @@ p{
     border: none;
     border-radius: 20px;
     margin-top: 1rem;
+    color: #fff;
 }
 
 .button-primary:hover{
@@ -76,6 +77,7 @@ p{
     color: #888787a4;
 }
 
-.input-primary{
+.ant-input{
+    color: grey;
     font-weight: 600;
 }

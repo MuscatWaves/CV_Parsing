@@ -29,12 +29,14 @@ const Login = () => {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             prefix={<UserOutlined />}
+            style={{ fontWeight: "600" }}
           ></Input>
         </div>
         <div className="name-bodies">
           <p className="name-title">Password</p>
-          <Input.Password
+          <Input
             className="input-primary"
+            type={"password"}
             size="large"
             placeholder="Enter your password"
             prefix={<RiLockPasswordLine />}
@@ -45,7 +47,7 @@ const Login = () => {
           />
         </div>
         <Button
-          type="primary"
+          type="submit"
           className="button-primary"
           size="large"
           loading={turnOn}
