@@ -17,7 +17,7 @@ const Login = () => {
   return (
     <div className="body">
       <div className="login-body">
-        <img className="oj-image" src={ojimage} />
+        <img className="oj-image" src={ojimage} alt={"Oman Jobs"} />
         <p className="oj-title">Log in to CV Parser</p>
         <div className="name-bodies">
           <p className="name-title">Email</p>

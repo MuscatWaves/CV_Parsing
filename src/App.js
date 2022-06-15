@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
 import Login from './pages/Login';
-// import Register from './pages/Register';
+import DashBoard from './pages/DashBoard';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login/>}></Route>
-            {/* <Route path="/Register" element={<Register/>}></Route> */}
+            <Route path="/DashBoard" element={<DashBoard/>}></Route>
           </Routes>
         </Router>
       </header>
