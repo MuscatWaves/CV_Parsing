@@ -4,6 +4,7 @@ import { RiUserSearchLine } from "react-icons/ri";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import "./DashBoard.css";
+import { Button } from "antd";
 
 const DashBoard = () => {
   const [hoverState, setHoverState] = useState({
@@ -19,7 +20,6 @@ const DashBoard = () => {
 
   const navigateTo = (path) => {
     navigate(path);
-    console.log(path);
   };
 
   const cards = [
@@ -44,50 +44,55 @@ const DashBoard = () => {
   ];
 
   return (
-    <div className="body">
-      <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
-      <div>
-        <span className="welcome-message">
-          <h1 className="text-orange bold">Welcome</h1>
-          <h1 className="text-grey">Admin!</h1>
-        </span>
-        <div className="main-card">
-          {cards.map(
-            (card) =>
-              card.permission && (
-                <div
-                  key={card.id}
-                  className="card"
-                  onMouseEnter={() =>
-                    setHoverState((hover) => ({
-                      ...hover,
-                      [card.name]: "hover",
-                    }))
-                  }
-                  onMouseLeave={() =>
-                    setHoverState((hover) => ({ ...hover, [card.name]: "" }))
-                  }
-                  onClick={() => navigateTo(card.path)}
-                >
-                  <RiUserSearchLine className="card-icon" />
-                  <h2 className={`bolder ${hoverState[card.name]}`}>
-                    {card.title}
-                  </h2>
-                  <p
-                    className={
-                      hoverState[card.name]
-                        ? hoverState[card.name]
-                        : "text-grey"
+    <div>
+      <Button className="dashboard-lg" type="primary" danger>
+        Logout
+      </Button>
+      <div className="body">
+        <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
+        <div>
+          <span className="welcome-message">
+            <h1 className="text-orange bold">Welcome</h1>
+            <h1 className="text-grey">Admin!</h1>
+          </span>
+          <div className="main-card">
+            {cards.map(
+              (card) =>
+                card.permission && (
+                  <div
+                    key={card.id}
+                    className="card"
+                    onMouseEnter={() =>
+                      setHoverState((hover) => ({
+                        ...hover,
+                        [card.name]: "hover",
+                      }))
                     }
+                    onMouseLeave={() =>
+                      setHoverState((hover) => ({ ...hover, [card.name]: "" }))
+                    }
+                    onClick={() => navigateTo(card.path)}
                   >
-                    {card.description}
-                  </p>
-                  <div className="go-corner" href="#">
-                    <div className="go-arrow">→</div>
+                    <RiUserSearchLine className="card-icon" />
+                    <h2 className={`bolder ${hoverState[card.name]}`}>
+                      {card.title}
+                    </h2>
+                    <p
+                      className={
+                        hoverState[card.name]
+                          ? hoverState[card.name]
+                          : "text-grey"
+                      }
+                    >
+                      {card.description}
+                    </p>
+                    <div className="go-corner" href="#">
+                      <div className="go-arrow">→</div>
+                    </div>
                   </div>
-                </div>
-              )
-          )}
+                )
+            )}
+          </div>
         </div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
