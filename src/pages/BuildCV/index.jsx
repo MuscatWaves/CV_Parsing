@@ -150,7 +150,7 @@ function BuildCV() {
           Create Account
         </Button>
       </Form>
-      <div></div>
+      <div className="copyright-1">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );
 }
