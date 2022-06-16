@@ -36,7 +36,7 @@ p{
     height: 100vh;
 }
 
-.login-body{
+.login-form{
     width: 50%;
     padding: 3rem 2rem;
     max-width: 500px;
@@ -58,7 +58,7 @@ p{
 
 .name-title{
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     font-size: 1rem;
     font-weight: 600;
     color: #f69f00;
@@ -80,4 +80,8 @@ p{
 .ant-input{
     color: grey;
     font-weight: 600;
+}
+
+.ant-form-item{
+    margin-bottom: 0;
 }
