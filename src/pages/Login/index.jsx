@@ -39,6 +39,8 @@ const Login = () => {
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Username"
+              size="large"
+              htmlType="email"
             />
           </Form.Item>
         </div>
@@ -58,6 +60,7 @@ const Login = () => {
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
               placeholder="Password"
+              size="large"
             />
           </Form.Item>
         </div>
