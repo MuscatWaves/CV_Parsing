@@ -1,0 +1,18 @@
+.searchCV{
+    min-height: 100vh;
+}
+
+.table{
+    animation: slide-in-top 0.6s;
+    padding: 0 1.5rem;
+}
+
+.ant-table table { 
+    font-size: 14px; 
+    font-weight: 600;
+    color: grey;
+}
+
+.ant-table-row{
+    cursor: pointer;
+}
