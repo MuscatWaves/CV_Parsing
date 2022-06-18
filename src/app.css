@@ -1,0 +1,40 @@
+@import '~antd/dist/antd.css';
+
+.App{
+    background: url("./images/main-background.webp");
+    height: 100%;
+}
+
+/* Global Styles used */
+
+.button-primary{
+    background-color: #f07d00;
+    border: none;
+    border-radius: 20px;
+    margin-top: 1rem;
+    color: #fff;
+}
+
+.button-primary:hover{
+    background-color: #fff;
+    color: #f07d00;
+    border: 1px solid #f07d00;
+}
+
+.button-primary:focus{
+    background-color: #f07d00;
+    color: #fff;
+}
+
+
+.text-grey{
+    color: #888787;
+}
+
+.text-orange{
+    color: #f07d00;
+}
+
+.pointer{
+    cursor: pointer;
+}

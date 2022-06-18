@@ -30,7 +30,7 @@ const DashBoard = () => {
       title: "Search CV",
       description: "Here, You can view all the CV with profile details.",
       permission: true,
-      path: "/Dashboard",
+      path: "/searchcv",
     },
     {
       id: 2,
@@ -44,11 +44,13 @@ const DashBoard = () => {
   ];
 
   return (
-    <div>
-      <Button className="dashboard-lg" type="primary" danger>
-        Logout
-      </Button>
-      <div className="body">
+    <div className="dashboard">
+      <div className="dashboard-lg">
+        <Button type="primary" danger>
+          Logout
+        </Button>
+      </div>
+      <div className="dashboard-body">
         <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
         <div>
           <span className="welcome-message">

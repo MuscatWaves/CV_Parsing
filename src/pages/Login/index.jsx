@@ -64,7 +64,7 @@ const Login = () => {
   };
 
   return (
-    <div className="body">
+    <div className="login-body">
       <Form
         name="normal_login"
         className="login-form"

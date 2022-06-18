@@ -1,3 +1,15 @@
+.dashboard{
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-body{
+    display: flex;
+    align-items: center;
+    min-height: 80vh;
+    justify-content: center;
+}
+
 .main-card{
     display: grid;
     grid-template-columns: repeat(2, auto);
@@ -5,13 +17,15 @@
 }
 
 .card{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     cursor: pointer;
     position: relative;
     max-width: 400px;
     background-color: rgba(255, 255, 255, 0.452);
     border-radius: 4px;
-    padding: 2rem 2.5rem;
+    padding: 1.5rem 2rem;
     margin: 12px;
     border-radius: 20px;
     text-decoration: none;
@@ -86,14 +100,6 @@
     font-weight: 700;
 }
 
-.text-grey{
-    color: #888787;
-}
-
-.text-orange{
-    color: #f07d00;
-}
-
 .card-icon{
     font-size: 40px;
 }
@@ -102,11 +108,8 @@
     font-size: 16px;
     font-weight: 700;
     padding: 2rem;
-    position: absolute;
     bottom: 0;
     text-align: center;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .oj-image-dashboard{
@@ -114,10 +117,9 @@
 }
 
 .dashboard-lg{
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    animation: slide-in-top 0.8s;
+    display: flex;
+    justify-content: flex-end;
+    padding: 2rem;
 }
 
 @media screen and (max-width: 1336px){
@@ -129,7 +131,7 @@
 
 @media screen and (max-width: 700px) {
 
-    .body{
+    .dashboard-body{
         flex-direction: column;
     }
 

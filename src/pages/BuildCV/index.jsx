@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { Form, Input, Button, DatePicker, Select } from "antd";
 import Header from "../../components/Header";
-import { AiFillCaretRight } from "react-icons/ai";
 import countryList from "react-select-country-list";
+import Navigation from "../../components/Navigation";
 import "./buildcv.css";
 
 function BuildCV() {
@@ -15,11 +15,11 @@ function BuildCV() {
   return (
     <div className="cv-body">
       <Header />
-      <div className="navigation-header">
-        <p>Dashboard</p>
-        <AiFillCaretRight />
-        <p className="text-orange">Create a Resume</p>
-      </div>
+      <Navigation
+        previous_page={"Dashboard"}
+        previous_path={"/Dashboard"}
+        current_page={"Create a resume"}
+      />
       <Form
         className="buildCvForm"
         onFinish={handleSubmit}
