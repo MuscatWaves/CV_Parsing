@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import { Button, message } from "antd";
 import Cookies from "universal-cookie";
 import { useEffect } from "react";
+import Authentication from "../../components/Authentication";
 
 const DashBoard = () => {
   const [hoverState, setHoverState] = useState({
@@ -28,11 +29,11 @@ const DashBoard = () => {
     navigate(path);
   };
 
-  useEffect(() => {
-    if (!token) {
-      navigateTo("/");
-    }
-  });
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigateTo("/");
+  //   }
+  // });
 
   const cards = [
     {
@@ -73,6 +74,7 @@ const DashBoard = () => {
 
   return (
     <div className="dashboard">
+      <Authentication />
       <div className="dashboard-lg">
         <Button type="primary" danger onClick={removeCookie}>
           Logout

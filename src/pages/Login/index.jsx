@@ -40,19 +40,19 @@ const Login = () => {
       .then(function (response) {
         if (response.status === 200 && response.data.token) {
           message.success("Login Successfull, Redirecting...", "success");
-          setLoading(false);
           cookies.set("token", response.data.token.token, {
             path: "/",
             maxAge: 60 * 60 * 24 * 365,
           });
           window.location.replace("/dashboard");
+          setLoading(false);
         } else {
           if (response.status === 201) {
-            setLoading(false);
             message.error(response.data.error, "error");
-          } else {
             setLoading(false);
+          } else {
             message.error("Something Went Wrong!", "error");
+            setLoading(false);
           }
         }
       })
