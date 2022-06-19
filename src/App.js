@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import Login from './pages/Login';
-import DashBoard from './pages/DashBoard';
-import BuildCV from './pages/BuildCV';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import DashBoard from "./pages/DashBoard";
+import BuildCV from "./pages/BuildCV";
 
 function App() {
   return (
@@ -9,9 +9,9 @@ function App() {
       <header className="App-header">
         <Router>
           <Routes>
-            <Route path="/" element={<Login/>}></Route>
-            <Route path="/dashboard" element={<DashBoard/>}></Route>
-            <Route path="/buildcv" element={<BuildCV/>}></Route>
+            <Route path="/" element={<Login />}></Route>
+            <Route path="/dashboard" element={<DashBoard />}></Route>
+            <Route path="/buildcv" element={<BuildCV />}></Route>
           </Routes>
         </Router>
       </header>

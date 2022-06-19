@@ -4,7 +4,10 @@ import { RiUserSearchLine } from "react-icons/ri";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import "./DashBoard.css";
+import jwt from "jsonwebtoken";
 import { Button } from "antd";
+import Cookies from "universal-cookie";
+import { useEffect } from "react";
 
 const DashBoard = () => {
   const [hoverState, setHoverState] = useState({
@@ -15,8 +18,11 @@ const DashBoard = () => {
     card5: "",
     card6: "",
   });
+  const [isLoggedIn, setLoggedIn] = useState(false);
 
   const navigate = useNavigate();
+  const cookies = new Cookies();
+  const token = cookies.get("token");
 
   const navigateTo = (path) => {
     navigate(path);
@@ -43,8 +49,17 @@ const DashBoard = () => {
     },
   ];
 
+  useEffect(() => {
+    if (token) {
+      try {
+        var user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+        setLoggedIn(user);
+      } catch (err) {}
+    }
+  }, [token]);
   return (
     <div>
+      {isLoggedIn.email}
       <Button className="dashboard-lg" type="primary" danger>
         Logout
       </Button>
@@ -53,7 +68,7 @@ const DashBoard = () => {
         <div>
           <span className="welcome-message">
             <h1 className="text-orange bold">Welcome</h1>
-            <h1 className="text-grey">Admin!</h1>
+            <h1 className="text-grey">{isLoggedIn.name}</h1>
           </span>
           <div className="main-card">
             {cards.map(
