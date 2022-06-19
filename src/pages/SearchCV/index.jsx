@@ -114,6 +114,7 @@ const SearchCV = () => {
           />
         </div>
       </div>
+      <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );
 };

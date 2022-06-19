@@ -1,5 +1,10 @@
 import React, { useMemo } from "react";
-import { Form, Input, Button, DatePicker, Select } from "antd";
+import { Form, Input, Button, DatePicker, Select, Upload, Space } from "antd";
+import {
+  UploadOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import Header from "../../components/Header";
 import countryList from "react-select-country-list";
 import Navigation from "../../components/Navigation";
@@ -11,6 +16,13 @@ function BuildCV() {
   };
 
   const countryOptions = useMemo(() => countryList().getData(), []);
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
 
   return (
     <div className="cv-body">
@@ -25,7 +37,30 @@ function BuildCV() {
         onFinish={handleSubmit}
         size="large"
         layout="vertical"
+        scrollToFirstError={true}
       >
+        <Form.Item
+          name="profile_picture"
+          label="Candidate's Picture"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          extra="Upload the candidate's profile picture"
+        >
+          <Upload name="profile-pic" listType="picture">
+            <Button icon={<UploadOutlined />}>Click to upload</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item
+          name="profile_cv"
+          label="CV/Resume"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          extra="Upload the candidate's profile picture"
+        >
+          <Upload name="cv profile" listType="picture">
+            <Button icon={<UploadOutlined />}>Click to upload</Button>
+          </Upload>
+        </Form.Item>
         <Form.Item
           name="name"
           rules={[
@@ -98,16 +133,203 @@ function BuildCV() {
         >
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label="Education" name="education" className="two-column">
-          <Input.TextArea />
-        </Form.Item>
-        <Form.Item
+        <div className="two-column">
+          <p className="bold">Education</p>
+          <Form.List name="education">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space
+                    key={key}
+                    style={{
+                      display: "flex",
+                      marginBottom: 8,
+                    }}
+                    align="baseline"
+                  >
+                    <Form.Item
+                      {...restField}
+                      name={[name, "name"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing Name",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Name" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "institution_name"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing institution name",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Institution Name" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "institution_location"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing institution location",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Institution Location" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "year"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing passed out year",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Year" />
+                    </Form.Item>
+                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  </Space>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Education
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+        </div>
+        <div className="two-column">
+          <p className="bold">Work Experience</p>
+          <Form.List name="work_experience">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div className="flex-small-gap">
+                    <div>
+                      <div className="flex-small-gap">
+                        <Form.Item
+                          {...restField}
+                          name={[name, "name"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing Name",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Name" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "location"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing location",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Location" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "job"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing job",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Job" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "year_from"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing year from",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Year From" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "year_to"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing year to",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Year to" />
+                        </Form.Item>
+                      </div>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "info"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Missing information ",
+                          },
+                        ]}
+                      >
+                        <Input.TextArea
+                          autoSize={{
+                            minRows: 4,
+                            maxRows: 10,
+                          }}
+                          placeholder={"Information"}
+                        />
+                      </Form.Item>
+                    </div>
+                    <MinusCircleOutlined className={"red-icon"} onClick={() => remove(name)} />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Work Experience
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+        </div>
+        {/* <Form.Item
           label="Work Experience"
           name="work_experience"
           className="two-column"
         >
-          <Input.TextArea />
-        </Form.Item>
+          <Input.TextArea
+            autoSize={{
+              minRows: 4,
+              maxRows: 10,
+            }}
+          />
+        </Form.Item> */}
         <Form.Item label="Skills" name="skills" className="two-column">
           <Input.TextArea />
         </Form.Item>

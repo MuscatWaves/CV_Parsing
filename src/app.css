@@ -3,6 +3,7 @@
 .App{
     background: url("./images/main-background.webp");
     height: 100%;
+    scroll-behavior: smooth;
 }
 
 /* Global Styles used */
@@ -28,11 +29,19 @@
 
 
 .text-grey{
-    color: #888787;
+    color: #6b6b6b;
+}
+
+.text-light-grey{
+    color: #9e9fa7;
 }
 
 .text-orange{
     color: #f07d00;
+}
+
+.text-black{
+    color: #272727;
 }
 
 .pointer{
@@ -61,6 +70,21 @@
 
 .bolder{
     font-weight: 700;
+}
+
+.flex-small-gap{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.red-icon{
+    font-size: 22px;
+    transition: 0.5s;
+}
+
+.red-icon:hover{
+    color: red;
 }
 
 /* Custom Animations */

@@ -9,7 +9,6 @@ const CVprofile = () => {
   const test = {
     name: "MOHAMED HANEEFA.A.W",
     image: "https://cv.omanjobs.om/files/images/pic-1655296444.png",
-    email: "haneefa.85@gmail.com",
     job: "Landscape Designer",
     skills: [
       "Auto Cad 2d",
@@ -21,15 +20,16 @@ const CVprofile = () => {
       "Internet Sourcing",
     ],
     personal_detail: {
+      email: "haneefa.85@gmail.com",
       gender: "Male",
       mobile: 97987878787,
       dob: "11 May 1988",
       nationality: "Indian",
       country: "India",
-      passport_no: "P3392902",
       address:
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore reprehenderit eaque placeat vero dolorum nobis excepturi maiores quasi quaerat iusto?",
       language: "Fluency in English, Hindi, Malayalam and Tamil",
+      passport_no: "P3392902",
     },
     work_experience: [
       {
@@ -37,85 +37,16 @@ const CVprofile = () => {
         job: "Landscape Designer",
         from: "2018",
         to: "present",
-        info: `Create detailed designs with computer-aided design (CAD) software
-      as per client’s requirement.
-      Calculate dimensions, weight limitations and requirements in materials
-      Describe production methods step-by-step (including equipment and software
-      types to be used)
-      Design diagrams, maps and layouts to illustrate workflow
-      Prepare and review rough sketches and review them along with the engineering
-      team
-      Identify potential operational issues and redesign products to improve
-      functionality
-      Ensure final designs comply with regulations and quality standards
-      Create manuals that describe existing products’ operation, features and
-      maintenance
-      Responding to customer’s quires regarding drawings.
-      Assisting in drawing problem by recommending solutions.
-      Receiving and sending CAD files across the internet.
-      Visiting site to take necessary collect village maps for Land Acquisition and prepare drawings as persite requirements.
-      
-      Detailed Project Experience:
-
-Project : Miscellaneous Streetscape Works
-Location : Abu Dhabi
-Client : Abu Dhabi Future Energy Company PJSC (MASDAR)
-Position : AutoCAD Draughtsman
-
-Project : Roof Repair and Waterproofing Works at AAW and DBM
-Location : Abu Dhabi
-Client : HCT
-Position : AutoCAD Draughtsman
-
-Project : Replacement of Chemical Dosing Pumps in DWC
-Location : Abu Dhabi
-Client : HCT
-Position : AutoCAD Draughtsman
-
-Project : G.H.Q.UAE ARMED FORCES DMW
-Location : Abu Dhabi
-Client : Al Dhafra Air Base
-Position : AutoCAD Draughtsman
-
-Project : UAEU CAR PARKINGS CMHS CAMPUS
-Location : Al Ain
-Client : United Arab EmiratesUniversity
-Position : AutoCAD Draughtsman
-
-Project : AUTOMATION OF IRRIGATIONSYSTEM
-Location : Abu Dhabi
-Client : Ministry Of Presidential Affairs
-Position : AutoCAD Draughtsman
-
-Project : PRESIDENTIAL PALACE ENHANCEMENT WORK
-Location : Abu Dhabi
-Client : Ministry Of Presidential Affairs(Qsar Al Watan)
-Position : AutoCAD Draughtsman
-
-Project : NORTH AL MARYAH ISLAND SPORTS ACTIVATION PRECINCT
-Location : Abu Dhabi
-Client : Mubadala Investment Company
-Position : AutoCAD Draughtsman
-
-Project : Miscellaneous Streetscape Works in Masdar City
-Location : Abu Dhabi
-Client : Abu Dhabi Future Energy Company PJSC (MASDAR)
-Position : AutoCAD Draughtsman
-
-Project : Agricultural Maintenance Works for Al Dhafra Airbase Camp
-Location : Abu Dhabi
-Client : Command of Military Works (CMW)
-Position : AutoCAD Draughts
-
-Project : Residential Building G+1
-Location : Abu Dhabi
-Client : Command of Military Works (CMW)
-Position : AutoCAD Draughts
-
-Project : New chilled Water Piping System
-Location : Abu Dhabi
-Client : Ministry Of Presidential Affairs(Al Mushrif Palace)
-Position : AutoCAD Draughtsman`,
+        info: `Responsibilities\n
+        • Site survey.\n
+        • Creating new AutoCAD layout.\n
+        • Landscape Design 2D & 3D Works.\n
+        • Photoshop works.\n
+        • 3D Designs in Real-time Landscape & Sketch Up.\n
+        • Rendering.\n
+        • Excel & word works.\n
+        • Monthly Progress report landscape & Irrigation\n
+        • Other works.\n`,
       },
       {
         name: "AYOON SOHAR",
@@ -162,8 +93,6 @@ Position : AutoCAD Draughtsman`,
     ],
   };
 
-  // const value = useParams();
-
   return (
     <div className="cvprofile">
       <Header />
@@ -175,24 +104,24 @@ Position : AutoCAD Draughtsman`,
         second_path={"/searchcv"}
       />
       <div className="cvprofile-body">
-        <div className="cvprofile-header">
-          <div className="cvprofile-header-first-part">
-            <img className={"cvprofile-picture"} src={test.image} alt="test" />
-            <div className="text-orange bolder large-text">{test.name}</div>
-            <div className="text-grey medium-text bold">{test.job}</div>
-          </div>
-          <div className="cvprofile-header-second-part">
-            {Object.keys(test.personal_detail).map((keyName, i) => (
-              <div>
-                <div className="bolder">{removeUnderScore(keyName)}</div>
-                <div className="text-grey">{test.personal_detail[keyName]}</div>
-              </div>
-            ))}
-          </div>
+        <div className="cvprofile-header-first-part">
+          <img className={"cvprofile-picture"} src={test.image} alt="test" />
+          <div className="text-orange bolder large-text">{test.name}</div>
+          <div className="text-grey medium-text bold">{test.job}</div>
         </div>
-        <div className="cvprofile-header-2">
+        <div className="cvprofile-header-second-part long-box">
+          {Object.keys(test.personal_detail).map((keyName, i) => (
+            <div>
+              <div className="bolder medium-text">
+                {removeUnderScore(keyName)}
+              </div>
+              <div className="text-grey">{test.personal_detail[keyName]}</div>
+            </div>
+          ))}
+        </div>
+        <div className="experiences-list">
           <div className="cvprofile-skills">
-            <div className="bolder medium-text">Candidate Skills</div>
+            <div className="bolder large-text text-black">Candidate Skills</div>
             <div className="cvprofile-skills-chain">
               {test.skills.map((skill) => (
                 <div className="cvprofile-each-skill bolder">{skill}</div>
@@ -200,21 +129,56 @@ Position : AutoCAD Draughtsman`,
             </div>
           </div>
           <div className="cvprofile-skills">
-            <div className="bolder medium-text">Work Experience</div>
-            <div>
-              {test.work_experience.map((experience) => (
-                <div>
-                  <div>{experience.name}</div>
-                  <div>{experience.job}</div>
-                  <div>{experience.from}</div>
-                  <div>{experience.to}</div>
-                  <div>{experience.info}</div>
+            <div className="bolder large-text text-black">Education</div>
+            <div className="cvprofile-skills-chain">
+              {test.education.map((each_education) => (
+                <div className="each-experience">
+                  <div className="text-orange bolder medium-text">
+                    {each_education.name}
+                  </div>
+                  <div className="medium-text bolder text-black">
+                    {each_education.inst}
+                  </div>
+                  <div className="bolder small-text text-light-grey">
+                    {each_education.year}
+                  </div>
+                  <div className="bold text-grey">
+                    {each_education.location}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+        <div className="cvprofile-skills long-box">
+          <div className="bolder large-text text-black">Work Experience</div>
+          <div className="experiences-list">
+            {test.work_experience.map((experience) => (
+              <div className="each-experience">
+                <div className="text-orange bolder medium-text">
+                  {experience.name}
+                </div>
+                <div className="medium-text bolder text-black">
+                  {experience.job}
+                </div>
+                <div className="flex-small-gap bolder small-text text-light-grey">
+                  <div>{experience.from}</div>
+                  <div>-</div>
+                  <div>{removeUnderScore(experience.to)}</div>
+                </div>
+                <div>
+                  {experience.info.split("\n").map((str) => (
+                    <div className="bold text-grey medium-text">{str}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="grid-gather">Link Section</div>
+        <div className="grid-gather">Attachment Section</div>
       </div>
+      <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );
 };
