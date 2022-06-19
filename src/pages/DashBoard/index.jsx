@@ -29,12 +29,6 @@ const DashBoard = () => {
     navigate(path);
   };
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     navigateTo("/");
-  //   }
-  // });
-
   const cards = [
     {
       id: 1,
