@@ -301,7 +301,10 @@ function BuildCV() {
                         />
                       </Form.Item>
                     </div>
-                    <MinusCircleOutlined className={"red-icon"} onClick={() => remove(name)} />
+                    <MinusCircleOutlined
+                      className={"red-icon"}
+                      onClick={() => remove(name)}
+                    />
                   </div>
                 ))}
                 <Form.Item>
@@ -318,18 +321,6 @@ function BuildCV() {
             )}
           </Form.List>
         </div>
-        {/* <Form.Item
-          label="Work Experience"
-          name="work_experience"
-          className="two-column"
-        >
-          <Input.TextArea
-            autoSize={{
-              minRows: 4,
-              maxRows: 10,
-            }}
-          />
-        </Form.Item> */}
         <Form.Item label="Skills" name="skills" className="two-column">
           <Input.TextArea />
         </Form.Item>

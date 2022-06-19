@@ -5,11 +5,12 @@ import ojimage from "../../images/oj.png";
 import "./Login.css";
 import FormData from "form-data";
 import isEmail from "validator/lib/isEmail";
-import isStrongPassword from "validator/lib/isStrongPassword";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 const Login = () => {
   const [isLoading, setLoading] = useState(false);
+  const cookies = new Cookies();
 
   const handleSubmit = async (values) => {
     const Email = values["email"];
@@ -21,18 +22,12 @@ const Login = () => {
       return;
     }
 
-    if (!isStrongPassword(Password)) {
-      message.error(
-        "Password must contains one upper case, one lower case, one numeric digit, minimum 8 characters, one special character"
-      );
-      setLoading(false);
-      return;
-    }
+    message.info("Authentication in progress");
 
     var bodyFormData = new FormData();
     bodyFormData.append("email", Email);
     bodyFormData.append("password", Password);
-    bodyFormData.append("Login", Password);
+    bodyFormData.append("login", "login");
     await axios({
       method: "POST",
       url: `/api/login.php`,
@@ -43,10 +38,14 @@ const Login = () => {
       },
     })
       .then(function (response) {
-        console.log(response);
         if (response.status === 200 && response.data.token) {
+          message.success("Login Successfull, Redirecting...", "success");
           setLoading(false);
-          message.error("Login Successfull, Redirecting...", "success");
+          cookies.set("token", response.data.token.token, {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 365,
+          });
+          window.location.replace("/dashboard");
         } else {
           if (response.status === 201) {
             setLoading(false);
@@ -89,9 +88,8 @@ const Login = () => {
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Email"
               size="large"
-              htmlType="email"
             />
           </Form.Item>
         </div>

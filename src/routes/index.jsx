@@ -10,7 +10,7 @@ const CVprofile = lazy(() => import("../pages/CVProfile"));
 const Routing = () => {
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading</div>}>
         <Router>
           <Routes>
             <Route path="/" element={<Login />}></Route>
