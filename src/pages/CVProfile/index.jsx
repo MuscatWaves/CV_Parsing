@@ -3,9 +3,70 @@ import React from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import { removeUnderScore } from "../../utilities";
+import { DownOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Space, Menu, message } from "antd";
+import {
+  FaUserCheck,
+  FaFileDownload,
+  FaClipboard,
+  FaWhatsapp,
+  FaUserEdit,
+} from "react-icons/fa";
+import { SiGmail } from "react-icons/si";
+import { FcShare } from "react-icons/fc";
 import "./cvprofile.css";
 
 const CVprofile = () => {
+  const menu = (
+    <Menu
+      items={[
+        {
+          label: "Download Oman Jobs CV",
+          key: "1",
+          icon: <FaUserCheck />,
+          onClick: () => {
+            message.success("Downloading Oman Jobs CV");
+          },
+        },
+        {
+          label: "Download Original CV",
+          key: "2",
+          icon: <FaFileDownload />,
+          onClick: () => {
+            message.success("Downloading Original CV");
+          },
+        },
+        {
+          label: "Share in",
+          key: "3",
+          children: [
+            {
+              key: "3-1",
+              label: "Clipboard",
+              icon: <FaClipboard />,
+            },
+            {
+              key: "3-2",
+              label: "Whatsapp",
+              icon: <FaWhatsapp />,
+            },
+            {
+              key: "3-3",
+              label: "Gmail",
+              icon: <SiGmail />,
+            },
+          ],
+          icon: <FcShare />,
+        },
+        {
+          label: "Edit",
+          key: "4",
+          icon: <FaUserEdit />,
+        },
+      ]}
+    />
+  );
+
   const test = {
     name: "MOHAMED HANEEFA.A.W",
     image: "https://cv.omanjobs.om/files/images/pic-1655296444.png",
@@ -37,7 +98,7 @@ const CVprofile = () => {
         job: "Landscape Designer",
         from: "2018",
         to: "present",
-        info: `Responsibilities\n
+        info: `
         • Site survey.\n
         • Creating new AutoCAD layout.\n
         • Landscape Design 2D & 3D Works.\n
@@ -99,17 +160,38 @@ const CVprofile = () => {
       <Navigation
         previous_page={"Dashboard"}
         previous_path={"/Dashboard"}
-        current_page={"CV Profile Search"}
+        current_page={"Search CV"}
         third_page={"CV profile"}
         second_path={"/searchcv"}
       />
       <div className="cvprofile-body">
-        <div className="cvprofile-header-first-part">
+        <div className="cvprofile-header-first-part slide-in-left-animation">
           <img className={"cvprofile-picture"} src={test.image} alt="test" />
           <div className="text-orange bolder large-text">{test.name}</div>
           <div className="text-grey medium-text bold">{test.job}</div>
+          <div className="flex-small-gap">
+            <a
+              className="each-skill"
+              href="https://www.w3schools.com"
+              rel="noreferrer"
+              target={"_blank"}
+            >
+              Work Portfolio Video
+            </a>
+            <a
+              className="each-skill"
+              href="https://www.w3schools.com"
+              rel="noreferrer"
+              target={"_blank"}
+            >
+              Interview
+            </a>
+          </div>
         </div>
-        <div className="cvprofile-header-second-part long-box">
+        <div className="cvprofile-header-second-part long-box slide-in-right-animation">
+          <div className="bolder large-text text-orange grid-gather4 small-padding-bottom">
+            Personal Details
+          </div>
           {Object.keys(test.personal_detail).map((keyName, i) => (
             <div>
               <div className="bolder medium-text">
@@ -120,15 +202,23 @@ const CVprofile = () => {
           ))}
         </div>
         <div className="experiences-list">
-          <div className="cvprofile-skills">
-            <div className="bolder large-text text-black">Candidate Skills</div>
+          <Dropdown overlay={menu}>
+            <Button className="button-primary zoom-in-animation">
+              <Space>
+                More Options
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
+          <div className="cvprofile-skills slide-in-left-animation">
+            <div className="bolder large-text text-black">Soft Skills</div>
             <div className="cvprofile-skills-chain">
               {test.skills.map((skill) => (
                 <div className="cvprofile-each-skill bolder">{skill}</div>
               ))}
             </div>
           </div>
-          <div className="cvprofile-skills">
+          <div className="cvprofile-skills slide-in-left-animation">
             <div className="bolder large-text text-black">Education</div>
             <div className="cvprofile-skills-chain">
               {test.education.map((each_education) => (
@@ -150,7 +240,7 @@ const CVprofile = () => {
             </div>
           </div>
         </div>
-        <div className="cvprofile-skills long-box">
+        <div className="cvprofile-skills long-box slide-in-right-animation">
           <div className="bolder large-text text-black">Work Experience</div>
           <div className="experiences-list">
             {test.work_experience.map((experience) => (
@@ -175,7 +265,6 @@ const CVprofile = () => {
             ))}
           </div>
         </div>
-        <div className="grid-gather">Link Section</div>
         <div className="grid-gather">Attachment Section</div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>

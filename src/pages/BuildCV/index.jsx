@@ -8,9 +8,10 @@ import {
 import Header from "../../components/Header";
 import countryList from "react-select-country-list";
 import Navigation from "../../components/Navigation";
+import ImgCrop from "antd-img-crop";
 import "./buildcv.css";
 
-function BuildCV() {
+const BuildCV = () => {
   const handleSubmit = (values) => {
     console.log(values);
   };
@@ -366,6 +367,6 @@ function BuildCV() {
       <div className="copyright-1">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );
-}
+};
 
 export default BuildCV;

@@ -26,15 +26,17 @@ const Navigation = ({
       </p>
       <AiFillCaretRight className="navigation-icon text-grey" />
       <p
-        className={third_page ? "pointer text-grey" : "text-orange"}
+        className={
+          third_page ? "pointer text-grey" : "text-orange zoom-in-animation"
+        }
         onClick={() => third_page && navigateTo(second_path)}
       >
         {current_page}
       </p>
       {third_page && (
         <>
-          <AiFillCaretRight className="navigation-icon text-grey" />
-          <p className="text-orange">{third_page}</p>
+          <AiFillCaretRight className="navigation-icon text-grey zoom-in-animation" />
+          <p className="text-orange zoom-in-animation">{third_page}</p>
         </>
       )}
     </div>

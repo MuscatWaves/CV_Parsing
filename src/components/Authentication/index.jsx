@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { message } from "antd";
 import Cookies from "universal-cookie";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Authentication = () => {

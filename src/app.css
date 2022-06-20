@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.css';
 
 .App{
-    background: url("./images/main-background.webp");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.040), rgba(0, 0, 0, 0.060)), url("./images/main-background.webp");
     height: 100%;
     scroll-behavior: smooth;
 }
@@ -86,6 +86,31 @@
 .red-icon:hover{
     color: red;
 }
+
+.slide-in-left-animation{
+    animation: slide-in-left 0.8s;
+}
+
+.slide-in-right-animation{
+    animation: slide-in-right 0.8s;
+}
+
+.zoom-in-animation{
+    animation: zoom-in 0.8s;
+}
+
+.small-padding-bottom{
+    padding-bottom: 1rem;
+}
+
+.copyright{
+    font-size: 16px;
+    font-weight: 700;
+    padding: 2rem;
+    bottom: 0;
+    text-align: center;
+}
+
 
 /* Custom Animations */
 
