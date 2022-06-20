@@ -1,17 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { Table } from "antd";
+import { Table, message } from "antd";
 import { FiUser } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import "./searchcv.css";
+import axios from "axios";
+import Cookies from "universal-cookie";
 
 const SearchCV = () => {
   const navigate = useNavigate();
-
+  const cookies = new Cookies();
+  const token = cookies.get("token");
   const navigateTo = (path) => {
     navigate(path);
   };
+
+  const getData = async () => {
+    await axios({
+      method: "GET",
+      url: `/api/searchcv.php`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`
+      },
+    })
+    .then(function (response) {
+      if (response.status === 200) {
+        console.log(response);
+      } else {
+        if (response.status === 201) {
+          message.error(response.data.error, "error");
+        } else {
+          message.error("Something Went Wrong!", "error");
+        }
+      }
+    })
+    .catch(function (response) {
+      message.error("Something Went Wrong!", "error");
+    });
+  }
 
   const columns = [
     {
@@ -89,6 +118,10 @@ const SearchCV = () => {
       image: "https://cv.omanjobs.om/files/images/pic-1655295646.png",
     },
   ];
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className="searchCV">
