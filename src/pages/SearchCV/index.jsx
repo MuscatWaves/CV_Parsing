@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { Table, message } from "antd";
-import { FiUser } from "react-icons/fi";
+import { Table, message, Pagination } from "antd";
+import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./searchcv.css";
 import axios from "axios";
@@ -10,6 +10,10 @@ import Cookies from "universal-cookie";
 
 const SearchCV = () => {
   const navigate = useNavigate();
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const cookies = new Cookies();
   const token = cookies.get("token");
   const navigateTo = (path) => {
@@ -17,61 +21,82 @@ const SearchCV = () => {
   };
 
   const getData = async () => {
+    setLoading(true);
     await axios({
       method: "GET",
       url: `/api/searchcv.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        row: page * 10 - 10,
       },
     })
-    .then(function (response) {
-      if (response.status === 200) {
-        console.log(response);
-      } else {
-        if (response.status === 201) {
-          message.error(response.data.error, "error");
+      .then(function (response) {
+        if (response.status === 200) {
+          setLoading(false);
+          setData(response.data.data);
+          page === 1 && setTotal(response.data.data[0].id);
         } else {
-          message.error("Something Went Wrong!", "error");
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
         }
-      }
-    })
-    .catch(function (response) {
-      message.error("Something Went Wrong!", "error");
-    });
-  }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const onChange = (page) => {
+    setPage(page);
+  };
 
   const columns = [
     {
       title: "Image",
       width: "120px",
+      key: "images",
       render: (record) =>
         (record.image && (
-          <img src={record.image} alt={"User"} width={90} />
+          <img
+            src={`${window.location.origin}/files/images/${record.image}`}
+            alt={"User"}
+            width={90}
+            className="image-user"
+          />
         )) || (
-          <div>
-            <FiUser />
+          <div className="no-user">
+            <FaUser className="no-user-icon" />
             <p>No Image</p>
           </div>
         ),
     },
     { title: "Name", dataIndex: "name", key: "name", width: "150px" },
-    { title: "Job", dataIndex: "job", key: "job", width: "150px" },
+    { title: "Job", dataIndex: "job", key: "id", width: "150px" },
     {
       title: "Education",
       dataIndex: "education",
       key: "education",
       ellipsis: true,
     },
-    { title: "Gender", dataIndex: "gender", key: "gender", width: "120px" },
+    { title: "Gender", dataIndex: "gender", key: "id", width: "120px" },
     {
       title: "Nationality",
       dataIndex: "nationality",
-      key: "nationality",
+      key: "id",
       width: "180px",
     },
-    { title: "DOB", dataIndex: "dob", key: "dob", width: "180px" },
+    {
+      title: "DOB",
+      render: (record) => <div>{record.DOB.replace("00:00:00", "")}</div>,
+      key: "dob",
+      width: "180px",
+    },
     {
       title: "Last seen by",
       dataIndex: "last_seen_by",
@@ -81,47 +106,14 @@ const SearchCV = () => {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      name: "Shaik Rashed",
-      job: "Landscape Designer",
-      education:
-        "B.A from Dr Br Ambedkar university, Vinjamur, Andhra Pradesh - Pursuing ITI",
-      gender: "Female",
-      nationality: "Indian",
-      dob: "18 April, 1987",
-      image: "https://cv.omanjobs.om/files/images/pic-1655297426.png",
-      last_seen_by: "Admin at 26/11/2022 8:12pm",
-      id: "220808A22",
-    },
-    {
-      key: "2",
-      name: "MOHAMED HANEEFA.A.W",
-      job: "Landscape Designer",
-      education:
-        "Draughtsman (CIVIL) (National Council for Vocational Training certificate) course done fromCSI ITC, Kaliyakkavilai, Tamilnadu. India, on Year 2010. ...",
-      gender: "Male",
-      nationality: "Indian",
-      dob: "11 May, 1988",
-      image: "https://cv.omanjobs.om/files/images/pic-1655296444.png",
-    },
-    {
-      key: "3",
-      name: "ROHITH JAGADEESWARAN",
-      job: "Sales Engineer - Pump",
-      education:
-        "Draughtsman (CIVIL) (National Council for Vocational Training certificate) course done fromCSI ITC, Kaliyakkavilai, Tamilnadu. India, on Year 2010. ...",
-      gender: "Male",
-      nationality: "Indian",
-      dob: "14 September, 1987",
-      image: "https://cv.omanjobs.om/files/images/pic-1655295646.png",
-    },
-  ];
-
   useEffect(() => {
     getData();
-  }, []);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    // eslint-disable-next-line
+  }, [page]);
 
   return (
     <div className="searchCV">
@@ -143,8 +135,20 @@ const SearchCV = () => {
             }}
             columns={columns}
             responsive
-            // loading={true}
+            loading={isLoading}
+            pagination={false}
           />
+          <div className="pagination">
+            <div className="pagination-total">{`Showing ${
+              page === 1 ? 1 : page * 10 - 10
+            } to ${page * 10} of ${total}`}</div>
+            <Pagination
+              current={page}
+              onChange={onChange}
+              total={total}
+              showSizeChanger={false}
+            />
+          </div>
         </div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>

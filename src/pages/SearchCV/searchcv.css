@@ -17,3 +17,34 @@
 .ant-table-row{
     cursor: pointer;
 }
+
+.pagination{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.pagination-total{
+    font-size: 16px;
+    font-weight: 700;
+    color: #6b6b6b;
+}
+
+.no-user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.no-user-icon{
+    font-size: 2rem;
+}
+
+.image-user{
+    border-radius: 20px;
+    border: 2px solid #f69f00;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}

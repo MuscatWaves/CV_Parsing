@@ -8,7 +8,6 @@ import {
 import Header from "../../components/Header";
 import countryList from "react-select-country-list";
 import Navigation from "../../components/Navigation";
-import ImgCrop from "antd-img-crop";
 import "./buildcv.css";
 
 const BuildCV = () => {
@@ -47,7 +46,12 @@ const BuildCV = () => {
           getValueFromEvent={normFile}
           extra="Upload the candidate's profile picture"
         >
-          <Upload name="profile-pic" listType="picture">
+          <Upload
+            name="profile-pic"
+            listType="picture"
+            accept=".jpeg,.png,.jpg"
+            maxCount={1}
+          >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
         </Form.Item>
@@ -58,7 +62,12 @@ const BuildCV = () => {
           getValueFromEvent={normFile}
           extra="Upload the candidate's profile picture"
         >
-          <Upload name="cv profile" listType="picture">
+          <Upload
+            name="cv profile"
+            listType="picture"
+            accept=".pdf,.docx,.xslx"
+            maxCount={1}
+          >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
         </Form.Item>
