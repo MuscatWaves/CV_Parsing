@@ -3,13 +3,16 @@
 }
 
 .table{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     animation: slide-in-top 0.6s;
     padding: 0 1.5rem;
     min-height: 80vh;
 }
 
 .ant-table table { 
-    font-size: 14px; 
+    font-size: 16px; 
     font-weight: 600;
     color: grey;
 }
@@ -17,6 +20,62 @@
 .ant-table-row{
     cursor: pointer;
 }
+
+/* Filter */
+
+.filter-modal{
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.filter-modal-button{
+    margin-top: 0px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 1.1rem;
+}
+
+.filter-icon{
+    font-size: 20px;
+    padding-right: 5px;
+}
+
+.select-options{
+    width: 300px;
+}
+
+.each-filter-modal-inner{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.horizontal-line{
+    background-color: #f69f00;
+}
+
+.filter-search-button{
+    margin-top: 0px;
+}
+
+.filter-section-division{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.filter-modal-inner{
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Filter Css end */
 
 .pagination{
     display: flex;
@@ -44,7 +103,7 @@
 }
 
 .image-user{
-    border-radius: 20px;
+    border-radius: 50px;
     border: 2px solid #f69f00;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }

@@ -95,6 +95,14 @@
     animation: slide-in-right 0.8s;
 }
 
+.slide-in-top-animation{
+    animation: slide-in-top 0.8s;
+}
+
+.slide-in-bottom-animation{
+    animation: slide-in-bottom 0.8s;
+}
+
 .zoom-in-animation{
     animation: zoom-in 0.8s;
 }

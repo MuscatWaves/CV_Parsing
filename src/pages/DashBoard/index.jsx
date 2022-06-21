@@ -59,6 +59,8 @@ const DashBoard = () => {
     }
   }, [token]);
 
+  console.log(isLoggedIn);
+
   const removeCookie = () => {
     const cookies = new Cookies();
     cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });

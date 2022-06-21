@@ -12,7 +12,7 @@
     grid-template-columns: repeat(2, 400px);
     justify-content: center;
     padding: 2rem;
-    grid-gap: 1.5rem;
+    grid-gap: 0.8rem;
     background-color: rgba(255, 255, 255, 0.411);
     animation: slide-in-top 0.8s;
 }

@@ -11,3 +11,10 @@
 .navigation-icon{
     margin-bottom: 15px;
 }
+
+.navigation-main{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 1.5rem;
+}
