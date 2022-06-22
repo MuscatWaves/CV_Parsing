@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { Table, message, Pagination, Button, Select, Input } from "antd";
+import {
+  Table,
+  message,
+  Pagination,
+  Button,
+  Select,
+  Input,
+  DatePicker,
+} from "antd";
 import { FaUser, FaFilter } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,6 +24,7 @@ import "./searchcv.css";
 
 const SearchCV = () => {
   const navigate = useNavigate();
+  const { RangePicker } = DatePicker;
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -35,12 +44,26 @@ const SearchCV = () => {
     age: "",
     gender: "",
     nationality: "",
+    from: "",
+    to: "",
   });
 
   const [show, toggleShow] = useState(false);
 
   const onChange = (page) => {
     setPage(page);
+  };
+
+  const onDateChange = (dates, dateStrings) => {
+    if (dates) {
+      setFilterData({
+        ...filterData,
+        from: moment(dates[0]).format("YYYY-MM-DD"),
+        to: moment(dates[1]).format("YYYY-MM-DD"),
+      });
+    } else {
+      setFilterData({ ...filterData, from: "", to: "" });
+    }
   };
 
   const getJobCategoryCount = async () => {
@@ -121,8 +144,8 @@ const SearchCV = () => {
       },
       params: {
         row: page * 10 - 10,
-        searchByFromdate: "",
-        searchByTodate: "",
+        searchByFromdate: filterData.from,
+        searchByTodate: filterData.to,
         JobTitle: filterData.jobTitle,
         Age: filterData.age,
         JobCategory: filterData.jobCategory,
@@ -274,11 +297,39 @@ const SearchCV = () => {
           />
         </div>
         <div className="each-filter-modal-inner">
+          <div className="bolder text-grey">Date Selection</div>
+          <RangePicker
+            ranges={{
+              Today: [moment(), moment()],
+              Yesterday: [
+                moment().subtract(1, "day"),
+                moment().subtract(1, "day"),
+              ],
+              "Last 30 Days": [moment().subtract(30, "days"), moment()],
+              "This Month": [moment().startOf("month"), moment()],
+              "Last Month": [
+                moment().subtract(1, "month").startOf("month"),
+                moment().subtract(1, "month").endOf("month"),
+              ],
+            }}
+            onChange={onDateChange}
+          />
+        </div>
+        <div className="each-filter-modal-inner">
           <div className="bolder text-grey">Job Title</div>
           <Input
             value={filterData.jobTitle}
             onChange={(e) =>
               setFilterData({ ...filterData, jobTitle: e.target.value })
+            }
+          />
+        </div>
+        <div className="each-filter-modal-inner">
+          <div className="bolder text-grey">Name</div>
+          <Input
+            value={filterData.name}
+            onChange={(e) =>
+              setFilterData({ ...filterData, name: e.target.value })
             }
           />
         </div>
@@ -295,7 +346,10 @@ const SearchCV = () => {
         <Button
           className="button-primary filter-search-button"
           type="primary"
-          onClick={() => getData()}
+          onClick={() => {
+            setPage(1);
+            getData();
+          }}
         >
           Search
         </Button>
