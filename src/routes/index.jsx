@@ -7,6 +7,7 @@ const DashBoard = lazy(() => import("../pages/DashBoard"));
 const BuildCV = lazy(() => import("../pages/BuildCV"));
 const SearchCV = lazy(() => import("../pages/SearchCV"));
 const CVprofile = lazy(() => import("../pages/CVProfile"));
+const UserManage = lazy(() => import("../pages/UserManage"));
 
 const Routing = () => {
   return (
@@ -25,6 +26,7 @@ const Routing = () => {
             <Route path="/buildcv" element={<BuildCV />}></Route>
             <Route path="/searchcv" element={<SearchCV />}></Route>
             <Route path="/searchcv/profile/:id" element={<CVprofile />}></Route>
+            <Route path="/userManage" element={<UserManage />}></Route>
           </Routes>
         </Router>
       </Suspense>

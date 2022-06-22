@@ -392,8 +392,8 @@ const SearchCV = () => {
           />
           <div className="pagination">
             <div className="pagination-total">{`Showing ${
-              page === 1 ? 1 : page * 10 - 10
-            } to ${page * 10} of ${total}`}</div>
+              page === 1 ? 1 : page * 10 - 10 + 1
+            } to ${page * 10 > total ? total : page * 10} of ${total}`}</div>
             <Pagination
               current={page}
               onChange={onChange}

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ojimage from "../../images/oj.png";
 import { RiUserSearchLine } from "react-icons/ri";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { RiFileUserLine } from "react-icons/ri";
+import { TbFileUpload } from "react-icons/tb";
+import { FiUserX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import "./DashBoard.css";
 import jwt from "jsonwebtoken";
 import { Button, message } from "antd";
 import Cookies from "universal-cookie";
-import { useEffect } from "react";
 import Authentication from "../../components/Authentication";
+import "./DashBoard.css";
 
 const DashBoard = () => {
   const [hoverState, setHoverState] = useState({
@@ -19,7 +22,7 @@ const DashBoard = () => {
     card5: "",
     card6: "",
   });
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState({});
 
   const cookies = new Cookies();
   const token = cookies.get("token");
@@ -33,22 +36,62 @@ const DashBoard = () => {
     {
       id: 1,
       name: "card1",
-      icon: RiUserSearchLine,
-      title: "Search CV",
-      description: "Here, You can view all the CV with profile details.",
-      permission: true,
-      path: "/searchcv",
+      icon: TbFileUpload,
+      title: "Upload CV",
+      description: "To upload bulk CV's for parsing",
+      permission: isLoggedIn.ucaccess === "0" ? true : false,
+      path: "/Dashboard",
     },
     {
       id: 2,
       name: "card2",
-      icon: AiOutlineUsergroupAdd,
+      icon: FiUserX,
+      title: "Rejected CV",
+      description: "Here are the list of the Rejected CV by API.",
+      permission: isLoggedIn.rcaccess === "0" ? true : false,
+      path: "/Dashboard",
+    },
+    {
+      id: 3,
+      name: "card3",
+      icon: RiUserSearchLine,
+      title: "Search CV",
+      description: "Here, You can view all the CV with profile details.",
+      permission: isLoggedIn.scaccess === "0" ? true : false,
+      path: "/searchcv",
+    },
+    {
+      id: 4,
+      name: "card4",
+      icon: RiFileUserLine,
       title: "Build CV",
       description: "Here you can Create CV for Jobseeker or Modify the CV.",
-      permission: true,
+      permission: isLoggedIn.bcaccess === "0" ? true : false,
       path: "/buildcv",
     },
+    {
+      id: 5,
+      name: "card5",
+      icon: AiOutlineUsergroupAdd,
+      title: "Add/Manage User",
+      description:
+        "Here you can add/manage account to provide the access to this dashboard.",
+      permission: isLoggedIn.uraccess === "0" ? true : false,
+      path: "/userManage",
+    },
+    {
+      id: 6,
+      name: "card6",
+      icon: HiOutlineDocumentReport,
+      title: "User Report",
+      description:
+        "Here you can View the User Report. How many CV uploaded by user.",
+      permission: isLoggedIn.uraccess === "0" ? true : false,
+      path: "/dashboard",
+    },
   ];
+
+  console.log(isLoggedIn);
 
   useEffect(() => {
     if (token) {
@@ -66,6 +109,9 @@ const DashBoard = () => {
     navigateTo("/");
   };
 
+  const checkNumberOfCards = () =>
+    cards.filter((card) => card?.permission).length;
+
   return (
     <div className="dashboard">
       <Authentication />
@@ -75,13 +121,19 @@ const DashBoard = () => {
         </Button>
       </div>
       <div className="dashboard-body">
-        <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
+        <div>
+          <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
+        </div>
         <div>
           <span className="welcome-message">
             <h1 className="text-orange bold">Welcome</h1>
             <h1 className="text-grey">{isLoggedIn.name}</h1>
           </span>
-          <div className="main-card">
+          <div
+            className={
+              checkNumberOfCards() > 4 ? "main-card grid-3" : "main-card"
+            }
+          >
             {cards.map(
               (card) =>
                 card.permission && (
@@ -99,7 +151,7 @@ const DashBoard = () => {
                     }
                     onClick={() => navigateTo(card.path)}
                   >
-                    <RiUserSearchLine className="card-icon" />
+                    <card.icon className="card-icon" />
                     <h2 className={`bolder ${hoverState[card.name]}`}>
                       {card.title}
                     </h2>
