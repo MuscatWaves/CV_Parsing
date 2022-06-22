@@ -277,8 +277,8 @@ const SearchCV = () => {
           <div className="bolder text-grey">Job Title</div>
           <Input
             value={filterData.jobTitle}
-            onChange={(value) =>
-              setFilterData({ ...filterData, jobTitle: value })
+            onChange={(e) =>
+              setFilterData({ ...filterData, jobTitle: e.target.value })
             }
           />
         </div>
