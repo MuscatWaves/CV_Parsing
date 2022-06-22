@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { Table, message, Pagination, Button, Select } from "antd";
+import { Table, message, Pagination, Button, Select, Input } from "antd";
 import { FaUser, FaFilter } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -28,6 +28,8 @@ const SearchCV = () => {
     navigate(path);
   };
   const [filterData, setFilterData] = useState({
+    jobTitle: "",
+    name: "",
     jobCategory: "",
     martialStatus: "",
     age: "",
@@ -121,13 +123,13 @@ const SearchCV = () => {
         row: page * 10 - 10,
         searchByFromdate: "",
         searchByTodate: "",
-        JobTitle: "",
+        JobTitle: filterData.jobTitle,
         Age: filterData.age,
         JobCategory: filterData.jobCategory,
         Nationality: filterData.nationality,
         Gender: filterData.gender,
         MaritalStatus: filterData.martialStatus,
-        Search: "",
+        Search: filterData.name,
       },
     })
       .then(function (response) {
@@ -268,6 +270,15 @@ const SearchCV = () => {
             options={martialStatusSelectOption}
             onChange={(value) =>
               setFilterData({ ...filterData, martialStatus: value })
+            }
+          />
+        </div>
+        <div className="each-filter-modal-inner">
+          <div className="bolder text-grey">Job Title</div>
+          <Input
+            value={filterData.jobTitle}
+            onChange={(value) =>
+              setFilterData({ ...filterData, jobTitle: value })
             }
           />
         </div>

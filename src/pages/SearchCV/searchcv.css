@@ -5,7 +5,6 @@
 .table{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     animation: slide-in-top 0.6s;
     padding: 0 1.5rem;
     min-height: 80vh;
@@ -30,6 +29,7 @@
     padding: 1rem;
     background-color: #fff;
     border-radius: 10px;
+    margin-bottom: 1rem;
 }
 
 .filter-modal-button{
@@ -43,10 +43,6 @@
 .filter-icon{
     font-size: 20px;
     padding-right: 5px;
-}
-
-.select-options{
-    width: 300px;
 }
 
 .each-filter-modal-inner{
@@ -69,10 +65,9 @@
 }
 
 .filter-modal-inner{
-    display: flex;
-    gap: 1.5rem;
-    padding: 0.5rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    grid-gap: 1rem;
 }
 
 /* Filter Css end */
