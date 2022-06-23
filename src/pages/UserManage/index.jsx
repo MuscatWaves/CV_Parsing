@@ -5,6 +5,7 @@ import { TiCancel } from "react-icons/ti";
 import { PlusOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
+import UserForm from "./UserForm";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
@@ -103,6 +104,7 @@ const UserManage = () => {
   return (
     <div>
       <Header />
+      <UserForm isModalOpen={isModalOpen} setModal={toggleModal} />
       <Navigation
         previous_page={"Dashboard"}
         previous_path={"/Dashboard"}

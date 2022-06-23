@@ -141,6 +141,12 @@
     color: #6b6b6b;
 }
 
+.flex-between{
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+}
+
 /* Custom Animations */
 
 @keyframes fade-in {

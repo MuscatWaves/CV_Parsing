@@ -200,8 +200,12 @@ const SearchCV = () => {
           <div className="text-black">{record.name}</div>
           <div className="small-text text-grey">{record.email}</div>
           <div className="very-small-text text-light-grey">{`Last seen by ${
-            record.username
-          } at ${moment(record.seendate).format("D MMMM YYYY hh:mm a")}`}</div>
+            record.username || "Nobody"
+          } ${
+            (record.username &&
+              "at " + moment(record.seendate).format("D MMMM YYYY hh:mm a")) ||
+            ""
+          }`}</div>
         </div>
       ),
     },

@@ -1,0 +1,20 @@
+.loading-data{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+}
+
+.inner-loading-data{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loader-image{
+    width: 130px;
+    height: 130px;
+    animation: slide-in-left 0.8s;
+}

@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import backgroundImage from "../images/main-background.webp";
+import Loader from "../components/Loader";
 
 const Login = lazy(() => import("../pages/Login"));
 const DashBoard = lazy(() => import("../pages/DashBoard"));
@@ -12,13 +12,7 @@ const UserManage = lazy(() => import("../pages/UserManage"));
 const Routing = () => {
   return (
     <div>
-      <Suspense
-        fallback={
-          <div>
-            <img src={backgroundImage} alt="Oman Jobs" />
-          </div>
-        }
-      >
+      <Suspense fallback={<Loader />}>
         <Router>
           <Routes>
             <Route path="/" element={<Login />}></Route>

@@ -91,8 +91,6 @@ const DashBoard = () => {
     },
   ];
 
-  console.log(isLoggedIn);
-
   useEffect(() => {
     if (token) {
       try {

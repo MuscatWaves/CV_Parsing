@@ -1,10 +1,10 @@
-import React from "react";
-// import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import { removeUnderScore } from "../../utilities";
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Space, Menu, message } from "antd";
+import { Button, Dropdown, Space, Menu, message, Table, Modal } from "antd";
 import {
   FaUserCheck,
   FaFileDownload,
@@ -14,9 +14,138 @@ import {
 } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import { FcShare } from "react-icons/fc";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import axios from "axios";
+import moment from "moment";
+import Cookies from "universal-cookie";
+import Loader from "../../components/Loader";
 import "./cvprofile.css";
 
 const CVprofile = () => {
+  const dataParams = useParams();
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const [userData, setUserData] = useState({ user: {}, attachments: [] });
+  const [isLoading, setLoading] = useState("");
+  const [deleteModal, toggleDeleteModal] = useState(false);
+  const [deletionData, setDeletionData] = useState("");
+
+  const getUserData = async () => {
+    setLoading(true);
+    await axios({
+      method: "GET",
+      url: `/api/user.php?id=${dataParams.id}`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          setUserData({
+            user: response.data.data.user[0],
+            attachments: response.data.data.attachments,
+          });
+          setLoading("loaded");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+            setLoading("");
+          } else {
+            message.error("Something Went Wrong!", "error");
+            setLoading("");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const deleteData = async () => {
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        deleteAttachment: true,
+        id: deletionData.id,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The attachment has been sucessfully deleted");
+          toggleDeleteModal(false);
+          setDeletionData("");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  useEffect(() => {
+    getUserData();
+    // eslint-disable-next-line
+  }, []);
+
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "id",
+    },
+    {
+      title: "File",
+      render: (record) => (
+        <a
+          href={`https://cv.omanjobs.om/files/docs/${record.name}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {record.name}
+        </a>
+      ),
+    },
+    {
+      title: "Uploaded By",
+      dataIndex: "uploaded_by",
+    },
+    {
+      title: "Date",
+      render: (record) => <div>{moment(record.date).format("D MMM YYYY")}</div>,
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+    },
+    {
+      title: "Action",
+      render: (record) => (
+        <Button
+          size="large"
+          type="primary"
+          danger
+          icon={<MdOutlineDeleteOutline />}
+          onClick={() => {
+            setDeletionData(record);
+            toggleDeleteModal(true);
+          }}
+        />
+      ),
+    },
+  ];
+
   const menu = (
     <Menu
       items={[
@@ -67,96 +196,52 @@ const CVprofile = () => {
     />
   );
 
-  const test = {
-    name: "MOHAMED HANEEFA.A.W",
-    image: "https://cv.omanjobs.om/files/images/pic-1655296444.png",
-    job: "Landscape Designer",
-    skills: [
-      "Auto Cad 2d",
-      "Sketch up 3d",
-      "Photoshop Cs-5",
-      "Enscape 3.1",
-      "MS Word",
-      "MS Excel",
-      "Internet Sourcing",
-    ],
-    personal_detail: {
-      email: "haneefa.85@gmail.com",
-      gender: "Male",
-      mobile: 97987878787,
-      dob: "11 May 1988",
-      nationality: "Indian",
-      country: "India",
-      address:
-        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempore reprehenderit eaque placeat vero dolorum nobis excepturi maiores quasi quaerat iusto?",
-      language: "Fluency in English, Hindi, Malayalam and Tamil",
-      passport_no: "P3392902",
-    },
-    work_experience: [
-      {
-        name: "AL REEF PROJECT L.L.C",
-        job: "Landscape Designer",
-        from: "2018",
-        to: "present",
-        info: `
-        • Site survey.\n
-        • Creating new AutoCAD layout.\n
-        • Landscape Design 2D & 3D Works.\n
-        • Photoshop works.\n
-        • 3D Designs in Real-time Landscape & Sketch Up.\n
-        • Rendering.\n
-        • Excel & word works.\n
-        • Monthly Progress report landscape & Irrigation\n
-        • Other works.\n`,
-      },
-      {
-        name: "AYOON SOHAR",
-        location: "Oman",
-        job: "CAD Draughtsman",
-        from: "2016",
-        to: "2018",
-        info: `Landscape and interior Layout plan drawing in Auto Cad.
-        Preparation of Landscape drawing.
-        Quantity takes off from drawings.
-        Visiting sites and factory to help supervisors to monitor the progress.`,
-      },
-      {
-        name: "FUTURA INTRIORS PVT. LTD",
-        location: "Oman",
-        job: "CAD Operator",
-        from: "2010",
-        to: "2015",
-        info: `Drawing Survey Interior design as per client Requirement in Auto Cad.
-        Interior layout plan, Drawing in Auto Cad 2d & 3d in sketch up
-        Making various types format & inter data in MS. Excel end writing latter in MS. Word.
-        Maintaining all documents and drawings.`,
-      },
-    ],
-    education: [
-      {
-        name: "Draughtsman (CIVIL) (National Council for Vocational Training certificate)",
-        inst: "CSI ITC",
-        location: "Kaliyakkavilai, Tamilnadu. India",
-        year: 2010,
-      },
-      {
-        name: "Higher Secondary",
-        inst: "S.S.P.G.Higher Secondary School",
-        location: "Edalakudy, TamilNadu. India",
-        year: 2005,
-      },
-      {
-        name: "High School",
-        inst: "S.S.P.G Higher Secondary School",
-        location: "Edalakudy, TamilNadu. India",
-        year: 2003,
-      },
-    ],
+  const personalDetail = {
+    email: userData.user.email,
+    gender: userData.user.gender,
+    mobile: userData.user.mobile,
+    DOB:
+      (userData.user.DOB && moment(userData.user.DOB).format("D MMMM YYYY")) ||
+      "",
+    nationality: userData.user.nationality,
+    country: userData.user.country,
+    address: userData.user.presentaddress,
+    language: userData.user.language,
+    passport_no: userData.user.passport,
+  };
+
+  const string = (str) =>
+    isLoading === "loaded" &&
+    str
+      .split("\r\n")
+      .map((line, i) =>
+        line === "" ? <br key={i} /> : <div key={i}>{line}</div>
+      );
+
+  const skills =
+    (isLoading === "loaded" &&
+      userData.user.skills !== "" &&
+      userData.user.skills.split("\r\n")) ||
+    "";
+
+  const handleCancel = () => {
+    toggleDeleteModal(false);
+    setDeletionData("");
   };
 
   return (
     <div className="cvprofile">
       <Header />
+      <Modal
+        title="Delete Confirmation"
+        visible={deleteModal}
+        onOk={deleteData}
+        onCancel={handleCancel}
+        okText={"Delete"}
+        okType={"danger"}
+      >
+        <p>{`Are you sure you wanna delete "${deletionData.name}" from attachments?`}</p>
+      </Modal>
       <Navigation
         previous_page={"Dashboard"}
         previous_path={"/Dashboard"}
@@ -164,109 +249,119 @@ const CVprofile = () => {
         third_page={"CV profile"}
         second_path={"/searchcv"}
       />
-      <div className="cvprofile-body">
-        <div className="cvprofile-header-first-part slide-in-left-animation">
-          <img className={"cvprofile-picture"} src={test.image} alt="test" />
-          <div className="text-orange bolder large-text">{test.name}</div>
-          <div className="text-grey medium-text bold">{test.job}</div>
-          <div className="flex-small-gap">
-            <a
-              className="each-skill"
-              href="https://www.w3schools.com"
-              rel="noreferrer"
-              target={"_blank"}
-            >
-              Work Portfolio Video
-            </a>
-            <a
-              className="each-skill"
-              href="https://www.w3schools.com"
-              rel="noreferrer"
-              target={"_blank"}
-            >
-              Interview
-            </a>
-          </div>
-        </div>
-        <div className="cvprofile-header-second-part long-box slide-in-right-animation">
-          <div className="bolder large-text text-orange grid-gather4 small-padding-bottom">
-            Personal Details
-          </div>
-          {Object.keys(test.personal_detail).map((keyName, i) => (
-            <div>
-              <div className="bolder medium-text">
-                {removeUnderScore(keyName)}
-              </div>
-              <div className="text-grey">{test.personal_detail[keyName]}</div>
+      {(isLoading === "loaded" && (
+        <div className="cvprofile-body">
+          <div className="cvprofile-header-first-part slide-in-left-animation">
+            <img
+              className={"cvprofile-picture"}
+              src={`${window.location.origin}/files/images/${userData.user.image}`}
+              alt="user"
+            />
+            <div className="text-orange bolder large-text">
+              {userData.user.name}
             </div>
-          ))}
-        </div>
-        <div className="experiences-list">
-          <Dropdown overlay={menu}>
-            <Button className="button-primary zoom-in-animation">
-              <Space>
-                More Options
-                <DownOutlined />
-              </Space>
-            </Button>
-          </Dropdown>
-          <div className="cvprofile-skills slide-in-left-animation">
-            <div className="bolder large-text text-black">Soft Skills</div>
-            <div className="cvprofile-skills-chain">
-              {test.skills.map((skill) => (
-                <div className="cvprofile-each-skill bolder">{skill}</div>
-              ))}
+            <div className="text-grey medium-text bold">
+              {userData.user.job}
+            </div>
+            <div className="flex-small-gap">
+              {userData.user.wpv && (
+                <a
+                  className="each-skill"
+                  href={userData.user.wpv}
+                  rel="noreferrer"
+                  target={"_blank"}
+                >
+                  Work Portfolio Video
+                </a>
+              )}
+              {userData.user.interview && (
+                <a
+                  className="each-skill"
+                  href={userData.user.interview}
+                  rel="noreferrer"
+                  target={"_blank"}
+                >
+                  Interview
+                </a>
+              )}
             </div>
           </div>
-          <div className="cvprofile-skills slide-in-left-animation">
-            <div className="bolder large-text text-black">Education</div>
-            <div className="cvprofile-skills-chain">
-              {test.education.map((each_education) => (
-                <div className="each-experience">
-                  <div className="text-orange bolder medium-text">
-                    {each_education.name}
-                  </div>
-                  <div className="medium-text bolder text-black">
-                    {each_education.inst}
-                  </div>
-                  <div className="bolder small-text text-light-grey">
-                    {each_education.year}
-                  </div>
-                  <div className="bold text-grey">
-                    {each_education.location}
-                  </div>
-                </div>
-              ))}
+          <div className="cvprofile-header-second-part long-box slide-in-right-animation">
+            <div className="bolder large-text text-orange grid-gather4">
+              Personal Details
             </div>
-          </div>
-        </div>
-        <div className="cvprofile-skills long-box slide-in-right-animation">
-          <div className="bolder large-text text-black">Work Experience</div>
-          <div className="experiences-list">
-            {test.work_experience.map((experience) => (
-              <div className="each-experience">
-                <div className="text-orange bolder medium-text">
-                  {experience.name}
+            {Object.keys(personalDetail).map((keyName, i) => (
+              <div key={keyName}>
+                <div className="bolder medium-text">
+                  {removeUnderScore(keyName)}
                 </div>
-                <div className="medium-text bolder text-black">
-                  {experience.job}
-                </div>
-                <div className="flex-small-gap bolder small-text text-light-grey">
-                  <div>{experience.from}</div>
-                  <div>-</div>
-                  <div>{removeUnderScore(experience.to)}</div>
-                </div>
-                <div>
-                  {experience.info.split("\n").map((str) => (
-                    <div className="bold text-grey medium-text">{str}</div>
-                  ))}
+                <div className="text-grey medium-text">
+                  {personalDetail[keyName] || "Not Provided"}
                 </div>
               </div>
             ))}
           </div>
+          <div className="experiences-list">
+            <Dropdown overlay={menu}>
+              <Button className="button-primary zoom-in-animation">
+                <Space>
+                  More Options
+                  <DownOutlined />
+                </Space>
+              </Button>
+            </Dropdown>
+            <div className="cvprofile-skills slide-in-left-animation">
+              <div className="bolder large-text text-black">Soft Skills</div>
+              <div className="cvprofile-skills-chain">
+                {(skills !== "" &&
+                  skills.map(
+                    (skill, i) =>
+                      skill !== "" && (
+                        <div className="cvprofile-each-skill bolder" key={i}>
+                          {skill}
+                        </div>
+                      )
+                  )) || (
+                  <div className="text-grey medium-text">
+                    No Skills Provided
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="cvprofile-skills slide-in-left-animation">
+              <div className="bolder large-text text-orange">Education</div>
+              <div className="cvprofile-skills-chain medium-text text-grey">
+                {string(userData.user.education)}
+              </div>
+            </div>
+          </div>
+          <div className="cvprofile-skills long-box slide-in-right-animation">
+            <div className="bolder large-text text-orange">Work Experience</div>
+            <div className="experiences-list">
+              <div className="each-experience medium-text text-grey">
+                {string(userData.user.company)}
+              </div>
+            </div>
+          </div>
+          <div className="grid-gather attachments-section">
+            <div className="flex-between">
+              <div className="bolder large-text text-orange">Attachments</div>
+              <Button className="button-primary zoom-in-animation">
+                Upload
+              </Button>
+            </div>
+            <div>
+              <Table
+                dataSource={userData.attachments}
+                columns={columns}
+                loading={isLoading}
+                pagination={false}
+                rowKey={"id"}
+              />
+            </div>
+          </div>
         </div>
-        <div className="grid-gather">Attachment Section</div>
-      </div>
+      )) || <Loader />}
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );

@@ -29,9 +29,9 @@
 .cvprofile-header-second-part{
     display: grid;
     grid-template-columns: repeat(3, 200px);
-    gap: 0.5rem;
+    justify-content: space-between;
+    grid-gap: 1rem;
     background-color: rgba(255, 255, 255, 0.650);
-    /* background-color: rgba(128, 128, 128, 0.253); */
     padding: 1.5rem;
     border-radius: 20px;    
 }
@@ -43,9 +43,8 @@
     padding: 1.5rem;
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.650);
-    /* background-color: rgba(128, 128, 128, 0.253); */
     height: fit-content;
-    max-width: 300px;
+    max-width: 320px;
 }
 
 .long-box{
@@ -106,8 +105,15 @@
 
 .each-skill:hover{
     transform: scale(1.050);
-    /* color: #f69f00; */
-    /* background-color: #ffc14f46; */
     background-color: #f07d00;
     color: #fff;
+}
+
+.attachments-section{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.650);
+    border-radius: 20px;
 }
