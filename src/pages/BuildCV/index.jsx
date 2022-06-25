@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Form, Input, Button, DatePicker, Select, Upload, Space } from "antd";
 import {
   UploadOutlined,
@@ -6,7 +6,6 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import Header from "../../components/Header";
-import countryList from "react-select-country-list";
 import Navigation from "../../components/Navigation";
 import "./buildcv.css";
 
@@ -14,8 +13,6 @@ const BuildCV = () => {
   const handleSubmit = (values) => {
     console.log(values);
   };
-
-  const countryOptions = useMemo(() => countryList().getData(), []);
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -121,11 +118,7 @@ const BuildCV = () => {
           </Select>
         </Form.Item>
         <Form.Item name="country">
-          <Select
-            placeholder="Select Country"
-            options={countryOptions}
-            showSearch
-          ></Select>
+          <Select placeholder="Select Country" options={[]} showSearch></Select>
         </Form.Item>
         <Form.Item name="nationality">
           <Input placeholder="Nationality" />

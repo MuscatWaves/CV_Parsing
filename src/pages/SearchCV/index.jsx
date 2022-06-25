@@ -24,6 +24,9 @@ import "./searchcv.css";
 
 const SearchCV = () => {
   const navigate = useNavigate();
+  const navigateTo = (path) => {
+    navigate(path);
+  };
   const { RangePicker } = DatePicker;
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -33,9 +36,6 @@ const SearchCV = () => {
   const [nationalityResult, setNationalityResult] = useState([]);
   const cookies = new Cookies();
   const token = cookies.get("token");
-  const navigateTo = (path) => {
-    navigate(path);
-  };
   const [filterData, setFilterData] = useState({
     jobTitle: "",
     name: "",
@@ -386,7 +386,7 @@ const SearchCV = () => {
             onRow={(record, rowIndex) => {
               return {
                 onClick: (event) =>
-                  navigateTo(`/searchcv/profile/${record.id}`), // click row
+                  navigateTo(`/searchcv/profile/app/${record.id}`), // click row
               };
             }}
             columns={columns}

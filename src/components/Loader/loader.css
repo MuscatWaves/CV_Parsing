@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 70vh;
+    /* min-height: 70vh; */
 }
 
 .inner-loading-data{
@@ -14,7 +14,7 @@
 }
 
 .loader-image{
-    width: 130px;
-    height: 130px;
+    width: 200px;
+    height: 200px;
     animation: slide-in-left 0.8s;
 }

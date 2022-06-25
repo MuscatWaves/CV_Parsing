@@ -3,8 +3,24 @@ import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import { removeUnderScore } from "../../utilities";
-import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Space, Menu, message, Table, Modal } from "antd";
+import {
+  DownOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Dropdown,
+  Space,
+  Menu,
+  message,
+  Table,
+  Modal,
+  Select,
+  Form,
+  Upload,
+} from "antd";
 import {
   FaUserCheck,
   FaFileDownload,
@@ -17,18 +33,22 @@ import { FcShare } from "react-icons/fc";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import axios from "axios";
 import moment from "moment";
+import jwt from "jsonwebtoken";
 import Cookies from "universal-cookie";
 import Loader from "../../components/Loader";
+import { categorySelection } from "./constants.ts";
 import "./cvprofile.css";
 
 const CVprofile = () => {
   const dataParams = useParams();
+  const [form] = Form.useForm();
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [userData, setUserData] = useState({ user: {}, attachments: [] });
   const [isLoading, setLoading] = useState("");
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [deletionData, setDeletionData] = useState("");
+  const [isUploadModal, toggleUploadModal] = useState(false);
 
   const getUserData = async () => {
     setLoading(true);
@@ -82,6 +102,40 @@ const CVprofile = () => {
           message.success("The attachment has been sucessfully deleted");
           toggleDeleteModal(false);
           setDeletionData("");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const uploadAttachmentsData = async (data) => {
+    const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        attachments: true,
+        id: user.id,
+        candidate: userData.user.id,
+        file: data.file,
+        category: data.category,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The attachment has been uploaded sucessfully");
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -154,7 +208,7 @@ const CVprofile = () => {
           key: "1",
           icon: <FaUserCheck />,
           onClick: () => {
-            message.success("Downloading Oman Jobs CV");
+            window.open(`/searchcv/profile/public/${dataParams.id}`, "_blank");
           },
         },
         {
@@ -226,12 +280,131 @@ const CVprofile = () => {
 
   const handleCancel = () => {
     toggleDeleteModal(false);
+    toggleUploadModal(false);
     setDeletionData("");
+    form.resetFields();
   };
 
+  const handleUploadModal = (values) => {
+    values.attachments.map((attachment) => {
+      const data = {
+        file: attachment.file.file,
+        category: attachment.category,
+      };
+      uploadAttachmentsData(data);
+      return null;
+    });
+    toggleUploadModal(false);
+  };
+
+  const uploadModal = () => (
+    <Modal
+      title="Upload Attachments"
+      visible={isUploadModal}
+      onCancel={handleCancel}
+      okText={"Submit"}
+      onOk={form.submit}
+    >
+      <Form
+        className="buildCvForm"
+        size="large"
+        layout="vertical"
+        onFinish={handleUploadModal}
+        form={form}
+        scrollToFirstError={true}
+      >
+        <Form.List name="attachments">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                <Space
+                  key={key}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, auto)",
+                    marginBottom: 8,
+                  }}
+                  align="baseline"
+                >
+                  <Form.Item
+                    {...restField}
+                    name={[name, "category"]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Missing category",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder={"Select Category"}
+                      options={categorySelection}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "file"]}
+                    valuePropName={"file"}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Missing Uploaded File",
+                      },
+                    ]}
+                  >
+                    <Upload
+                      name="cv profile"
+                      accept=".pdf,.docx,.xslx"
+                      maxCount={1}
+                      beforeUpload={() => {
+                        return false;
+                      }}
+                      showUploadList={{ showRemoveIcon: false }}
+                    >
+                      <Button icon={<UploadOutlined />}>Click to upload</Button>
+                    </Upload>
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Attachment
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+      </Form>
+    </Modal>
+  );
+
   return (
-    <div className="cvprofile">
-      <Header />
+    <div
+      className={
+        dataParams.type === "app"
+          ? "cvprofile"
+          : "padding-top-public-cv cvprofile"
+      }
+    >
+      {dataParams.type === "app" && (
+        <>
+          <Header />
+          <Navigation
+            previous_page={"Dashboard"}
+            previous_path={"/Dashboard"}
+            current_page={"Search CV"}
+            third_page={"CV profile"}
+            second_path={"/searchcv"}
+          />
+        </>
+      )}
+      {uploadModal()}
       <Modal
         title="Delete Confirmation"
         visible={deleteModal}
@@ -240,15 +413,8 @@ const CVprofile = () => {
         okText={"Delete"}
         okType={"danger"}
       >
-        <p>{`Are you sure you wanna delete "${deletionData.name}" from attachments?`}</p>
+        <p>{`Are you sure you want to delete "${deletionData.name}" from attachments?`}</p>
       </Modal>
-      <Navigation
-        previous_page={"Dashboard"}
-        previous_path={"/Dashboard"}
-        current_page={"Search CV"}
-        third_page={"CV profile"}
-        second_path={"/searchcv"}
-      />
       {(isLoading === "loaded" && (
         <div className="cvprofile-body">
           <div className="cvprofile-header-first-part slide-in-left-animation">
@@ -302,14 +468,16 @@ const CVprofile = () => {
             ))}
           </div>
           <div className="experiences-list">
-            <Dropdown overlay={menu}>
-              <Button className="button-primary zoom-in-animation">
-                <Space>
-                  More Options
-                  <DownOutlined />
-                </Space>
-              </Button>
-            </Dropdown>
+            {dataParams.type === "app" && (
+              <Dropdown overlay={menu}>
+                <Button className="button-primary zoom-in-animation">
+                  <Space>
+                    More Options
+                    <DownOutlined />
+                  </Space>
+                </Button>
+              </Dropdown>
+            )}
             <div className="cvprofile-skills slide-in-left-animation">
               <div className="bolder large-text text-black">Soft Skills</div>
               <div className="cvprofile-skills-chain">
@@ -334,6 +502,12 @@ const CVprofile = () => {
                 {string(userData.user.education)}
               </div>
             </div>
+            {/* <div className="cvprofile-skills slide-in-left-animation">
+              <div className="bolder large-text text-orange">Attachments</div>
+              <div className="cvprofile-skills-chain medium-text text-grey">
+                {"Here you can see your attachments"}
+              </div>
+            </div> */}
           </div>
           <div className="cvprofile-skills long-box slide-in-right-animation">
             <div className="bolder large-text text-orange">Work Experience</div>
@@ -343,25 +517,40 @@ const CVprofile = () => {
               </div>
             </div>
           </div>
-          <div className="grid-gather attachments-section">
-            <div className="flex-between">
-              <div className="bolder large-text text-orange">Attachments</div>
-              <Button className="button-primary zoom-in-animation">
-                Upload
-              </Button>
+          {dataParams.type === "app" && (
+            <div className="grid-gather attachments-section">
+              <div className="flex-between">
+                <div className="bolder large-text text-orange">Attachments</div>
+                <Button
+                  className="button-primary zoom-in-animation"
+                  onClick={() => toggleUploadModal(true)}
+                >
+                  Upload
+                </Button>
+              </div>
+              <div>
+                <Table
+                  dataSource={userData.attachments}
+                  columns={columns}
+                  loading={isLoading}
+                  pagination={false}
+                  rowKey={"id"}
+                />
+              </div>
             </div>
-            <div>
-              <Table
-                dataSource={userData.attachments}
-                columns={columns}
-                loading={isLoading}
-                pagination={false}
-                rowKey={"id"}
+          )}
+          {dataParams.type === "app" && (
+            <div className="grid-gather">
+              <iframe
+                src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                title="testPdf"
+                height="800px"
+                width="100%"
               />
             </div>
-          </div>
+          )}
         </div>
-      )) || <Loader />}
+      )) || <Loader minHeight={"70vh"} />}
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );

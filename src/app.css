@@ -147,6 +147,23 @@
     padding: 0.5rem;
 }
 
+.padding-top-public-cv{
+    padding-top: 50px;
+}
+
+.grid-2{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.flex-at-end{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
 /* Custom Animations */
 
 @keyframes fade-in {

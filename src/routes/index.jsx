@@ -12,14 +12,17 @@ const UserManage = lazy(() => import("../pages/UserManage"));
 const Routing = () => {
   return (
     <div>
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<Loader minHeight={"90vh"} />}>
         <Router>
           <Routes>
             <Route path="/" element={<Login />}></Route>
             <Route path="/dashboard" element={<DashBoard />}></Route>
             <Route path="/buildcv" element={<BuildCV />}></Route>
             <Route path="/searchcv" element={<SearchCV />}></Route>
-            <Route path="/searchcv/profile/:id" element={<CVprofile />}></Route>
+            <Route
+              path="/searchcv/profile/:type/:id"
+              element={<CVprofile />}
+            ></Route>
             <Route path="/userManage" element={<UserManage />}></Route>
           </Routes>
         </Router>

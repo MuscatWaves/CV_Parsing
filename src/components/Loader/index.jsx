@@ -3,9 +3,9 @@ import React from "react";
 import ojimage from "../../images/oj.png";
 import "./loader.css";
 
-const Loader = () => {
+const Loader = ({ minHeight }) => {
   return (
-    <div className="loading-data">
+    <div className="loading-data" style={{ minHeight: minHeight }}>
       <div className="inner-loading-data">
         <img src={ojimage} className="loader-image" alt="Oman jobs" />
         <Spin size="large" />
