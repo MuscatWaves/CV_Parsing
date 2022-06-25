@@ -87,7 +87,7 @@ const DashBoard = () => {
       description:
         "Here you can View the User Report. How many CV uploaded by user.",
       permission: isLoggedIn.uraccess === "0" ? true : false,
-      path: "/dashboard",
+      path: "/userReport",
     },
   ];
 

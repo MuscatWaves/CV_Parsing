@@ -384,6 +384,11 @@ const CVprofile = () => {
     </Modal>
   );
 
+  const checkWhichFile = (cv) => {
+    var n = cv?.split(".");
+    return n[n.length - 1];
+  };
+
   return (
     <div
       className={
@@ -541,12 +546,14 @@ const CVprofile = () => {
           )}
           {dataParams.type === "app" && (
             <div className="grid-gather">
-              <iframe
-                src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                title="testPdf"
-                height="800px"
-                width="100%"
-              />
+              {checkWhichFile(userData.user.cv) === "pdf" && (
+                <iframe
+                  src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                  title="testPdf"
+                  height="800px"
+                  width="100%"
+                />
+              )}
             </div>
           )}
         </div>

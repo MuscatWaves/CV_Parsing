@@ -8,6 +8,7 @@ const BuildCV = lazy(() => import("../pages/BuildCV"));
 const SearchCV = lazy(() => import("../pages/SearchCV"));
 const CVprofile = lazy(() => import("../pages/CVProfile"));
 const UserManage = lazy(() => import("../pages/UserManage"));
+const UserReport = lazy(() => import("../pages/UserReport"));
 
 const Routing = () => {
   return (
@@ -24,6 +25,7 @@ const Routing = () => {
               element={<CVprofile />}
             ></Route>
             <Route path="/userManage" element={<UserManage />}></Route>
+            <Route path="/userReport" element={<UserReport />}></Route>
           </Routes>
         </Router>
       </Suspense>

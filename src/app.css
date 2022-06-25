@@ -52,6 +52,10 @@
     color: #ff4c41;
 }
 
+.text-blue{
+    color: #51a6f5;
+}
+
 .pointer{
     cursor: pointer;
 }
@@ -117,6 +121,10 @@
 
 .small-padding-bottom{
     padding-bottom: 1rem;
+}
+
+.small-margin-top{
+    margin-top: 1rem;
 }
 
 .copyright{

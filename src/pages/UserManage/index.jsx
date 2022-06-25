@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Table, Button } from "antd";
 import { FaCheck } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import UserForm from "./UserForm";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
+  const [editData, setEditData] = useState(null);
 
   const dummyData = [
     {
@@ -99,12 +100,33 @@ const UserManage = () => {
         },
       ],
     },
+    {
+      title: "Action",
+      render: (record) => (
+        <Button
+          type="primary"
+          shape="round"
+          icon={<EditOutlined />}
+          onClick={() => {
+            setEditData(record);
+            toggleModal(true);
+          }}
+        />
+      ),
+    },
   ];
 
   return (
     <div>
       <Header />
-      <UserForm isModalOpen={isModalOpen} setModal={toggleModal} />
+      {isModalOpen && (
+        <UserForm
+          isModalOpen={isModalOpen}
+          setModal={toggleModal}
+          editData={editData}
+          setEditData={setEditData}
+        />
+      )}
       <Navigation
         previous_page={"Dashboard"}
         previous_path={"/Dashboard"}

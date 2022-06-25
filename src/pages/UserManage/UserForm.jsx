@@ -2,11 +2,12 @@ import React from "react";
 import { Button, Form, Drawer, Input, Switch } from "antd";
 import Password from "antd/lib/input/Password";
 
-const UserForm = ({ isModalOpen, setModal }) => {
+const UserForm = ({ isModalOpen, setModal, editData, setEditData }) => {
   const [form] = Form.useForm();
 
   const onClose = () => {
     setModal(false);
+    setEditData(null);
   };
 
   const handleCreateUser = (values) => {
@@ -15,22 +16,25 @@ const UserForm = ({ isModalOpen, setModal }) => {
 
   return (
     <Drawer
-      title="Basic Drawer"
+      title={editData ? "Update the User Profile" : "Create a New User"}
       placement="right"
       onClose={onClose}
       visible={isModalOpen}
     >
       <Form
-        className="buildCvForm"
         layout="vertical"
+        className={"zoom-in-animation"}
         onFinish={handleCreateUser}
         form={form}
         scrollToFirstError={true}
         initialValues={{
-          uv_access: false,
-          sc_access: false,
-          rc_access: false,
-          bc_access: false,
+          name: editData?.name,
+          email: editData?.email,
+          password: "",
+          uv_access: editData?.uvaccess === "0" ? true : false || false,
+          sc_access: editData?.scaccess === "0" ? true : false || false,
+          rc_access: editData?.rcaccess === "0" ? true : false || false,
+          bc_access: editData?.bcaccess === "0" ? true : false || false,
         }}
       >
         <Form.Item
@@ -100,9 +104,12 @@ const UserForm = ({ isModalOpen, setModal }) => {
             <Switch />
           </Form.Item>
         </div>
-        <div className="flex-at-end">
+        <div className="flex-at-end small-margin-top">
+          <Button className="" type="text" onClick={onClose}>
+            Cancel
+          </Button>
           <Button className="" type="primary" htmlType="submit">
-            Create Account
+            {editData ? "Update Account" : "Create Account"}
           </Button>
         </div>
       </Form>
