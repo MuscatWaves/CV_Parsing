@@ -198,7 +198,12 @@ const SearchCV = () => {
       render: (record) => (
         <div>
           <div className="text-black">{record.name}</div>
-          <div className="small-text text-grey">{record.email}</div>
+          <div className="small-text text-grey">{`${record.nationality}, ${
+            record.gender
+          } (${moment().diff(
+            moment(record.DOB).format("YYYY-MM-DD"),
+            "years"
+          )})`}</div>
           <div className="very-small-text text-light-grey">{`Last seen by ${
             record.username || "Nobody"
           } ${
@@ -209,22 +214,11 @@ const SearchCV = () => {
         </div>
       ),
     },
-    { title: "Job", dataIndex: "job", width: "150px" },
+    { title: "Job", dataIndex: "job", width: "250px" },
     {
       title: "Education",
       dataIndex: "education",
       ellipsis: true,
-    },
-    { title: "Gender", dataIndex: "gender", width: "120px" },
-    {
-      title: "Nationality",
-      dataIndex: "nationality",
-      width: "150px",
-    },
-    {
-      title: "DOB",
-      render: (record) => <div>{record.DOB.replace("00:00:00", "")}</div>,
-      width: "150px",
     },
   ];
 

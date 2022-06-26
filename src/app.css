@@ -1,12 +1,19 @@
 @import '~antd/dist/antd.css';
 
 .App{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.040), rgba(0, 0, 0, 0.060)), url("./images/main-background.webp");
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.040), rgba(0, 0, 0, 0.060)), url("./images/main-background.webp"); */
+    background: rgb(221,221,221);
+    background: radial-gradient(circle, rgba(221,221,221,1) 0%, rgba(238,238,238,1) 100%);
     min-height: 100vh;
     scroll-behavior: smooth;
 }
 
 /* Global Styles used */
+
+.ant-table-thead > tr > th{
+    font-weight: 700;
+    color: #272727;
+}
 
 .button-primary{
     background-color: #f07d00;
@@ -140,13 +147,13 @@
     flex-direction: column;
     animation: slide-in-top 0.6s;
     padding: 0 1.5rem;
-    min-height: 80vh;
+    min-height: 70vh;
 }
 
 .ant-table table { 
     font-size: 16px; 
     font-weight: 600;
-    color: #6b6b6b;
+    color: 	#272727;
 }
 
 .flex-between{

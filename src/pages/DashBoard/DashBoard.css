@@ -28,6 +28,7 @@
     position: relative;
     max-width: 400px;
     background-color: rgba(255, 255, 255, 0.452);
+    /* background-color: #fff; */
     border-radius: 4px;
     padding: 1.5rem 2rem;
     margin: 12px;
