@@ -33,11 +33,11 @@ import { FcShare } from "react-icons/fc";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import axios from "axios";
 import moment from "moment";
-import jwt from "jsonwebtoken";
 import Cookies from "universal-cookie";
 import Loader from "../../components/Loader";
 import { categorySelection } from "./constants.ts";
 import "./cvprofile.css";
+import FormData from "form-data";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -49,6 +49,7 @@ const CVprofile = () => {
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
+  const [fileList, setFileList] = useState([]);
 
   const getUserData = async () => {
     setLoading(true);
@@ -84,17 +85,17 @@ const CVprofile = () => {
   };
 
   const deleteData = async () => {
+    var bodyFormDataDelete = new FormData();
+    bodyFormDataDelete.append("deleteAttachment", true);
+    bodyFormDataDelete.append("id", deletionData.id);
     await axios({
       method: "POST",
       url: `/api/react-post.php`,
+      data: bodyFormDataDelete,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
-      },
-      params: {
-        deleteAttachment: true,
-        id: deletionData.id,
       },
     })
       .then(function (response) {
@@ -102,40 +103,6 @@ const CVprofile = () => {
           message.success("The attachment has been sucessfully deleted");
           toggleDeleteModal(false);
           setDeletionData("");
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const uploadAttachmentsData = async (data) => {
-    const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        attachments: true,
-        id: user.id,
-        candidate: userData.user.id,
-        file: data.file,
-        category: data.category,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The attachment has been uploaded sucessfully");
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -285,15 +252,54 @@ const CVprofile = () => {
     form.resetFields();
   };
 
-  const handleUploadModal = (values) => {
-    values.attachments.map((attachment) => {
-      const data = {
-        file: attachment.file.file,
-        category: attachment.category,
-      };
-      uploadAttachmentsData(data);
-      return null;
+  const UploadProps = {
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false;
+    },
+    fileList,
+  };
+  const handleUploadModal = async (values) => {
+    var bodyFormDataUpload = new FormData();
+    fileList.forEach((file) => {
+      bodyFormDataUpload.append("files[]", file);
     });
+    const attach = values["attachments"];
+    for (let key in attach) {
+      let secondattach = attach[key];
+      for (let key1 in secondattach) {
+        console.log(`${key1}: ${secondattach[key1]}`);
+        bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
+      }
+    }
+    console.log(values);
+    bodyFormDataUpload.append("attachments", true);
+    bodyFormDataUpload.append("candidate", userData.user.id);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataUpload,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The attachment has been uploaded sucessfully");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+
     toggleUploadModal(false);
   };
 
@@ -328,7 +334,7 @@ const CVprofile = () => {
                 >
                   <Form.Item
                     {...restField}
-                    name={[name, "category"]}
+                    name={[name, "category[]"]}
                     rules={[
                       {
                         required: true,
@@ -343,7 +349,7 @@ const CVprofile = () => {
                   </Form.Item>
                   <Form.Item
                     {...restField}
-                    name={[name, "file"]}
+                    name="file[]"
                     valuePropName={"file"}
                     rules={[
                       {
@@ -353,12 +359,9 @@ const CVprofile = () => {
                     ]}
                   >
                     <Upload
-                      name="cv profile"
+                      {...UploadProps}
                       accept=".pdf,.docx,.xslx"
                       maxCount={1}
-                      beforeUpload={() => {
-                        return false;
-                      }}
                       showUploadList={{ showRemoveIcon: false }}
                     >
                       <Button icon={<UploadOutlined />}>Click to upload</Button>
@@ -546,14 +549,27 @@ const CVprofile = () => {
           )}
           {dataParams.type === "app" && (
             <div className="grid-gather">
-              {checkWhichFile(userData.user.cv) === "pdf" && (
-                <iframe
-                  src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                  title="testPdf"
-                  height="800px"
-                  width="100%"
-                />
+              {checkWhichFile(userData.user.cv) == "pdf" && (
+                <object
+                  data={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                  type="application/pdf"
+                >
+                  <iframe
+                    src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                  ></iframe>
+                </object>
               )}
+              {checkWhichFile(userData.user.cv) == "docx" ||
+                (checkWhichFile(userData.user.cv) == "doc" && (
+                  <iframe
+                    src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cv.omanjobs.om/files/cv/${userData.user.cv}`}
+                    width="100%"
+                    height="800px"
+                    frameborder="0"
+                  >
+                  </iframe>
+                ))}
+              {console.log(checkWhichFile(userData.user.cv))}
             </div>
           )}
         </div>
