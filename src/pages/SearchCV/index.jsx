@@ -137,7 +137,6 @@ const SearchCV = () => {
   };
 
   const getData = async (data) => {
-    console.log(data);
     setLoading(true);
     await axios({
       method: "GET",
@@ -439,38 +438,41 @@ const SearchCV = () => {
               <div>{`${removeUnderScore(filterValue)}: ${
                 filterData[filterValue]
               }`}</div>
-              <GiCancel
-                className="pointer medium-text"
-                onClick={() => {
-                  setFilterData({ ...filterData, [filterValue]: "" });
-                  const data = {
-                    SearchByFromdate:
-                      (filterData.searchByFromdate &&
-                        moment(filterData.searchByFromdate).format(
-                          "YYYY-MM-DD"
-                        )) ||
-                      "",
-                    SearchByTodate:
-                      (filterData.searchByTodate &&
-                        moment(filterData.searchByTodate).format(
-                          "YYYY-MM-DD"
-                        )) ||
-                      "",
-                    JobTitle: filterData.jobTitle,
-                    Age: filterData.age,
-                    JobCategory: filterData.jobCategory,
-                    Nationality: filterData.nationality,
-                    Gender: filterData.gender,
-                    MaritalStatus: filterData.maritalStatus,
-                    Search: filterData.name,
-                  };
-                  const updateData = {
-                    ...data,
-                    [removeUnderScore(filterValue)]: "",
-                  };
-                  getData(updateData);
-                }}
-              />
+              {filterValue !== "searchByFromdate" &&
+                filterValue !== "searchByTodate" && (
+                  <GiCancel
+                    className="pointer medium-text"
+                    onClick={() => {
+                      setFilterData({ ...filterData, [filterValue]: "" });
+                      const data = {
+                        SearchByFromdate:
+                          (filterData.searchByFromdate &&
+                            moment(filterData.searchByFromdate).format(
+                              "YYYY-MM-DD"
+                            )) ||
+                          "",
+                        SearchByTodate:
+                          (filterData.searchByTodate &&
+                            moment(filterData.searchByTodate).format(
+                              "YYYY-MM-DD"
+                            )) ||
+                          "",
+                        JobTitle: filterData.jobTitle,
+                        Age: filterData.age,
+                        JobCategory: filterData.jobCategory,
+                        Nationality: filterData.nationality,
+                        Gender: filterData.gender,
+                        MaritalStatus: filterData.maritalStatus,
+                        Search: filterData.name,
+                      };
+                      const updateData = {
+                        ...data,
+                        [removeUnderScore(filterValue)]: "",
+                      };
+                      getData(updateData);
+                    }}
+                  />
+                )}
             </div>
           )
       )}
@@ -479,7 +481,6 @@ const SearchCV = () => {
       ).length > 0 && (
         <div
           className="bolder small-text pointer link"
-          // key={index}
           onClick={() => {
             setFilterData({
               jobTitle: "",

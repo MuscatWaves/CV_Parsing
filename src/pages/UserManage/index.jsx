@@ -1,54 +1,61 @@
-import React, { useState } from "react";
-import { Table, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Button, message } from "antd";
 import { FaCheck } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
+import axios from "axios";
+import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
 import UserForm from "./UserForm";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const cookies = new Cookies();
+  const token = cookies.get("token");
 
-  const dummyData = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "johndoe@example.com",
-      ucaccess: "0",
-      rcaccess: "0",
-      scaccess: "0",
-      bcaccess: "0",
-      amuaccess: "0",
-      uraccess: "0",
-    },
-    {
-      id: 2,
-      name: "Prabin",
-      email: "prabin@example.com",
-      ucaccess: "0",
-      rcaccess: "0",
-      scaccess: "1",
-      bcaccess: "0",
-      amuaccess: "1",
-      uraccess: "0",
-    },
-    {
-      id: 3,
-      name: "Sam",
-      email: "sam@example.com",
-      ucaccess: "0",
-      rcaccess: "1",
-      scaccess: "1  ",
-      bcaccess: "0",
-      amuaccess: "0",
-      uraccess: "0",
-    },
-  ];
+  const getAllUserManageList = async () => {
+    setLoading(true);
+    await axios({
+      method: "GET",
+      url: `/api/userlist.php`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        row: 0,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          setLoading(false);
+          setData(response.data);
+          console.log(response.data);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  useEffect(() => {
+    getAllUserManageList();
+    // eslint-disable-next-line
+  }, []);
 
   const renderCheckMark = (res) =>
-    res === "0" ? (
+    res === 0 ? (
       <FaCheck className="large-text text-green" />
     ) : (
       <TiCancel className="large-text text-red" />
@@ -70,32 +77,32 @@ const UserManage = () => {
       children: [
         {
           title: "Upload CV",
-          render: (record) => renderCheckMark(record.ucaccess),
+          render: (record) => renderCheckMark(record.uploadcv_access),
           align: "center",
         },
         {
           title: "Search CV",
-          render: (record) => renderCheckMark(record.scaccess),
+          render: (record) => renderCheckMark(record.searchcv_access),
           align: "center",
         },
         {
           title: "Rejected CV",
-          render: (record) => renderCheckMark(record.rcaccess),
+          render: (record) => renderCheckMark(record.rejectedcv_access),
           align: "center",
         },
         {
           title: "Add/Manage User",
-          render: (record) => renderCheckMark(record.amuaccess),
+          render: (record) => renderCheckMark(record.type === 1 ? 0 : 1),
           align: "center",
         },
         {
           title: "User Report",
-          render: (record) => renderCheckMark(record.uraccess),
+          render: (record) => renderCheckMark(record.userreport_access),
           align: "center",
         },
         {
           title: "Build CV",
-          render: (record) => renderCheckMark(record.bcaccess),
+          render: (record) => renderCheckMark(record.buildcv_access),
           align: "center",
         },
       ],
@@ -138,6 +145,7 @@ const UserManage = () => {
               type="primary"
               onClick={() => toggleModal(true)}
               icon={<PlusOutlined />}
+              disabled
             >
               New User
             </Button>
@@ -146,9 +154,9 @@ const UserManage = () => {
       />
       <div className="table">
         <Table
-          dataSource={dummyData}
+          dataSource={data.data}
           columns={columns}
-          loading={false}
+          loading={isLoading}
           pagination={false}
           rowKey={"id"}
         />

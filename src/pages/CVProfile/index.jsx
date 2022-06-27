@@ -46,13 +46,13 @@ const CVprofile = () => {
   const token = cookies.get("token");
   const [userData, setUserData] = useState({ user: {}, attachments: [] });
   const [isLoading, setLoading] = useState("");
+  const [tableLoading, setTableLoading] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
 
   const getUserData = async () => {
-    setLoading(true);
     await axios({
       method: "GET",
       url: `/api/user.php?id=${dataParams.id}`,
@@ -72,10 +72,10 @@ const CVprofile = () => {
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
-            setLoading("");
+            setLoading("loaded");
           } else {
             message.error("Something Went Wrong!", "error");
-            setLoading("");
+            setLoading("loaded");
           }
         }
       })
@@ -88,6 +88,7 @@ const CVprofile = () => {
     var bodyFormDataDelete = new FormData();
     bodyFormDataDelete.append("deleteAttachment", true);
     bodyFormDataDelete.append("id", deletionData.id);
+    setTableLoading(true);
     await axios({
       method: "POST",
       url: `/api/react-post.php`,
@@ -103,6 +104,7 @@ const CVprofile = () => {
           message.success("The attachment has been sucessfully deleted");
           toggleDeleteModal(false);
           setDeletionData("");
+          getUserData();
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -114,6 +116,56 @@ const CVprofile = () => {
       .catch(function (response) {
         message.error("Something Went Wrong!", "error");
       });
+    setTableLoading(false);
+  };
+
+  const handleUploadModal = async (values) => {
+    var bodyFormDataUpload = new FormData();
+    fileList.forEach((file) => {
+      bodyFormDataUpload.append("files[]", file);
+    });
+    const attach = values["attachments"];
+    for (let key in attach) {
+      let secondattach = attach[key];
+      for (let key1 in secondattach) {
+        console.log(`${key1}: ${secondattach[key1]}`);
+        bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
+      }
+    }
+    setTableLoading(true);
+    console.log(values);
+    bodyFormDataUpload.append("attachments", true);
+    bodyFormDataUpload.append("candidate", userData.user.id);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataUpload,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The attachment has been uploaded sucessfully");
+          getUserData();
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+            setLoading("loaded");
+          } else {
+            message.error("Something Went Wrong!", "error");
+            setLoading("loaded");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+
+    toggleUploadModal(false);
+    setTableLoading(false);
   };
 
   useEffect(() => {
@@ -257,50 +309,7 @@ const CVprofile = () => {
       setFileList([...fileList, file]);
       return false;
     },
-    fileList,
-  };
-  const handleUploadModal = async (values) => {
-    var bodyFormDataUpload = new FormData();
-    fileList.forEach((file) => {
-      bodyFormDataUpload.append("files[]", file);
-    });
-    const attach = values["attachments"];
-    for (let key in attach) {
-      let secondattach = attach[key];
-      for (let key1 in secondattach) {
-        console.log(`${key1}: ${secondattach[key1]}`);
-        bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
-      }
-    }
-    console.log(values);
-    bodyFormDataUpload.append("attachments", true);
-    bodyFormDataUpload.append("candidate", userData.user.id);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataUpload,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The attachment has been uploaded sucessfully");
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-
-    toggleUploadModal(false);
+    // fileList,
   };
 
   const uploadModal = () => (
@@ -310,6 +319,7 @@ const CVprofile = () => {
       onCancel={handleCancel}
       okText={"Submit"}
       onOk={form.submit}
+      confirmLoading={tableLoading}
     >
       <Form
         className="buildCvForm"
@@ -420,6 +430,7 @@ const CVprofile = () => {
         onCancel={handleCancel}
         okText={"Delete"}
         okType={"danger"}
+        confirmLoading={tableLoading}
       >
         <p>{`Are you sure you want to delete "${deletionData.name}" from attachments?`}</p>
       </Modal>
@@ -540,7 +551,7 @@ const CVprofile = () => {
                 <Table
                   dataSource={userData.attachments}
                   columns={columns}
-                  loading={isLoading}
+                  loading={tableLoading}
                   pagination={false}
                   rowKey={"id"}
                 />
