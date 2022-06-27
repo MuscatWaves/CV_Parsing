@@ -4,13 +4,19 @@ import ojimage from "../../images/oj.png";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import Authentication from "../../components/Authentication";
+import jwt from "jsonwebtoken";
+import { AiOutlinePoweroff } from "react-icons/ai";
+import { FiUser } from "react-icons/fi";
 import "./header.css";
 
 const Header = () => {
   const navigate = useNavigate();
+  const cookies = new Cookies();
+  const token = cookies.get("token");
   const navigateTo = (path) => {
     navigate(path);
   };
+  const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
 
   const removeCookie = () => {
     const cookies = new Cookies();
@@ -28,14 +34,20 @@ const Header = () => {
         onClick={() => navigateTo("/dashboard")}
       />
       <Authentication />
-      <Button
-        className="header-btn"
-        type="primary"
-        danger
-        onClick={removeCookie}
-      >
-        Logout
-      </Button>
+      <div className="flex-small-gap">
+        <FiUser className="large-text text-light-grey" />
+        <div className="text-light-grey bolder">{user.name}</div>
+        <Button
+          className="header-log-out-btn"
+          type="primary"
+          danger
+          onClick={removeCookie}
+          shape={"round"}
+          title={"Log Off"}
+        >
+          <AiOutlinePoweroff className="large-text" />
+        </Button>
+      </div>
     </div>
   );
 };

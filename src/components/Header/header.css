@@ -13,6 +13,26 @@
     cursor: pointer;
 }
 
-.header-btn{
+.header-log-out-btn{
     animation: zoom-in 0.8s;
+    font-weight: 600;
+}
+
+.header-log-out-btn:after {
+    content: '';
+    position: absolute;
+    font-weight: 600;
+    opacity: 0;  
+    transition: 0.5s;
+}
+
+.header-log-out-btn:hover{
+    padding-right: 64px;
+    padding-left : 8px;
+  }
+  
+.header-log-out-btn:hover:after {
+    content: 'Log Off';
+    opacity: 1;
+    right: 10px;
 }

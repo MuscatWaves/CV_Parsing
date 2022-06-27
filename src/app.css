@@ -179,6 +179,24 @@
     gap: 0.5rem;
 }
 
+.link{
+    transition: 0.3s;
+}
+
+.link:hover{
+    transform: scale(1.05);
+    color: #f07d00;
+}
+
+.link-green{
+    transition: 0.3s;
+}
+
+.link-green:hover{
+    transform: scale(1.05);
+    color: #1fc264;
+}
+
 /* Custom Animations */
 
 @keyframes fade-in {

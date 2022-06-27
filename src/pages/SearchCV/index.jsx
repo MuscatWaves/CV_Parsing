@@ -10,7 +10,10 @@ import {
   Input,
   DatePicker,
 } from "antd";
-import { FaUser, FaFilter, FaMailBulk } from "react-icons/fa";
+import { FaUser, FaFilter } from "react-icons/fa";
+import { HiMail } from "react-icons/hi";
+import { RiMessage3Fill } from "react-icons/ri";
+import { GiCancel } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -20,6 +23,7 @@ import {
   ageSelectOptions,
   genderSelectOptions,
 } from "./constants.ts";
+import { removeUnderScore } from "../../utilities";
 import "./searchcv.css";
 
 const SearchCV = () => {
@@ -40,12 +44,12 @@ const SearchCV = () => {
     jobTitle: "",
     name: "",
     jobCategory: "",
-    martialStatus: "",
+    maritalStatus: "",
     age: "",
     gender: "",
     nationality: "",
-    from: "",
-    to: "",
+    searchByFromdate: "",
+    searchByTodate: "",
   });
 
   const [show, toggleShow] = useState(false);
@@ -58,8 +62,8 @@ const SearchCV = () => {
     if (dates) {
       setFilterData({
         ...filterData,
-        from: moment(dates[0]).format("YYYY-MM-DD"),
-        to: moment(dates[1]).format("YYYY-MM-DD"),
+        searchByFromdate: dates[0],
+        searchByTodate: dates[1],
       });
     } else {
       setFilterData({ ...filterData, from: "", to: "" });
@@ -132,7 +136,8 @@ const SearchCV = () => {
       });
   };
 
-  const getData = async () => {
+  const getData = async (data) => {
+    console.log(data);
     setLoading(true);
     await axios({
       method: "GET",
@@ -144,15 +149,15 @@ const SearchCV = () => {
       },
       params: {
         row: page * 10 - 10,
-        searchByFromdate: filterData.from,
-        searchByTodate: filterData.to,
-        JobTitle: filterData.jobTitle,
-        Age: filterData.age,
-        JobCategory: filterData.jobCategory,
-        Nationality: filterData.nationality,
-        Gender: filterData.gender,
-        MaritalStatus: filterData.martialStatus,
-        Search: filterData.name,
+        MaritalStatus: data.MaritalStatus,
+        searchByFromdate: data.SearchByFromdate,
+        searchByTodate: data.SearchByTodate,
+        JobTitle: data.JobTitle,
+        Age: data.Age,
+        JobCategory: data.JobCategory,
+        Nationality: data.Nationality,
+        Gender: data.Gender,
+        Search: data.Search,
       },
     })
       .then(function (response) {
@@ -232,6 +237,7 @@ const SearchCV = () => {
       title: "Email",
       render: (record) => (
         <div
+          className="pointer link flex-small-gap"
           onClick={() =>
             window.open(
               `mailto:${record.email}?subject=${encodeURIComponent(
@@ -240,11 +246,25 @@ const SearchCV = () => {
             )
           }
         >
-          <FaMailBulk />
+          <HiMail className="large-text" />
           {record.email}
         </div>
       ),
       width: "320px",
+    },
+    {
+      title: "Phone",
+      render: (record) =>
+        record.mobile && (
+          <div
+            className="pointer link-green flex-small-gap"
+            onClick={() => window.open(`https://wa.me/${record.mobile}`)}
+          >
+            <RiMessage3Fill className="large-text" />
+            {record.mobile}
+          </div>
+        ),
+      width: "200px",
     },
   ];
 
@@ -255,13 +275,34 @@ const SearchCV = () => {
   }, []);
 
   useEffect(() => {
-    getData();
+    refresh();
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
     // eslint-disable-next-line
   }, [page]);
+
+  const refresh = () => {
+    const data = {
+      SearchByFromdate:
+        (filterData.searchByFromdate &&
+          moment(filterData.searchByFromdate).format("YYYY-MM-DD")) ||
+        "",
+      SearchByTodate:
+        (filterData.searchByTodate &&
+          moment(filterData.searchByTodate).format("YYYY-MM-DD")) ||
+        "",
+      JobTitle: filterData.jobTitle,
+      Age: filterData.age,
+      JobCategory: filterData.jobCategory,
+      Nationality: filterData.nationality,
+      Gender: filterData.gender,
+      MaritalStatus: filterData.maritalStatus,
+      Search: filterData.name,
+    };
+    getData(data);
+  };
 
   const Filter = () => (
     <div className="filter-modal slide-in-top-animation">
@@ -313,16 +354,17 @@ const SearchCV = () => {
           <div className="bolder text-grey">Maratial Status</div>
           <Select
             className="select-options"
-            value={filterData.martialStatus}
+            value={filterData.maritalStatus}
             options={martialStatusSelectOption}
             onChange={(value) =>
-              setFilterData({ ...filterData, martialStatus: value })
+              setFilterData({ ...filterData, maritalStatus: value })
             }
           />
         </div>
         <div className="each-filter-modal-inner">
           <div className="bolder text-grey">Date Selection</div>
           <RangePicker
+            value={[filterData.searchByFromdate, filterData.searchByTodate]}
             ranges={{
               Today: [moment(), moment()],
               Yesterday: [
@@ -367,17 +409,108 @@ const SearchCV = () => {
         }}
       />
       <div className="filter-section-division">
+        <Button className="" type="text" onClick={() => toggleShow(false)}>
+          Cancel
+        </Button>
         <Button
           className="button-primary filter-search-button"
           type="primary"
           onClick={() => {
             setPage(1);
-            getData();
+            refresh();
+            toggleShow(false);
           }}
         >
           Search
         </Button>
       </div>
+    </div>
+  );
+
+  const makeFiltered = () => (
+    <div className="filtered-list">
+      {Object.keys(filterData).map(
+        (filterValue, index) =>
+          filterData[filterValue] && (
+            <div
+              className="each-filter flex-small-gap medium-text"
+              key={filterValue}
+            >
+              <div>{`${removeUnderScore(filterValue)}: ${
+                filterData[filterValue]
+              }`}</div>
+              <GiCancel
+                className="pointer medium-text"
+                onClick={() => {
+                  setFilterData({ ...filterData, [filterValue]: "" });
+                  const data = {
+                    SearchByFromdate:
+                      (filterData.searchByFromdate &&
+                        moment(filterData.searchByFromdate).format(
+                          "YYYY-MM-DD"
+                        )) ||
+                      "",
+                    SearchByTodate:
+                      (filterData.searchByTodate &&
+                        moment(filterData.searchByTodate).format(
+                          "YYYY-MM-DD"
+                        )) ||
+                      "",
+                    JobTitle: filterData.jobTitle,
+                    Age: filterData.age,
+                    JobCategory: filterData.jobCategory,
+                    Nationality: filterData.nationality,
+                    Gender: filterData.gender,
+                    MaritalStatus: filterData.maritalStatus,
+                    Search: filterData.name,
+                  };
+                  const updateData = {
+                    ...data,
+                    [removeUnderScore(filterValue)]: "",
+                  };
+                  getData(updateData);
+                }}
+              />
+            </div>
+          )
+      )}
+      {Object.keys(filterData).filter(
+        (filterValue, index) => filterData[filterValue]
+      ).length > 0 && (
+        <div
+          className="bolder small-text pointer link"
+          // key={index}
+          onClick={() => {
+            setFilterData({
+              jobTitle: "",
+              name: "",
+              jobCategory: "",
+              maritalStatus: "",
+              age: "",
+              gender: "",
+              nationality: "",
+              searchByFromdate: "",
+              searchByTodate: "",
+            });
+
+            const data = {
+              SearchByFromdate: "",
+              SearchByTodate: "",
+              JobTitle: "",
+              Age: "",
+              JobCategory: "",
+              Nationality: "",
+              Gender: "",
+              MaritalStatus: "",
+              Search: "",
+            };
+            getData(data);
+          }}
+          style={{ marginBottom: "10px" }}
+        >
+          Reset All
+        </div>
+      )}
     </div>
   );
 
@@ -393,14 +526,14 @@ const SearchCV = () => {
             <Button
               className="button-primary filter-modal-button"
               type="primary"
-              onClick={() => toggleShow(!show)}
+              onClick={() => toggleShow(true)}
             >
               <FaFilter className="filter-icon" /> Filter
             </Button>
           }
         />
         <div className="table">
-          {show && Filter()}
+          {(show && Filter()) || makeFiltered()}
           <Table
             dataSource={data.data}
             columns={columns}
