@@ -149,7 +149,13 @@ const DashBoard = () => {
                     }
                     onClick={() => navigateTo(card.path)}
                   >
-                    <card.icon className="card-icon" />
+                    <card.icon
+                      className={
+                        hoverState[card.name]
+                          ? "card-icon"
+                          : "card-icon text-orange"
+                      }
+                    />
                     <h2 className={`bolder ${hoverState[card.name]}`}>
                       {card.title}
                     </h2>
@@ -157,7 +163,7 @@ const DashBoard = () => {
                       className={
                         hoverState[card.name]
                           ? hoverState[card.name]
-                          : "text-grey"
+                          : "text-light-grey"
                       }
                     >
                       {card.description}

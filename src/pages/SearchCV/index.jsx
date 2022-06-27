@@ -10,7 +10,7 @@ import {
   Input,
   DatePicker,
 } from "antd";
-import { FaUser, FaFilter } from "react-icons/fa";
+import { FaUser, FaFilter, FaMailBulk } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -196,7 +196,10 @@ const SearchCV = () => {
       title: "Name",
       width: "250px",
       render: (record) => (
-        <div>
+        <div
+          className="pointer"
+          onClick={() => navigateTo(`/searchcv/profile/app/${record.id}`)}
+        >
           <div className="text-black">{record.name}</div>
           <div className="small-text text-grey">{`${record.nationality}, ${
             record.gender
@@ -219,6 +222,29 @@ const SearchCV = () => {
       title: "Education",
       dataIndex: "education",
       ellipsis: true,
+    },
+    {
+      title: "Skills",
+      dataIndex: "skills",
+      ellipsis: true,
+    },
+    {
+      title: "Email",
+      render: (record) => (
+        <div
+          onClick={() =>
+            window.open(
+              `mailto:${record.email}?subject=${encodeURIComponent(
+                "Oman Jobs"
+              )}&body=${encodeURIComponent("For Recruiter - Write here")}`
+            )
+          }
+        >
+          <FaMailBulk />
+          {record.email}
+        </div>
+      ),
+      width: "320px",
     },
   ];
 
@@ -377,12 +403,6 @@ const SearchCV = () => {
           {show && Filter()}
           <Table
             dataSource={data.data}
-            onRow={(record, rowIndex) => {
-              return {
-                onClick: (event) =>
-                  navigateTo(`/searchcv/profile/app/${record.id}`), // click row
-              };
-            }}
             columns={columns}
             loading={isLoading}
             pagination={false}
