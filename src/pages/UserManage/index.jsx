@@ -35,7 +35,6 @@ const UserManage = () => {
         if (response.status === 200) {
           setLoading(false);
           setData(response.data);
-          console.log(response.data);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -70,6 +69,7 @@ const UserManage = () => {
           <div className="small-text text-light-grey">{record.email}</div>
         </div>
       ),
+      width: "350px",
     },
     {
       title: "Permission/Access",
@@ -88,16 +88,6 @@ const UserManage = () => {
         {
           title: "Rejected CV",
           render: (record) => renderCheckMark(record.rejectedcv_access),
-          align: "center",
-        },
-        {
-          title: "Add/Manage User",
-          render: (record) => renderCheckMark(record.type === 1 ? 0 : 1),
-          align: "center",
-        },
-        {
-          title: "User Report",
-          render: (record) => renderCheckMark(record.userreport_access),
           align: "center",
         },
         {
@@ -120,6 +110,7 @@ const UserManage = () => {
           }}
         />
       ),
+      width: "150px",
     },
   ];
 
@@ -132,6 +123,7 @@ const UserManage = () => {
           setModal={toggleModal}
           editData={editData}
           setEditData={setEditData}
+          getData={getAllUserManageList}
         />
       )}
       <Navigation

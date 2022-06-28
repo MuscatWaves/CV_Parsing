@@ -23,17 +23,25 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 1rem;
+    max-width: 320px;
+    text-align: center;
+}
+
+.cvprofile-header-second-part-section{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.700);
+    padding: 1.5rem;
+    border-radius: 20px;    
 }
 
 
 .cvprofile-header-second-part{
     display: grid;
     grid-template-columns: repeat(3, 200px);
-    justify-content: space-between;
-    grid-gap: 1rem;
-    background-color: rgba(255, 255, 255, 0.700);
-    padding: 1.5rem;
-    border-radius: 20px;    
+    height: 100%;
+    grid-gap: 1.5rem;
 }
 
 .cvprofile-skills{
@@ -45,6 +53,12 @@
     background-color: rgba(255, 255, 255, 0.700);
     height: fit-content;
     max-width: 320px;
+}
+
+.cvprofile-attachments{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .long-box{
@@ -63,12 +77,6 @@
     border-radius: 20px;
     color: #f69f00;
     background-color: #ffc14f46;
-}
-
-.cvprofile-header-2{
-    display: grid;
-    grid-template-columns: 300px auto;
-    grid-gap: 2rem;
 }
 
 .experiences-list{
@@ -116,4 +124,57 @@
     padding: 1rem;
     background-color: rgba(255, 255, 255, 0.650);
     border-radius: 20px;
+}
+
+@media screen and (max-width: 1200px){
+    .cvprofile-body{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0;
+    }
+
+    .cvprofile-skills{
+        max-width: 700px;
+        margin: 0.5rem;
+    }
+
+    .experiences-list{
+        grid-gap: 0px;
+        gap: 0px;
+    }
+}
+
+@media screen and (max-width: 710px) {
+    .cvprofile-header-second-part{
+        grid-template-columns: repeat(3, auto);
+    }
+
+    .cvprofile-skills{
+        max-width: 550px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .cvprofile-header-second-part{
+        grid-template-columns: repeat(2, auto);
+        grid-gap: 1rem;
+    }
+
+    .cvprofile-skills{
+        max-width: 380px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .cvprofile-header-second-part-section{
+        width: 100%;
+        margin: 1rem;
+    }
+
+    .cvprofile-header-second-part{
+        display: flex;
+        flex-direction: column;
+    }
 }

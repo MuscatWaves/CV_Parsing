@@ -1,17 +1,164 @@
-import React from "react";
-import { Form, Input, Button, DatePicker, Select, Upload, Space } from "antd";
-import {
-  UploadOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, DatePicker, Select, Upload, message } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
+import axios from "axios";
+import Cookies from "universal-cookie";
+import moment from "moment";
 import "./buildcv.css";
 
 const BuildCV = () => {
-  const handleSubmit = (values) => {
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const [jobCategoryResult, setJobCategoryResult] = useState([]);
+  const [nationalityResult, setNationalityResult] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+
+  const getJobCategoryCount = async () => {
+    await axios({
+      method: "GET",
+      url: `/api/countget.php?category=true`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          const result = response.data
+            .map((item) => ({
+              label: item.category,
+              value: item.category,
+            }))
+            .filter((catr) => catr.label !== null);
+          setJobCategoryResult(result);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const getNationalityCount = async () => {
+    await axios({
+      method: "GET",
+      url: `/api/countget.php?nationality=true`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          const result = response.data
+            .map((item) => ({
+              label: item.nationality,
+              value: item.nationality,
+            }))
+            .filter((nation) => nation.label !== "");
+          setNationalityResult(result);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  useEffect(() => {
+    getJobCategoryCount();
+    getNationalityCount();
+    // eslint-disable-next-line
+  }, []);
+
+  const handleSubmit = async (values) => {
+    const profilePicture =
+      values.profile_picture.length !== 0
+        ? values.profile_picture[0].originFileObj
+        : null;
+    const cvFile =
+      values.profile_cv.length !== 0
+        ? values.profile_cv[0].originFileObj
+        : null;
+
+    var bodyFormDataBuild = new FormData();
+    bodyFormDataBuild.append("Add_Cv", true);
+    bodyFormDataBuild.append("name", values.name);
+    bodyFormDataBuild.append("email", values.email);
+    bodyFormDataBuild.append("dob", moment(values.dob).format("MM/DD/YYYY"));
+    bodyFormDataBuild.append("job", values.job_title);
+    values.gender && bodyFormDataBuild.append("gender", values.gender);
+    values.country && bodyFormDataBuild.append("country", values.country);
+    values.nationality &&
+      bodyFormDataBuild.append("nationality", values.nationality);
+    values.martial_status &&
+      bodyFormDataBuild.append("maritalstatus", values.martial_status);
+    values.nationality &&
+      bodyFormDataBuild.append("nationality", values.nationality);
+    values.job_category &&
+      bodyFormDataBuild.append("category", values.job_category);
+    values.phone_number &&
+      bodyFormDataBuild.append("mobile", Number(values.phone_number));
+    values.work_portfolio_photos &&
+      bodyFormDataBuild.append("url", values.work_portfolio_photos);
+    values.work_portfolio_videos &&
+      bodyFormDataBuild.append("wpv", values.work_portfolio_videos);
+    values.interview_link &&
+      bodyFormDataBuild.append("interview", values.interview_link);
+    values.passport_number &&
+      bodyFormDataBuild.append("passport", values.passport_number);
+    values.civil_id_number &&
+      bodyFormDataBuild.append("civil_id", values.civil_id_number);
+    values.height && bodyFormDataBuild.append("height", values.height);
+    values.weight && bodyFormDataBuild.append("weight", values.weight);
+    values.skills && bodyFormDataBuild.append("skills", values.skills);
+    values.education && bodyFormDataBuild.append("education", values.education);
+    values.work_exp && bodyFormDataBuild.append("company", values.work_exp);
+    values.address && bodyFormDataBuild.append("address", values.address);
+    values.languages && bodyFormDataBuild.append("language", values.languages);
+    profilePicture && bodyFormDataBuild.append("image", profilePicture);
+    cvFile && bodyFormDataBuild.append("cv", cvFile);
     console.log(values);
+    setLoading(true);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataBuild,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The profile has been created successfully");
+          setLoading(false);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
   };
 
   const normFile = (e) => {
@@ -35,6 +182,10 @@ const BuildCV = () => {
         size="large"
         layout="vertical"
         scrollToFirstError={true}
+        initialValues={{
+          profile_picture: [],
+          profile_cv: [],
+        }}
       >
         <Form.Item
           name="profile_picture"
@@ -48,6 +199,10 @@ const BuildCV = () => {
             listType="picture"
             accept=".jpeg,.png,.jpg"
             maxCount={1}
+            beforeUpload={() => {
+              /* update state here */
+              return false;
+            }}
           >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
@@ -64,6 +219,10 @@ const BuildCV = () => {
             listType="picture"
             accept=".pdf,.docx,.xslx"
             maxCount={1}
+            beforeUpload={() => {
+              /* update state here */
+              return false;
+            }}
           >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
@@ -88,8 +247,15 @@ const BuildCV = () => {
         >
           <Input placeholder="Email of the candidate*" />
         </Form.Item>
-        <Form.Item name="dob">
-          <DatePicker placeholder="Date of Birth" />
+        <Form.Item
+          name="dob"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <DatePicker placeholder="Date of Birth*" />
         </Form.Item>
         <Form.Item
           name="job_title"
@@ -118,13 +284,21 @@ const BuildCV = () => {
           </Select>
         </Form.Item>
         <Form.Item name="country">
-          <Select placeholder="Select Country" options={[]} showSearch></Select>
+          <Input placeholder="Country" />
         </Form.Item>
         <Form.Item name="nationality">
-          <Input placeholder="Nationality" />
+          <Select
+            placeholder="Select Nationality"
+            options={nationalityResult}
+            showSearch
+          ></Select>
         </Form.Item>
         <Form.Item name="job_category">
-          <Input placeholder="Job Category" />
+          <Select
+            placeholder="Select Job Category"
+            options={jobCategoryResult}
+            showSearch
+          ></Select>
         </Form.Item>
         <Form.Item name="phone_number">
           <Input placeholder="Phone Number" type="number" />
@@ -136,194 +310,16 @@ const BuildCV = () => {
         >
           <Input.TextArea />
         </Form.Item>
-        <div className="two-column">
-          <p className="bold">Education</p>
-          <Form.List name="education">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space
-                    key={key}
-                    style={{
-                      display: "flex",
-                      marginBottom: 8,
-                    }}
-                    align="baseline"
-                  >
-                    <Form.Item
-                      {...restField}
-                      name={[name, "name"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing Name",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Name" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "institution_name"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing institution name",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Institution Name" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "institution_location"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing institution location",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Institution Location" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "year"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing passed out year",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Year" />
-                    </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </Space>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    icon={<PlusOutlined />}
-                  >
-                    Add Education
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-        </div>
-        <div className="two-column">
-          <p className="bold">Work Experience</p>
-          <Form.List name="work_experience">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <div className="flex-small-gap">
-                    <div>
-                      <div className="flex-small-gap">
-                        <Form.Item
-                          {...restField}
-                          name={[name, "name"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing Name",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Name" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "location"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing location",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Location" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "job"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing job",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Job" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "year_from"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing year from",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Year From" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "year_to"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing year to",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Year to" />
-                        </Form.Item>
-                      </div>
-                      <Form.Item
-                        {...restField}
-                        name={[name, "info"]}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Missing information ",
-                          },
-                        ]}
-                      >
-                        <Input.TextArea
-                          autoSize={{
-                            minRows: 4,
-                            maxRows: 10,
-                          }}
-                          placeholder={"Information"}
-                        />
-                      </Form.Item>
-                    </div>
-                    <MinusCircleOutlined
-                      className={"red-icon"}
-                      onClick={() => remove(name)}
-                    />
-                  </div>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    icon={<PlusOutlined />}
-                  >
-                    Add Work Experience
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
-        </div>
+        <Form.Item label="Education" name="education" className="two-column">
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item
+          label="Work Experience"
+          name="work_exp"
+          className="two-column"
+        >
+          <Input.TextArea />
+        </Form.Item>
         <Form.Item label="Skills" name="skills" className="two-column">
           <Input.TextArea />
         </Form.Item>
@@ -362,6 +358,7 @@ const BuildCV = () => {
           className="button-primary grid-last-btn"
           type="primary"
           htmlType="submit"
+          loading={isLoading}
         >
           Create Account
         </Button>

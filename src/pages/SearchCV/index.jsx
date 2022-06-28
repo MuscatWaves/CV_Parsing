@@ -408,7 +408,14 @@ const SearchCV = () => {
         }}
       />
       <div className="filter-section-division">
-        <Button className="" type="text" onClick={() => toggleShow(false)}>
+        <Button
+          className=""
+          type="text"
+          onClick={() => {
+            toggleShow(false);
+            refresh();
+          }}
+        >
           Cancel
         </Button>
         <Button

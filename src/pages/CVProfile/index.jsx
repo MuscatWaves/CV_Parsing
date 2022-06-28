@@ -9,6 +9,7 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
+import { GrAttachment } from "react-icons/gr";
 import {
   Button,
   Dropdown,
@@ -32,8 +33,8 @@ import { SiGmail } from "react-icons/si";
 import { FcShare } from "react-icons/fc";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import axios from "axios";
-import moment from "moment";
 import Cookies from "universal-cookie";
+import moment from "moment";
 import Loader from "../../components/Loader";
 import { categorySelection } from "./constants.ts";
 import "./cvprofile.css";
@@ -51,6 +52,14 @@ const CVprofile = () => {
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
+
+  const UploadProps = {
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false;
+    },
+    // fileList,
+  };
 
   const getUserData = async () => {
     await axios({
@@ -125,15 +134,16 @@ const CVprofile = () => {
       bodyFormDataUpload.append("files[]", file);
     });
     const attach = values["attachments"];
+    console.log(attach);
     for (let key in attach) {
       let secondattach = attach[key];
+      console.log(attach[key]);
       for (let key1 in secondattach) {
-        console.log(`${key1}: ${secondattach[key1]}`);
+        console.log(`Inside Loop - ${key1}: ${secondattach[key1]}`);
         bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
       }
     }
     setTableLoading(true);
-    console.log(values);
     bodyFormDataUpload.append("attachments", true);
     bodyFormDataUpload.append("candidate", userData.user.id);
     await axios({
@@ -294,7 +304,7 @@ const CVprofile = () => {
   const skills =
     (isLoading === "loaded" &&
       userData.user.skills !== "" &&
-      userData.user.skills.split("\r\n")) ||
+      userData.user.skills.split(/, |,|\r\n/)) ||
     "";
 
   const handleCancel = () => {
@@ -302,14 +312,6 @@ const CVprofile = () => {
     toggleUploadModal(false);
     setDeletionData("");
     form.resetFields();
-  };
-
-  const UploadProps = {
-    beforeUpload: (file) => {
-      setFileList([...fileList, file]);
-      return false;
-    },
-    // fileList,
   };
 
   const uploadModal = () => (
@@ -402,6 +404,34 @@ const CVprofile = () => {
     return n[n.length - 1];
   };
 
+  const checkCategory = (cat) =>
+    categorySelection.filter((category) => category.value === cat)[0].label;
+
+  const arrangeDocuments = () => {
+    var edList = [];
+    let currentCategory;
+    let num = 1;
+    const check = [...userData.attachments];
+    const sorted = check.sort((a, b) => a.category - b.category);
+    sorted.map((attachment, index) => {
+      currentCategory === attachment.category ? (num = num + 1) : (num = 1);
+      currentCategory =
+        currentCategory === attachment.category
+          ? currentCategory
+          : attachment.category;
+      return (edList = [
+        ...edList,
+        {
+          id: index,
+          name: `${checkCategory(attachment.category)} - ${num}`,
+          attachment_link: `https://cv.omanjobs.om/files/docs/${attachment.name}`,
+          category: attachment.category,
+        },
+      ]);
+    });
+    return edList;
+  };
+
   return (
     <div
       className={
@@ -471,20 +501,22 @@ const CVprofile = () => {
               )}
             </div>
           </div>
-          <div className="cvprofile-header-second-part long-box slide-in-right-animation">
-            <div className="bolder large-text text-orange grid-gather4">
+          <div className="cvprofile-header-second-part-section long-box slide-in-right-animation">
+            <div className="bolder large-text text-orange">
               Personal Details
             </div>
-            {Object.keys(personalDetail).map((keyName, i) => (
-              <div key={keyName}>
-                <div className="bolder medium-text">
-                  {removeUnderScore(keyName)}
+            <div className="cvprofile-header-second-part">
+              {Object.keys(personalDetail).map((keyName, i) => (
+                <div key={keyName}>
+                  <div className="bolder medium-text">
+                    {removeUnderScore(keyName)}
+                  </div>
+                  <div className="text-grey medium-text">
+                    {personalDetail[keyName] || "Not Provided"}
+                  </div>
                 </div>
-                <div className="text-grey medium-text">
-                  {personalDetail[keyName] || "Not Provided"}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
           <div className="experiences-list">
             {dataParams.type === "app" && (
@@ -521,12 +553,25 @@ const CVprofile = () => {
                 {string(userData.user.education)}
               </div>
             </div>
-            {/* <div className="cvprofile-skills slide-in-left-animation">
-              <div className="bolder large-text text-orange">Attachments</div>
-              <div className="cvprofile-skills-chain medium-text text-grey">
-                {"Here you can see your attachments"}
+            {dataParams.type !== "app" && (
+              <div className="cvprofile-skills slide-in-left-animation">
+                <div className="bolder large-text text-orange">Attachments</div>
+                <div className="cvprofile-attachments medium-text text-grey">
+                  {arrangeDocuments().map((attachment) => (
+                    <a
+                      href={attachment.attachment_link}
+                      key={attachment.id}
+                      className={"flex-small-gap link"}
+                      target={"_blank"}
+                      rel="noreferrer"
+                    >
+                      <GrAttachment />
+                      <div>{attachment.name}</div>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div> */}
+            )}
           </div>
           <div className="cvprofile-skills long-box slide-in-right-animation">
             <div className="bolder large-text text-orange">Work Experience</div>

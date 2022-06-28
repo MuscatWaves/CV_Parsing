@@ -1,65 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
+import axios from "axios";
+import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
-import { Table } from "antd";
+import { Table, message } from "antd";
 
 const UserReport = () => {
-  const dummyData = [
-    {
-      id: 1,
-      name: "User 1",
-      email: "user@email.com",
-      type: "Main-Account",
-      uploaded_cv: 28,
-      pending_failed: 229,
-      parsed: 58,
-    },
-    {
-      id: 2,
-      name: "User 2",
-      email: "user2@email.com",
-      type: "Sub-Account",
-      uploaded_cv: 128,
-      pending_failed: 329,
-      parsed: 582,
-    },
-    {
-      id: 3,
-      name: "User 3",
-      email: "user3@email.com",
-      type: "Sub-Account",
-      uploaded_cv: 900,
-      pending_failed: 2,
-      parsed: 522,
-    },
-    {
-      id: 4,
-      name: "User 4",
-      email: "user4@email.com",
-      type: "Sub-Account",
-      uploaded_cv: 3328,
-      pending_failed: 2329,
-      parsed: 5822,
-    },
-    {
-      id: 1,
-      name: "User 5",
-      email: "user5@email.com",
-      type: "Sub-Account",
-      uploaded_cv: 28,
-      pending_failed: 29,
-      parsed: 582,
-    },
-    {
-      id: 6,
-      name: "User 6",
-      email: "user6@email.com",
-      type: "Sub-Account",
-      uploaded_cv: 2328,
-      pending_failed: 22329,
-      parsed: 58223,
-    },
-  ];
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const getAllUserReportList = async () => {
+    setLoading(true);
+    await axios({
+      method: "GET",
+      url: `/api/userlist.php`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        row: 0,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          setLoading(false);
+          setData(response.data);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  useEffect(() => {
+    getAllUserReportList();
+    // eslint-disable-next-line
+  }, []);
 
   const columns = [
     {
@@ -73,17 +59,19 @@ const UserReport = () => {
     },
     {
       title: "Account Type",
-      dataIndex: "type",
+      render: (record) => (
+        <div>{record.type === 1 ? "Main Account" : "Sub Account"}</div>
+      ),
     },
     {
       title: "Uploaded",
-      render: (record) => <div className="text-blue">{record.uploaded_cv}</div>,
+      render: (record) => (
+        <div className="text-blue">{record.pending + record.parsed}</div>
+      ),
     },
     {
       title: "Pending/Failed",
-      render: (record) => (
-        <div className="text-red">{record.pending_failed}</div>
-      ),
+      render: (record) => <div className="text-red">{record.pending}</div>,
     },
     {
       title: "Parsed",
@@ -101,9 +89,9 @@ const UserReport = () => {
       />
       <div className="table">
         <Table
-          dataSource={dummyData}
+          dataSource={data.data}
           columns={columns}
-          loading={false}
+          loading={isLoading}
           pagination={false}
           rowKey={"id"}
         />

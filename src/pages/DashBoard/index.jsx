@@ -76,7 +76,7 @@ const DashBoard = () => {
       title: "Add/Manage User",
       description:
         "Here you can add/manage account to provide the access to this dashboard.",
-      permission: isLoggedIn.uraccess === "0" ? true : false,
+      permission: isLoggedIn.type === "1" ? true : false,
       path: "/userManage",
     },
     {
@@ -86,7 +86,7 @@ const DashBoard = () => {
       title: "User Report",
       description:
         "Here you can View the User Report. How many CV uploaded by user.",
-      permission: isLoggedIn.uraccess === "0" ? true : false,
+      permission: isLoggedIn.type === "1" ? true : false,
       path: "/userReport",
     },
   ];
