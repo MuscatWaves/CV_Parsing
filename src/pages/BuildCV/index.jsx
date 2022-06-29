@@ -185,7 +185,6 @@ const BuildCV = () => {
   };
 
   const normFile = (e) => {
-    console.log(e);
     if (Array.isArray(e)) {
       return e;
     }

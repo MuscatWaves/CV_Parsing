@@ -37,6 +37,7 @@ import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
 import { categorySelection } from "./constants.ts";
+import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
@@ -54,6 +55,7 @@ const CVprofile = () => {
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
 
   const UploadProps = {
     beforeUpload: (file) => {
@@ -61,6 +63,37 @@ const CVprofile = () => {
       return false;
     },
     // fileList,
+  };
+
+  const lastSeen = async () => {
+    var bodyFormDataLastSeen = new FormData();
+    bodyFormDataLastSeen.append("lastseen", true);
+    bodyFormDataLastSeen.append("id", user.id);
+    bodyFormDataLastSeen.append("candidate", userData.user.id);
+
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataLastSeen,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
   };
 
   const getUserData = async () => {
@@ -136,12 +169,9 @@ const CVprofile = () => {
       bodyFormDataUpload.append("files[]", file);
     });
     const attach = values["attachments"];
-    console.log(attach);
     for (let key in attach) {
       let secondattach = attach[key];
-      console.log(attach[key]);
       for (let key1 in secondattach) {
-        console.log(`Inside Loop - ${key1}: ${secondattach[key1]}`);
         bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
       }
     }
@@ -184,6 +214,10 @@ const CVprofile = () => {
     getUserData();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    lastSeen(); // eslint-disable-next-line
+  }, [isLoading]);
 
   const columns = [
     {
@@ -239,7 +273,7 @@ const CVprofile = () => {
           key: "1",
           icon: <FaUserCheck />,
           onClick: () => {
-            window.open(`/searchcv/profile/public/${dataParams.id}`, "_blank");
+            window.open(`/profile/public/${dataParams.id}`, "_blank");
           },
         },
         {
@@ -247,7 +281,7 @@ const CVprofile = () => {
           key: "2",
           icon: <FaFileDownload />,
           onClick: () => {
-            message.success("Downloading Original CV");
+            window.open(`https://cv.omanjobs.om/files/cv/${userData.user.cv}`);
           },
         },
         {
@@ -258,16 +292,34 @@ const CVprofile = () => {
               key: "3-1",
               label: "Clipboard",
               icon: <FaClipboard />,
+              onClick: () => {
+                message.success("Link copied to your clipboard");
+                return navigator.clipboard.writeText(
+                  `${window.location.origin}/profile/public/${userData.user.id}`
+                );
+              },
             },
             {
               key: "3-2",
               label: "Whatsapp",
               icon: <FaWhatsapp />,
+              onClick: () =>
+                window.open(
+                  `https://wa.me/?text=${encodeURIComponent(
+                    `${window.location.origin}/profile/public/${userData.user.id}`
+                  )}`
+                ),
             },
             {
               key: "3-3",
-              label: "Gmail",
+              label: "Mail",
               icon: <SiGmail />,
+              onClick: () =>
+                window.open(
+                  `mailto:?subject=&body=${encodeURIComponent(
+                    `${window.location.origin}/profile/public/${userData.user.id}`
+                  )}`
+                ),
             },
           ],
           icon: <FcShare />,
@@ -282,9 +334,9 @@ const CVprofile = () => {
   );
 
   const personalDetail = {
-    email: userData.user.email,
+    ...(dataParams.type === "app" && { email: userData.user.email }),
     gender: userData.user.gender,
-    mobile: userData.user.mobile,
+    ...(dataParams.type === "app" && { mobile: userData.user.mobile }),
     DOB:
       (userData.user.DOB && moment(userData.user.DOB).format("D MMMM YYYY")) ||
       "",
@@ -438,7 +490,7 @@ const CVprofile = () => {
   };
 
   const checkImageIcon = (gender) =>
-    gender === "male" ? maleUserImage : femaleUserImage;
+    gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
   return (
     <div

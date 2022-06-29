@@ -40,7 +40,7 @@ const DashBoard = () => {
       title: "Upload CV",
       description: "To upload bulk CV's for parsing",
       permission: isLoggedIn.ucaccess === "0" ? true : false,
-      path: "/Dashboard",
+      path: "/uploadcv",
     },
     {
       id: 2,

@@ -180,7 +180,7 @@ const SearchCV = () => {
   };
 
   const checkImageIcon = (gender) =>
-    gender === "male" ? maleUserImage : femaleUserImage;
+    gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
   const columns = [
     {
