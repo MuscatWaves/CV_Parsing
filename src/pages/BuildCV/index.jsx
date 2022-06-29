@@ -107,8 +107,6 @@ const BuildCV = () => {
       bodyFormDataBuild.append("nationality", values.nationality);
     values.martial_status &&
       bodyFormDataBuild.append("maritalstatus", values.martial_status);
-    values.nationality &&
-      bodyFormDataBuild.append("nationality", values.nationality);
     values.job_category &&
       bodyFormDataBuild.append("category", values.job_category);
     values.phone_number &&
@@ -311,19 +309,24 @@ const BuildCV = () => {
           <Input.TextArea />
         </Form.Item>
         <Form.Item label="Education" name="education" className="two-column">
-          <Input.TextArea />
+          <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
         </Form.Item>
         <Form.Item
           label="Work Experience"
           name="work_exp"
           className="two-column"
         >
-          <Input.TextArea />
+          <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
         </Form.Item>
         <Form.Item label="Skills" name="skills" className="two-column">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item label="Address" name="address" className="two-column">
+        <Form.Item
+          label="Address"
+          name="address"
+          className="two-column"
+          autoSize={{ minRows: 3, maxRows: 6 }}
+        >
           <Input.TextArea />
         </Form.Item>
         <Form.Item className="two-column" label="Languages" name="languages">
