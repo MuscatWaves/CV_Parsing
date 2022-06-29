@@ -10,7 +10,7 @@ import {
   Input,
   DatePicker,
 } from "antd";
-import { FaUser, FaFilter } from "react-icons/fa";
+import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 import { RiMessage3Fill } from "react-icons/ri";
 import { GiCancel } from "react-icons/gi";
@@ -23,6 +23,8 @@ import {
   ageSelectOptions,
   genderSelectOptions,
 } from "./constants.ts";
+import maleUserImage from "../../images/male-user.png";
+import femaleUserImage from "../../images/female-user.jpg";
 import { removeUnderScore } from "../../utilities";
 import "./searchcv.css";
 
@@ -177,24 +179,25 @@ const SearchCV = () => {
       });
   };
 
+  const checkImageIcon = (gender) =>
+    gender === "male" ? maleUserImage : femaleUserImage;
+
   const columns = [
     {
       title: "Image",
       width: "120px",
-      render: (record) =>
-        (record.image && (
-          <img
-            src={`${window.location.origin}/files/images/${record.image}`}
-            alt={"User"}
-            width={90}
-            className="image-user"
-          />
-        )) || (
-          <div className="no-user">
-            <FaUser className="no-user-icon" />
-            <p>No Image</p>
-          </div>
-        ),
+      render: (record) => (
+        <img
+          src={
+            record.image
+              ? `${window.location.origin}/files/images/${record.image}`
+              : checkImageIcon(record.gender)
+          }
+          alt={"User"}
+          width={90}
+          className="image-user"
+        />
+      ),
     },
     {
       title: "Name",
@@ -535,6 +538,7 @@ const SearchCV = () => {
               className="button-primary filter-modal-button"
               type="primary"
               onClick={() => toggleShow(true)}
+              loading={isLoading}
             >
               <FaFilter className="filter-icon" /> Filter
             </Button>

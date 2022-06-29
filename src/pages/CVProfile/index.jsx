@@ -38,6 +38,8 @@ import moment from "moment";
 import Loader from "../../components/Loader";
 import { categorySelection } from "./constants.ts";
 import "./cvprofile.css";
+import maleUserImage from "../../images/male-user.png";
+import femaleUserImage from "../../images/female-user.jpg";
 import FormData from "form-data";
 
 const CVprofile = () => {
@@ -291,6 +293,9 @@ const CVprofile = () => {
     address: userData.user.presentaddress,
     language: userData.user.language,
     passport_no: userData.user.passport,
+    civil_id_no: userData.user.civil_id,
+    height: `${userData.user.height} cm`,
+    weight: `${userData.user.weight} kg`,
   };
 
   const string = (str) =>
@@ -432,6 +437,9 @@ const CVprofile = () => {
     return edList;
   };
 
+  const checkImageIcon = (gender) =>
+    gender === "male" ? maleUserImage : femaleUserImage;
+
   return (
     <div
       className={
@@ -469,8 +477,14 @@ const CVprofile = () => {
           <div className="cvprofile-header-first-part slide-in-left-animation">
             <img
               className={"cvprofile-picture"}
-              src={`${window.location.origin}/files/images/${userData.user.image}`}
+              src={
+                userData.user.image
+                  ? `${window.location.origin}/files/images/${userData.user.image}`
+                  : checkImageIcon(userData.user.gender)
+              }
               alt="user"
+              width={"170px"}
+              height={"170px"}
             />
             <div className="text-orange bolder large-text">
               {userData.user.name}

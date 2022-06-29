@@ -112,6 +112,8 @@
 
 .oj-image-dashboard{
     animation: slide-in-left 0.8s;
+    width: 400px;
+    height: 400px;
 }
 
 .dashboard-lg{

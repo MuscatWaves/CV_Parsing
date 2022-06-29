@@ -49,7 +49,7 @@ const DashBoard = () => {
       title: "Rejected CV",
       description: "Here are the list of the Rejected CV by API.",
       permission: isLoggedIn.rcaccess === "0" ? true : false,
-      path: "/Dashboard",
+      path: "/rejectedcv",
     },
     {
       id: 3,

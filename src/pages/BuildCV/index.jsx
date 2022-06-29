@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, Upload, message } from "antd";
+// import ImgCrop from "antd-img-crop";
 import { UploadOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
@@ -13,12 +14,16 @@ const BuildCV = () => {
   const token = cookies.get("token");
   const [jobCategoryResult, setJobCategoryResult] = useState([]);
   const [nationalityResult, setNationalityResult] = useState([]);
+  const [countryResult, setCountryResult] = useState([]);
+  const [countryMenuLoading, setCountryMenuLoading] = useState(false);
+  const [jobMenuLoading, setJobMenuLoading] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   const getJobCategoryCount = async () => {
+    setJobMenuLoading(true);
     await axios({
       method: "GET",
-      url: `/api/countget.php?category=true`,
+      url: `/api/get.php?industry=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -27,13 +32,12 @@ const BuildCV = () => {
     })
       .then(function (response) {
         if (response.status === 200) {
-          const result = response.data
-            .map((item) => ({
-              label: item.category,
-              value: item.category,
-            }))
-            .filter((catr) => catr.label !== null);
+          const result = response.data.map((item) => ({
+            label: item.name,
+            value: item.name,
+          }));
           setJobCategoryResult(result);
+          setJobMenuLoading(false);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -48,9 +52,10 @@ const BuildCV = () => {
   };
 
   const getNationalityCount = async () => {
+    setCountryMenuLoading(true);
     await axios({
       method: "GET",
-      url: `/api/countget.php?nationality=true`,
+      url: `/api/get.php?nationality=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -59,13 +64,32 @@ const BuildCV = () => {
     })
       .then(function (response) {
         if (response.status === 200) {
-          const result = response.data
+          const uniqueIds = [];
+          const resultNationality = response.data
             .map((item) => ({
               label: item.nationality,
               value: item.nationality,
             }))
-            .filter((nation) => nation.label !== "");
-          setNationalityResult(result);
+            .filter((element) => {
+              const isDuplicate = uniqueIds.includes(element.label);
+
+              if (!isDuplicate) {
+                uniqueIds.push(element.label);
+
+                return true;
+              }
+
+              return false;
+            });
+          const resultCountry = response.data
+            .map((item) => ({
+              label: item.country,
+              value: item.country,
+            }))
+            .filter((country) => country.label !== "");
+          setCountryResult(resultCountry);
+          setNationalityResult(resultNationality);
+          setCountryMenuLoading(false);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -97,10 +121,10 @@ const BuildCV = () => {
 
     var bodyFormDataBuild = new FormData();
     bodyFormDataBuild.append("Add_Cv", true);
-    bodyFormDataBuild.append("name", values.name);
+    values.name && bodyFormDataBuild.append("name", values.name);
     bodyFormDataBuild.append("email", values.email);
     bodyFormDataBuild.append("dob", moment(values.dob).format("MM/DD/YYYY"));
-    bodyFormDataBuild.append("job", values.job_title);
+    values.job_title && bodyFormDataBuild.append("job", values.job_title);
     values.gender && bodyFormDataBuild.append("gender", values.gender);
     values.country && bodyFormDataBuild.append("country", values.country);
     values.nationality &&
@@ -121,8 +145,8 @@ const BuildCV = () => {
       bodyFormDataBuild.append("passport", values.passport_number);
     values.civil_id_number &&
       bodyFormDataBuild.append("civil_id", values.civil_id_number);
-    values.height && bodyFormDataBuild.append("height", values.height);
-    values.weight && bodyFormDataBuild.append("weight", values.weight);
+    values.height && bodyFormDataBuild.append("height", Number(values.height));
+    values.weight && bodyFormDataBuild.append("weight", Number(values.weight));
     values.skills && bodyFormDataBuild.append("skills", values.skills);
     values.education && bodyFormDataBuild.append("education", values.education);
     values.work_exp && bodyFormDataBuild.append("company", values.work_exp);
@@ -130,7 +154,6 @@ const BuildCV = () => {
     values.languages && bodyFormDataBuild.append("language", values.languages);
     profilePicture && bodyFormDataBuild.append("image", profilePicture);
     cvFile && bodyFormDataBuild.append("cv", cvFile);
-    console.log(values);
     setLoading(true);
     await axios({
       method: "POST",
@@ -149,8 +172,10 @@ const BuildCV = () => {
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
+            setLoading(false);
           } else {
             message.error("Something Went Wrong!", "error");
+            setLoading(false);
           }
         }
       })
@@ -160,6 +185,7 @@ const BuildCV = () => {
   };
 
   const normFile = (e) => {
+    console.log(e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -192,6 +218,7 @@ const BuildCV = () => {
           getValueFromEvent={normFile}
           extra="Upload the candidate's profile picture"
         >
+          {/* <ImgCrop grid rotate> */}
           <Upload
             name="profile-pic"
             listType="picture"
@@ -204,6 +231,7 @@ const BuildCV = () => {
           >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
+          {/* </ImgCrop> */}
         </Form.Item>
         <Form.Item
           name="profile_cv"
@@ -218,22 +246,14 @@ const BuildCV = () => {
             accept=".pdf,.docx,.xslx"
             maxCount={1}
             beforeUpload={() => {
-              /* update state here */
               return false;
             }}
           >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
         </Form.Item>
-        <Form.Item
-          name="name"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input placeholder="Name of the candidate*" />
+        <Form.Item name="name">
+          <Input placeholder="Name of the candidate" />
         </Form.Item>
         <Form.Item
           name="email"
@@ -255,15 +275,8 @@ const BuildCV = () => {
         >
           <DatePicker placeholder="Date of Birth*" />
         </Form.Item>
-        <Form.Item
-          name="job_title"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input placeholder="Job Title*" />
+        <Form.Item name="job_title">
+          <Input placeholder="Job Title" />
         </Form.Item>
         <Form.Item name="gender">
           <Select placeholder="Select Gender">
@@ -282,13 +295,19 @@ const BuildCV = () => {
           </Select>
         </Form.Item>
         <Form.Item name="country">
-          <Input placeholder="Country" />
+          <Select
+            placeholder="Country"
+            options={countryResult}
+            showSearch
+            disabled={countryMenuLoading}
+          />
         </Form.Item>
         <Form.Item name="nationality">
           <Select
             placeholder="Select Nationality"
             options={nationalityResult}
             showSearch
+            loading={countryMenuLoading}
           ></Select>
         </Form.Item>
         <Form.Item name="job_category">
@@ -296,17 +315,11 @@ const BuildCV = () => {
             placeholder="Select Job Category"
             options={jobCategoryResult}
             showSearch
+            loading={jobMenuLoading}
           ></Select>
         </Form.Item>
         <Form.Item name="phone_number">
           <Input placeholder="Phone Number" type="number" />
-        </Form.Item>
-        <Form.Item
-          label="Career Summary"
-          name="career_summary"
-          className="two-column"
-        >
-          <Input.TextArea />
         </Form.Item>
         <Form.Item label="Education" name="education" className="two-column">
           <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
@@ -332,16 +345,40 @@ const BuildCV = () => {
         <Form.Item className="two-column" label="Languages" name="languages">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item name="work_portfolio_photos" label="Work Portfolio Photos">
-          <Input placeholder="Work Portfolio Photos" />
+        <Form.Item
+          name="work_portfolio_photos"
+          label="Work Portfolio Photos"
+          rules={[
+            {
+              type: "url",
+              message: "This field must be a valid url.",
+            },
+          ]}
+        >
+          <Input placeholder="Work Portfolio Photos Link" />
         </Form.Item>
-        <Form.Item name="work_portfolio_videos" label="Work Portfolio Videos">
-          <Input placeholder="Work Portfolio Videos" />
+        <Form.Item
+          name="work_portfolio_videos"
+          label="Work Portfolio Videos"
+          rules={[
+            {
+              type: "url",
+              message: "This field must be a valid url.",
+            },
+          ]}
+        >
+          <Input placeholder="Work Portfolio Videos Link" />
         </Form.Item>
         <Form.Item
           className="two-column"
           name="interview_link"
           label="Interview Link"
+          rules={[
+            {
+              type: "url",
+              message: "This field must be a valid url.",
+            },
+          ]}
         >
           <Input placeholder="Interview Link" />
         </Form.Item>
