@@ -225,6 +225,12 @@
     margin-top: 0;
 }
 
+.flex-small-gap-column{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .pagination{
     display: flex;
     justify-content: space-between;

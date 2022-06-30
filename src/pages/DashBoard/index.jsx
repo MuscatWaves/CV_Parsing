@@ -168,7 +168,7 @@ const DashBoard = () => {
                     <p
                       className={
                         hoverState[card.name]
-                          ? hoverState[card.name]
+                          ? `${hoverState[card.name]}`
                           : "text-light-grey"
                       }
                     >

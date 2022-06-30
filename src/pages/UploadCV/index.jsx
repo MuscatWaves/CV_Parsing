@@ -3,8 +3,9 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Header from "../../components/Header";
 import jwt from "jsonwebtoken";
+import { InboxOutlined } from "@ant-design/icons";
 import Navigation from "../../components/Navigation";
-import { message } from "antd";
+import { message, Select, Upload } from "antd";
 import { removeUnderScore } from "../../utilities";
 import "./uploadcv.css";
 import Loader from "../../components/Loader";
@@ -15,6 +16,51 @@ const UploadCV = () => {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const mainUser = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [jobCategoryResult, setJobCategoryResult] = useState([]);
+  const [jobMenuLoading, setJobMenuLoading] = useState(false);
+  const [fileList, setFileList] = useState([]);
+  const { Dragger } = Upload;
+  const props = {
+    name: "file",
+    multiple: true,
+    onChange(info) {
+      setFileList(info.fileList);
+    },
+    maxCount: "5",
+  };
+
+  const getJobCategoryCount = async () => {
+    setJobMenuLoading(true);
+    await axios({
+      method: "GET",
+      url: `/api/get.php?industry=true`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          const result = response.data.map((item) => ({
+            label: item.name,
+            value: item.name,
+          }));
+          setJobCategoryResult(result);
+          setJobMenuLoading(false);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
 
   const getAllUser = async () => {
     setLoading(true);
@@ -52,6 +98,7 @@ const UploadCV = () => {
 
   useEffect(() => {
     getAllUser();
+    getJobCategoryCount();
     // eslint-disable-next-line
   }, []);
 
@@ -62,8 +109,6 @@ const UploadCV = () => {
     CVs_pending: data.pending || 0,
     total_CVs_parsed: data.parsed + data.pending || 0,
   };
-
-  console.log(personalStatus);
 
   return (
     <div>
@@ -76,7 +121,7 @@ const UploadCV = () => {
       <div>
         {(!isLoading && (
           <div className="uploadCV">
-            <div className="status-list">
+            <div className="status-list slide-in-left-animation">
               <div className="bolder large-text text-orange">
                 Status Information
               </div>
@@ -91,10 +136,38 @@ const UploadCV = () => {
                 </div>
               ))}
             </div>
-            <div></div>
+            <div className="status-list upload-box slide-in-right-animation">
+              <div className="flex-small-gap-column">
+                <div className="bolder text-grey">{"Job Category"}</div>
+                <Select
+                  placeholder={"Select the Job category"}
+                  options={jobCategoryResult}
+                  loading={jobMenuLoading}
+                  value={selectedCategory}
+                  onChange={(value) => setSelectedCategory(value)}
+                />
+              </div>
+              <Dragger
+                {...props}
+                beforeUpload={() => {
+                  return false;
+                }}
+              >
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Support for a single or bulk upload. Max - 5 files
+                </p>
+              </Dragger>
+            </div>
           </div>
         )) || <Loader minHeight={"70vh"} />}
       </div>
+      <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );
 };
