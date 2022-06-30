@@ -62,6 +62,8 @@ const UploadCV = () => {
       });
   };
 
+  console.log(fileList);
+
   const getAllUser = async () => {
     setLoading(true);
     await axios({
@@ -147,22 +149,25 @@ const UploadCV = () => {
                   onChange={(value) => setSelectedCategory(value)}
                 />
               </div>
-              <Dragger
-                {...props}
-                beforeUpload={() => {
-                  return false;
-                }}
-              >
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint">
-                  Support for a single or bulk upload. Max - 5 files
-                </p>
-              </Dragger>
+              <div>
+                <Dragger
+                  {...props}
+                  beforeUpload={() => {
+                    return false;
+                  }}
+                  listType="picture"
+                >
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">
+                    Click or drag file to this area to upload
+                  </p>
+                  <p className="ant-upload-hint">
+                    Support for a single or bulk upload. Max - 5 files
+                  </p>
+                </Dragger>
+              </div>
             </div>
           </div>
         )) || <Loader minHeight={"70vh"} />}

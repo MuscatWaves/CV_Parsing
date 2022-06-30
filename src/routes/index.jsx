@@ -20,7 +20,8 @@ const Routing = () => {
           <Routes>
             <Route path="/" element={<Login />}></Route>
             <Route path="/dashboard" element={<DashBoard />}></Route>
-            <Route path="/buildcv" element={<BuildCV />}></Route>
+            <Route path="/cv/create" element={<BuildCV />}></Route>
+            <Route path="/cv/update/:id" element={<BuildCV />}></Route>
             <Route path="/searchcv" element={<SearchCV />}></Route>
             <Route
               path="/searchcv/profile/:type/:id"

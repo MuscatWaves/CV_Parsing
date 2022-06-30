@@ -67,7 +67,7 @@ const DashBoard = () => {
       title: "Build CV",
       description: "Here you can Create CV for Jobseeker or Modify the CV.",
       permission: isLoggedIn.bcaccess === "0" ? true : false,
-      path: "/buildcv",
+      path: "/cv/create",
     },
     {
       id: 5,

@@ -39,6 +39,7 @@ import Loader from "../../components/Loader";
 import { categorySelection } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
+import { useNavigate } from "react-router-dom";
 import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
 import FormData from "form-data";
@@ -55,7 +56,13 @@ const CVprofile = () => {
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+  const user =
+    dataParams.type === "app" &&
+    jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+  const navigate = useNavigate();
+  const navigateTo = (path) => {
+    navigate(path);
+  };
 
   const UploadProps = {
     beforeUpload: (file) => {
@@ -100,6 +107,38 @@ const CVprofile = () => {
     await axios({
       method: "GET",
       url: `/api/user.php?id=${dataParams.id}`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          setUserData({
+            user: response.data.data.user[0],
+            attachments: response.data.data.attachments,
+          });
+          setLoading("loaded");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+            setLoading("loaded");
+          } else {
+            message.error("Something Went Wrong!", "error");
+            setLoading("loaded");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const getUserDataPublic = async () => {
+    await axios({
+      method: "GET",
+      url: `/api/publicuser.php?id=${dataParams.id}`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -211,12 +250,12 @@ const CVprofile = () => {
   };
 
   useEffect(() => {
-    getUserData();
+    dataParams.type === "app" ? getUserData() : getUserDataPublic();
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    lastSeen(); // eslint-disable-next-line
+    dataParams.type === "app" && lastSeen(); // eslint-disable-next-line
   }, [isLoading]);
 
   const columns = [
@@ -328,6 +367,7 @@ const CVprofile = () => {
           label: "Edit",
           key: "4",
           icon: <FaUserEdit />,
+          onClick: () => navigateTo(`/cv/update/${userData.user.id}`),
         },
       ]}
     />
