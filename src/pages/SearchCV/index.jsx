@@ -9,6 +9,7 @@ import {
   Select,
   Input,
   DatePicker,
+  Popover,
 } from "antd";
 import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
@@ -26,6 +27,7 @@ import {
 import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
 import { removeUnderScore } from "../../utilities";
+import { FaSearch } from "react-icons/fa";
 import "./searchcv.css";
 
 const SearchCV = () => {
@@ -40,6 +42,7 @@ const SearchCV = () => {
   const [total, setTotal] = useState(0);
   const [jobCategoryResult, setJobCategoryResult] = useState([]);
   const [nationalityResult, setNationalityResult] = useState([]);
+  const [isSearchPop, toggleSearchPop] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [filterData, setFilterData] = useState({
@@ -392,15 +395,6 @@ const SearchCV = () => {
             }
           />
         </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Name</div>
-          <Input
-            value={filterData.name}
-            onChange={(e) =>
-              setFilterData({ ...filterData, name: e.target.value })
-            }
-          />
-        </div>
       </div>
       <hr
         style={{
@@ -442,16 +436,17 @@ const SearchCV = () => {
         (filterValue, index) =>
           filterData[filterValue] && (
             <div
-              className="each-filter flex-small-gap medium-text"
+              className="each-filter flex-small-gap medium-text slide-in-left-animation"
               key={filterValue}
             >
               <div>{`${removeUnderScore(filterValue)}: ${
                 filterData[filterValue]
               }`}</div>
               {filterValue !== "searchByFromdate" &&
-                filterValue !== "searchByTodate" && (
+                filterValue !== "searchByTodate" &&
+                !isLoading && (
                   <GiCancel
-                    className="pointer medium-text"
+                    className="pointer medium-text fade-in-animation"
                     onClick={() => {
                       setFilterData({ ...filterData, [filterValue]: "" });
                       const data = {
@@ -525,6 +520,31 @@ const SearchCV = () => {
     </div>
   );
 
+  const searchContainer = () => (
+    <div className="flex-small-gap">
+      <Input
+        placeholder="Type to search..."
+        value={filterData.name}
+        onChange={(e) => setFilterData({ ...filterData, name: e.target.value })}
+        onPressEnter={() => {
+          setPage(1);
+          refresh();
+          toggleSearchPop(false);
+        }}
+      />
+      <Button
+        type="primary"
+        onClick={() => {
+          setPage(1);
+          refresh();
+          toggleSearchPop(false);
+        }}
+      >
+        Search
+      </Button>
+    </div>
+  );
+
   return (
     <div className="searchCV">
       <Header />
@@ -534,18 +554,44 @@ const SearchCV = () => {
           previous_path={"/Dashboard"}
           current_page={"Search CV"}
           customFilterButton={
-            <Button
-              className="button-primary filter-modal-button"
-              type="primary"
-              onClick={() => toggleShow(true)}
-              loading={isLoading}
-            >
-              <FaFilter className="filter-icon" /> Filter
-            </Button>
+            <div className="flex-small-gap">
+              <Popover
+                placement="rightBottom"
+                title={""}
+                content={searchContainer}
+                trigger="click"
+                visible={isSearchPop}
+                onVisibleChange={toggleSearchPop}
+              >
+                <Button
+                  className="button-primary filter-modal-button"
+                  type="primary"
+                  loading={isLoading}
+                >
+                  <FaSearch className="filter-icon" />
+                </Button>
+              </Popover>
+              <Button
+                className="button-primary filter-modal-button"
+                type="primary"
+                onClick={() => {
+                  toggleShow(true);
+                }}
+                loading={isLoading}
+              >
+                <FaFilter className="filter-icon" />
+              </Button>
+            </div>
           }
         />
         <div className="table">
-          {(show && Filter()) || makeFiltered()}
+          {show && Filter()}
+          {Object.keys(filterData).filter(
+            (filterValue, index) => filterData[filterValue]
+          ).length > 0 &&
+            !show &&
+            !isSearchPop &&
+            makeFiltered()}
           <Table
             dataSource={data.data}
             columns={columns}

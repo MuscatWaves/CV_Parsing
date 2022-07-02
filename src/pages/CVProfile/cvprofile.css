@@ -29,8 +29,6 @@
 
 .cvprofile-header-second-part-section{
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
     background-color: rgba(255, 255, 255, 0.700);
     padding: 1.5rem;
     border-radius: 20px;    
@@ -40,7 +38,6 @@
 .cvprofile-header-second-part{
     display: grid;
     grid-template-columns: repeat(3, 200px);
-    height: 100%;
     grid-gap: 1.5rem;
 }
 
@@ -62,7 +59,7 @@
 }
 
 .long-box{
-    max-width: 750px;
+    max-width: 760px;
 }
 
 .cvprofile-skills-chain{
@@ -104,7 +101,7 @@
 .each-skill{
     color: #f69f00;
     background-color: #fff;
-    padding: 0.5rem;
+    padding: 0.2rem 0.5rem;
     border: #f69f00 solid 1px;
     font-weight: 700;
     border-radius: 20px;
@@ -126,6 +123,13 @@
     border-radius: 20px;
 }
 
+.public-header-image{
+    width: 70px;
+    height: 70px;
+    animation: zoom-in 0.8s;
+    cursor: pointer;
+}
+
 @media screen and (max-width: 1200px){
     .cvprofile-body{
         display: flex;
@@ -136,7 +140,7 @@
     }
 
     .cvprofile-skills{
-        max-width: 700px;
+        max-width: 740px;
         margin: 0.5rem;
     }
 

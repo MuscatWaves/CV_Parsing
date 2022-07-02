@@ -42,6 +42,7 @@ import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
 import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
+import ojimage from "../../images/oj.png";
 import FormData from "form-data";
 
 const CVprofile = () => {
@@ -421,7 +422,6 @@ const CVprofile = () => {
       confirmLoading={tableLoading}
     >
       <Form
-        className="buildCvForm"
         size="large"
         layout="vertical"
         onFinish={handleUploadModal}
@@ -602,27 +602,34 @@ const CVprofile = () => {
                   rel="noreferrer"
                   target={"_blank"}
                 >
-                  Interview
+                  Interview Video
                 </a>
               )}
             </div>
           </div>
           <div className="cvprofile-header-second-part-section long-box slide-in-right-animation">
-            <div className="bolder large-text text-orange">
-              Personal Details
-            </div>
-            <div className="cvprofile-header-second-part">
-              {Object.keys(personalDetail).map((keyName, i) => (
-                <div key={keyName}>
-                  <div className="bolder medium-text">
-                    {removeUnderScore(keyName)}
+            <div className="flex-gap-column">
+              <div className="bolder large-text text-orange">
+                Personal Details
+              </div>
+              <div className="cvprofile-header-second-part">
+                {Object.keys(personalDetail).map((keyName, i) => (
+                  <div key={keyName}>
+                    <div className="bolder medium-text">
+                      {removeUnderScore(keyName)}
+                    </div>
+                    <div className="text-grey medium-text">
+                      {personalDetail[keyName] || "Not Provided"}
+                    </div>
                   </div>
-                  <div className="text-grey medium-text">
-                    {personalDetail[keyName] || "Not Provided"}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+            <img
+              src={ojimage}
+              className="public-header-image"
+              alt="Oman jobs"
+            />
           </div>
           <div className="experiences-list">
             {dataParams.type === "app" && (

@@ -7,6 +7,7 @@ import Header from "../../components/Header";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
+import moment from "moment";
 import UserForm from "./UserForm";
 
 const UserManage = () => {
@@ -66,7 +67,12 @@ const UserManage = () => {
       render: (record) => (
         <div>
           <div className="text-black bolder">{record.name}</div>
-          <div className="small-text text-light-grey">{record.email}</div>
+          <div className="small-text text-grey">{record.email}</div>
+          <div className="very-small-text text-light-grey">
+            {`Created on ${moment(record.created).format(
+              "D MMMM YYYY hh:mm a"
+            )}`}
+          </div>
         </div>
       ),
       width: "350px",
