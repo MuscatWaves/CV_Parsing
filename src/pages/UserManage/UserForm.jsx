@@ -23,7 +23,6 @@ const UserForm = ({
   const [form] = Form.useForm();
   const [newPassword, setNewPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [accountActive, setAccountActive] = useState(editData?.something);
   const cookies = new Cookies();
   const token = cookies.get("token");
 
@@ -35,7 +34,7 @@ const UserForm = ({
     setNewPassword(e.target.checked);
   };
 
-  const handleUpdateUser = async (values) => {
+  const handleUpdateUser = async (values, status) => {
     var bodyFormDataUpdate = new FormData();
     editData
       ? bodyFormDataUpdate.append("update_account", true)
@@ -49,6 +48,7 @@ const UserForm = ({
     bodyFormDataUpdate.append("searchcv", values.sc_access === true ? 0 : 1);
     bodyFormDataUpdate.append("rejectcv", values.rc_access === true ? 0 : 1);
     bodyFormDataUpdate.append("buildcv", values.bc_access === true ? 0 : 1);
+    editData && bodyFormDataUpdate.append("status", status || editData.status);
     setLoading(true);
     await axios({
       method: "POST",
@@ -81,11 +81,18 @@ const UserForm = ({
       });
   };
 
-  const confirm = async () =>
-    await new Promise((resolve) => {
-      setTimeout(() => resolve(null), 3000);
-      message.success("Done");
-    });
+  const confirm = () => {
+    const data = {
+      name: editData?.name,
+      email: editData?.email,
+      uv_access: editData?.uploadcv_access === 0 ? true : false || false,
+      sc_access: editData?.searchcv_access === 0 ? true : false || false,
+      rc_access: editData?.rejectedcv_access === 0 ? true : false || false,
+      bc_access: editData?.buildcv_access === 0 ? true : false || false,
+    };
+    const state = editData.status === 0 ? 1 : 0;
+    handleUpdateUser(data, state);
+  };
 
   return (
     <Drawer
@@ -206,19 +213,31 @@ const UserForm = ({
               title={
                 <div>
                   <div>
-                    {
-                      "Deactivating this account would no longer allow user to log-in"
-                    }
+                    {editData.status === 0
+                      ? "Deactivating this account would no longer allow user to log-in"
+                      : "Activating this account would allow user to log-in"}
                   </div>
-                  <div>{" Are you sure to deactivate this account?"}</div>
+                  <div>
+                    {editData.status === 0
+                      ? "Are you sure to deactivate this account?"
+                      : "Are you sure to activate this account?"}
+                  </div>
                 </div>
               }
               onConfirm={confirm}
-              okText={"Deactivate"}
-              okType={"danger"}
+              okText={editData.status === 0 ? "Deactivate" : "Activate"}
+              okType={editData.status === 0 ? "danger" : "primary"}
             >
-              <div className="text-red bolder pointer button-zoom">
-                Deactivate this account
+              <div
+                className={
+                  editData.status === 0
+                    ? "text-red bolder pointer button-zoom"
+                    : "text-green bolder pointer button-zoom"
+                }
+              >
+                {editData.status === 0
+                  ? "Deactivate this account"
+                  : "Activate this account"}
               </div>
             </Popconfirm>
           )}

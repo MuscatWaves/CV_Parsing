@@ -12,7 +12,6 @@ import UserForm from "./UserForm";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
-  const [popConfirm, setPopConfirm] = useState(false);
   const [editData, setEditData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -77,6 +76,15 @@ const UserManage = () => {
         </div>
       ),
       width: "350px",
+    },
+    {
+      title: "Status",
+      render: (record) => (
+        <div className={record.status === 0 ? "text-green" : "text-red"}>
+          {record.status === 0 ? "Active" : "Inactive"}
+        </div>
+      ),
+      width: "150px",
     },
     {
       title: "Permission/Access",
@@ -144,7 +152,6 @@ const UserManage = () => {
               type="primary"
               onClick={() => toggleModal(true)}
               icon={<PlusOutlined />}
-              // disabled
             >
               New User
             </Button>
