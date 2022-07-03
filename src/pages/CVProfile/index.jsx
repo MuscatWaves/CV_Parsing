@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
@@ -44,6 +44,8 @@ import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
 import ojimage from "../../images/oj.png";
 import FormData from "form-data";
+import jsPDF from "jspdf";
+import * as htmlToImage from "html-to-image";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -532,6 +534,46 @@ const CVprofile = () => {
   const checkImageIcon = (gender) =>
     gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
+  const CvDownload = useRef();
+  const TriggerCvDownload = () => {
+    var printMe = CvDownload.current;
+    var HTML_Width = printMe.clientWidth;
+    var HTML_Height = printMe.clientHeight;
+    var top_left_margin = 15;
+    var PDF_Width = HTML_Width + top_left_margin * 2;
+    var PDF_Height = PDF_Width * 1.5 + top_left_margin * 2;
+    var canvas_image_width = HTML_Width;
+    var canvas_image_height = HTML_Height;
+    var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+    htmlToImage.toPng(printMe).then(function (dataUrl) {
+      var imgData = dataUrl;
+      var pdf = new jsPDF("p", "pt", [PDF_Width, PDF_Height]);
+      pdf.addImage(
+        imgData,
+        "PNG",
+        top_left_margin,
+        top_left_margin,
+        canvas_image_width,
+        canvas_image_height
+      );
+
+      for (var i = 1; i <= totalPDFPages; i++) {
+        pdf.addPage(PDF_Width, PDF_Height);
+        pdf.addImage(
+          imgData,
+          "PNG",
+          top_left_margin,
+          -(PDF_Height * i) + top_left_margin * 4,
+          canvas_image_width,
+          canvas_image_height
+        );
+      }
+
+      pdf.save(userData.user.name+".pdf");
+    });
+  };
+
   return (
     <div
       className={
@@ -565,184 +607,195 @@ const CVprofile = () => {
         <p>{`Are you sure you want to delete "${deletionData.name}" from attachments?`}</p>
       </Modal>
       {(isLoading === "loaded" && (
-        <div className="cvprofile-body">
-          <div className="cvprofile-header-first-part slide-in-left-animation">
-            <img
-              className={"cvprofile-picture"}
-              src={
-                userData.user.image
-                  ? `${window.location.origin}/files/images/${userData.user.image}`
-                  : checkImageIcon(userData.user.gender)
-              }
-              alt="user"
-              width={"170px"}
-              height={"170px"}
-            />
-            <div className="text-orange bolder large-text">
-              {userData.user.name}
-            </div>
-            <div className="text-grey medium-text bold">
-              {userData.user.job}
-            </div>
-            <div className="flex-small-gap">
-              {userData.user.wpv && (
-                <a
-                  className="each-skill"
-                  href={userData.user.wpv}
-                  rel="noreferrer"
-                  target={"_blank"}
-                >
-                  Work Portfolio Video
-                </a>
-              )}
-              {userData.user.interview && (
-                <a
-                  className="each-skill"
-                  href={userData.user.interview}
-                  rel="noreferrer"
-                  target={"_blank"}
-                >
-                  Interview Video
-                </a>
-              )}
-            </div>
-          </div>
-          <div className="cvprofile-header-second-part-section long-box slide-in-right-animation">
-            <div className="flex-gap-column">
-              <div className="bolder large-text text-orange">
-                Personal Details
+        <div>
+          <div className="cvprofile-body" ref={CvDownload}>
+            <div className="cvprofile-header-first-part slide-in-left-animation">
+              <img
+                className={"cvprofile-picture"}
+                src={
+                  userData.user.image
+                    ? `${window.location.origin}/files/images/${userData.user.image}`
+                    : checkImageIcon(userData.user.gender)
+                }
+                alt="user"
+                width={"170px"}
+                height={"170px"}
+              />
+              <div className="text-orange bolder large-text">
+                {userData.user.name}
               </div>
-              <div className="cvprofile-header-second-part">
-                {Object.keys(personalDetail).map((keyName, i) => (
-                  <div key={keyName}>
-                    <div className="bolder medium-text">
-                      {removeUnderScore(keyName)}
-                    </div>
-                    <div className="text-grey medium-text">
-                      {personalDetail[keyName] || "Not Provided"}
-                    </div>
-                  </div>
-                ))}
+              <div className="text-grey medium-text bold">
+                {userData.user.job}
               </div>
-            </div>
-            <img
-              src={ojimage}
-              className="public-header-image"
-              alt="Oman jobs"
-            />
-          </div>
-          <div className="experiences-list">
-            {dataParams.type === "app" && (
-              <Dropdown overlay={menu}>
-                <Button className="button-primary zoom-in-animation">
-                  <Space>
-                    More Options
-                    <DownOutlined />
-                  </Space>
-                </Button>
-              </Dropdown>
-            )}
-            <div className="cvprofile-skills slide-in-left-animation">
-              <div className="bolder large-text text-black">Soft Skills</div>
-              <div className="cvprofile-skills-chain">
-                {(skills !== "" &&
-                  skills.map(
-                    (skill, i) =>
-                      skill !== "" && (
-                        <div className="cvprofile-each-skill bolder" key={i}>
-                          {skill}
-                        </div>
-                      )
-                  )) || (
-                  <div className="text-grey medium-text">
-                    No Skills Provided
-                  </div>
+              <div className="flex-small-gap">
+                {userData.user.wpv && (
+                  <a
+                    className="each-skill"
+                    href={userData.user.wpv}
+                    rel="noreferrer"
+                    target={"_blank"}
+                  >
+                    Work Portfolio Video
+                  </a>
+                )}
+                {userData.user.interview && (
+                  <a
+                    className="each-skill"
+                    href={userData.user.interview}
+                    rel="noreferrer"
+                    target={"_blank"}
+                  >
+                    Interview Video
+                  </a>
                 )}
               </div>
             </div>
-            <div className="cvprofile-skills slide-in-left-animation">
-              <div className="bolder large-text text-orange">Education</div>
-              <div className="cvprofile-skills-chain medium-text text-grey">
-                {string(userData.user.education)}
-              </div>
-            </div>
-            {dataParams.type !== "app" && (
-              <div className="cvprofile-skills slide-in-left-animation">
-                <div className="bolder large-text text-orange">Attachments</div>
-                <div className="cvprofile-attachments medium-text text-grey">
-                  {arrangeDocuments().map((attachment) => (
-                    <a
-                      href={attachment.attachment_link}
-                      key={attachment.id}
-                      className={"flex-small-gap link"}
-                      target={"_blank"}
-                      rel="noreferrer"
-                    >
-                      <GrAttachment />
-                      <div>{attachment.name}</div>
-                    </a>
+            <div className="cvprofile-header-second-part-section long-box slide-in-right-animation">
+              <div className="flex-gap-column">
+                <div className="bolder large-text text-orange">
+                  Personal Details
+                </div>
+                <div className="cvprofile-header-second-part">
+                  {Object.keys(personalDetail).map((keyName, i) => (
+                    <div key={keyName}>
+                      <div className="bolder medium-text">
+                        {removeUnderScore(keyName)}
+                      </div>
+                      <div className="text-grey medium-text">
+                        {personalDetail[keyName] || "Not Provided"}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-          <div className="cvprofile-skills long-box slide-in-right-animation">
-            <div className="bolder large-text text-orange">Work Experience</div>
+              <img
+                src={ojimage}
+                className="public-header-image"
+                alt="Oman jobs"
+              />
+            </div>
             <div className="experiences-list">
-              <div className="each-experience medium-text text-grey">
-                {string(userData.user.company)}
-              </div>
-            </div>
-          </div>
-          {dataParams.type === "app" && (
-            <div className="grid-gather attachments-section">
-              <div className="flex-between">
-                <div className="bolder large-text text-orange">Attachments</div>
-                <Button
-                  className="button-primary zoom-in-animation"
-                  onClick={() => toggleUploadModal(true)}
-                >
-                  Upload
-                </Button>
-              </div>
-              <div>
-                <Table
-                  dataSource={userData.attachments}
-                  columns={columns}
-                  loading={tableLoading}
-                  pagination={false}
-                  rowKey={"id"}
-                />
-              </div>
-            </div>
-          )}
-          {dataParams.type === "app" && (
-            <div className="grid-gather">
-              {checkWhichFile(userData.user.cv) === "pdf" && (
-                <object
-                  data={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                  type="application/pdf"
-                  width="100%"
-                  height="800px"
-                >
-                  <iframe
-                    title={"PDF file for Candidate Resume"}
-                    src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                  ></iframe>
-                </object>
+              {dataParams.type === "app" && (
+                <Dropdown overlay={menu}>
+                  <Button className="button-primary zoom-in-animation">
+                    <Space>
+                      More Options
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
               )}
-              {checkWhichFile(userData.user.cv) === "docx" ||
-                (checkWhichFile(userData.user.cv) === "doc" && (
-                  <iframe
-                    title={"DOC file for Candidate Resume"}
-                    src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cv.omanjobs.om/files/cv/${userData.user.cv}`}
+              <div className="cvprofile-skills slide-in-left-animation">
+                <div className="bolder large-text text-black">Soft Skills</div>
+                <div className="cvprofile-skills-chain">
+                  {(skills !== "" &&
+                    skills.map(
+                      (skill, i) =>
+                        skill !== "" && (
+                          <div className="cvprofile-each-skill bolder" key={i}>
+                            {skill}
+                          </div>
+                        )
+                    )) || (
+                    <div className="text-grey medium-text">
+                      No Skills Provided
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="cvprofile-skills slide-in-left-animation">
+                <div className="bolder large-text text-orange">Education</div>
+                <div className="cvprofile-skills-chain medium-text text-grey">
+                  {string(userData.user.education)}
+                </div>
+              </div>
+              {dataParams.type !== "app" && (
+                <div className="cvprofile-skills slide-in-left-animation">
+                  <div className="bolder large-text text-orange">
+                    Attachments
+                  </div>
+                  <div className="cvprofile-attachments medium-text text-grey">
+                    {arrangeDocuments().map((attachment) => (
+                      <a
+                        href={attachment.attachment_link}
+                        key={attachment.id}
+                        className={"flex-small-gap link"}
+                        target={"_blank"}
+                        rel="noreferrer"
+                      >
+                        <GrAttachment />
+                        <div>{attachment.name}</div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="cvprofile-skills long-box slide-in-right-animation">
+              <div className="bolder large-text text-orange">
+                Work Experience
+              </div>
+              <div className="experiences-list">
+                <div className="each-experience medium-text text-grey">
+                  {string(userData.user.company)}
+                </div>
+              </div>
+            </div>
+            {dataParams.type === "app" && (
+              <div className="grid-gather attachments-section">
+                <div className="flex-between">
+                  <div className="bolder large-text text-orange">
+                    Attachments
+                  </div>
+                  <Button
+                    className="button-primary zoom-in-animation"
+                    onClick={() => toggleUploadModal(true)}
+                  >
+                    Upload
+                  </Button>
+                </div>
+                <div>
+                  <Table
+                    dataSource={userData.attachments}
+                    columns={columns}
+                    loading={tableLoading}
+                    pagination={false}
+                    rowKey={"id"}
+                  />
+                </div>
+              </div>
+            )}
+            {dataParams.type === "app" && (
+              <div className="grid-gather">
+                {checkWhichFile(userData.user.cv) === "pdf" && (
+                  <object
+                    data={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                    type="application/pdf"
                     width="100%"
                     height="800px"
-                    frameborder="0"
-                  ></iframe>
-                ))}
-            </div>
-          )}
+                  >
+                    <iframe
+                      title={"PDF file for Candidate Resume"}
+                      src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                    ></iframe>
+                  </object>
+                )}
+                {checkWhichFile(userData.user.cv) === "docx" ||
+                  (checkWhichFile(userData.user.cv) === "doc" && (
+                    <iframe
+                      title={"DOC file for Candidate Resume"}
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cv.omanjobs.om/files/cv/${userData.user.cv}`}
+                      width="100%"
+                      height="800px"
+                      frameborder="0"
+                    ></iframe>
+                  ))}
+              </div>
+            )}
+          </div>
+          <Button type="primary" onClick={TriggerCvDownload}>
+            Download
+          </Button>
         </div>
       )) || <Loader minHeight={"70vh"} />}
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
