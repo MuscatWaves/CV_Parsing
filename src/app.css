@@ -164,6 +164,10 @@
     margin-top: 1rem;
 }
 
+.medium-margin-top{
+    margin-top: 1.5rem;
+}
+
 .copyright{
     font-size: 16px;
     font-weight: 700;
@@ -255,6 +259,14 @@
     font-size: 16px;
     font-weight: 700;
     color: #6b6b6b;
+}
+
+.button-zoom{
+    transition: 0.3s;
+}
+
+.button-zoom:hover{
+    transform: scale(1.05);
 }
 
 

@@ -12,6 +12,7 @@ import UserForm from "./UserForm";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
+  const [popConfirm, setPopConfirm] = useState(false);
   const [editData, setEditData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -143,7 +144,7 @@ const UserManage = () => {
               type="primary"
               onClick={() => toggleModal(true)}
               icon={<PlusOutlined />}
-              disabled
+              // disabled
             >
               New User
             </Button>
