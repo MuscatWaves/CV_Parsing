@@ -7,6 +7,7 @@ import { Table, message, Button, Pagination } from "antd";
 import { AiOutlineFileText } from "react-icons/ai";
 import "./rejectedcv.css";
 import moment from "moment";
+import FormData from "form-data";
 
 const RejectedCV = () => {
   const cookies = new Cookies();
@@ -18,7 +19,7 @@ const RejectedCV = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-
+  console.log(selectedRowKeys);
   useEffect(() => {
     getAllRejectedCV();
     // eslint-disable-next-line
@@ -29,15 +30,78 @@ const RejectedCV = () => {
   };
 
   const onSelectChange = (newSelectedRowKeys) => {
+    console.log(newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const reScanCv = async () => {
     setReScanLoading(true);
+    var bodyFormData = new FormData();
+    bodyFormData.append("ReScan_Reject_CV", "ReScan_Reject_CV");
+    selectedRowKeys.forEach((file) => {
+      bodyFormData.append("searchIDs[]", file);
+    });
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormData,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("CV Queued for Rescan.", "success");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+        setReScanLoading(false);
+        getAllRejectedCV();
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+        setReScanLoading(false);
+      });
   };
 
   const deleteCv = async () => {
     setDeleteLoading(true);
+    var bodyFormData = new FormData();
+    bodyFormData.append("Delete_Reject_CV", "Delete_Reject_CV");
+    selectedRowKeys.forEach((file) => {
+      bodyFormData.append("searchIDs[]", file);
+    });
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormData,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("CV Queued for Rescan.", "success");
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+        setDeleteLoading(false);
+        getAllRejectedCV();
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+        setDeleteLoading(false);
+      });
   };
 
   const getAllRejectedCV = async () => {

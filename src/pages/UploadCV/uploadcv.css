@@ -1,25 +1,39 @@
-.uploadCV{
-    display: flex;
-    gap: 1rem;
-    height: 100%;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 70vh;
-    /* padding: 2rem; */
+.uploadCV {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 70vh;
+  /* padding: 2rem; */
 }
 
-.status-list{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.548);
-    width: 300px;
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.548);
+  width: 300px;
 }
 
-.upload-box{
-    width: 50%;
-    /* background-color: transparent; */
-    height: 100%;
+.upload-box {
+  width: 50%;
+  /* background-color: transparent; */
+  height: 100%;
+}
+
+.filepond--credits {
+  display: none;
+}
+label::before {
+  content: none;
+}
+.filepond--drop-label {
+  background-color: transparent;
+}
+.filepond--root,
+.filepond--hopper {
+  background-color: transparent;
 }
