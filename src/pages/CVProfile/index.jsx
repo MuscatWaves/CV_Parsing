@@ -644,7 +644,14 @@ const CVprofile = () => {
       </Modal>
       {(isLoading === "loaded" && (
         <div>
-          <div className="cvprofile-body" ref={CvDownload}>
+          <div
+            className={
+              dataParams.type === "app"
+                ? "cvprofile-body"
+                : "cvprofile-body cvprofile-body-public"
+            }
+            ref={CvDownload}
+          >
             <div className="cvprofile-header-first-part slide-in-left-animation">
               <img
                 className={"cvprofile-picture"}
