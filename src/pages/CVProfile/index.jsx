@@ -264,6 +264,7 @@ const CVprofile = () => {
         if (response.status === 200) {
           message.success("The attachment has been uploaded sucessfully");
           getUserData();
+          form.resetFields();
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
