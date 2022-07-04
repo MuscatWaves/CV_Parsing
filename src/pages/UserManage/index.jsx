@@ -78,13 +78,13 @@ const UserManage = () => {
       width: "350px",
     },
     {
-      title: "Status",
+      title: "Account Status",
       render: (record) => (
         <div className={record.status === 0 ? "text-green" : "text-red"}>
-          {record.status === 0 ? "Active" : "Inactive"}
+          {record.status === 0 ? "Active" : "Deactivated"}
         </div>
       ),
-      width: "150px",
+      width: "200px",
     },
     {
       title: "Permission/Access",
