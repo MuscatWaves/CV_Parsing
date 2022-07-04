@@ -295,8 +295,8 @@ const CVprofile = () => {
 
   const columns = [
     {
-      title: "Id",
-      dataIndex: "id",
+      title: "Sr no",
+      render: (text, record, index) => <div>{index + 1}</div>,
     },
     {
       title: "File",
