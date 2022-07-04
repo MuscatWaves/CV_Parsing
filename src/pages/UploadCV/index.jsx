@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import Header from "../../components/Header";
 import jwt from "jsonwebtoken";
-import { InboxOutlined } from "@ant-design/icons";
 import Navigation from "../../components/Navigation";
-import { message, Select, Upload } from "antd";
+import { message, Select } from "antd";
 import { removeUnderScore } from "../../utilities";
 import "./uploadcv.css";
 import Loader from "../../components/Loader";
+import { FilePond } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import FormData from "form-data";
 
 const UploadCV = () => {
   const cookies = new Cookies();
@@ -16,19 +18,11 @@ const UploadCV = () => {
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState({});
   const mainUser = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedCategory, setSelectedCategory] = useState("Accounting");
   const [jobCategoryResult, setJobCategoryResult] = useState([]);
   const [jobMenuLoading, setJobMenuLoading] = useState(false);
-  const [fileList, setFileList] = useState([]);
-  const { Dragger } = Upload;
-  const props = {
-    name: "file",
-    multiple: true,
-    onChange(info) {
-      setFileList(info.fileList);
-    },
-    maxCount: "5",
-  };
+  const [files, setFiles] = useState([]);
+  const [isLoggedIn, setLoggedIn] = useState({});
 
   const getJobCategoryCount = async () => {
     setJobMenuLoading(true);
@@ -61,8 +55,6 @@ const UploadCV = () => {
         message.error("Something Went Wrong!", "error");
       });
   };
-
-  console.log(fileList);
 
   const getAllUser = async () => {
     setLoading(true);
@@ -103,6 +95,15 @@ const UploadCV = () => {
     getJobCategoryCount();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        var user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+        setLoggedIn(user);
+      } catch (err) {}
+    }
+  }, [token]);
 
   const personalStatus = {
     name: data.name || "",
@@ -150,23 +151,58 @@ const UploadCV = () => {
                 />
               </div>
               <div>
-                <Dragger
-                  {...props}
-                  beforeUpload={() => {
-                    return false;
+                <FilePond
+                  files={files}
+                  onupdatefiles={setFiles}
+                  allowMultiple={true}
+                  maxFiles={30}
+                  server={{
+                    process: (
+                      fieldName,
+                      file,
+                      metadata,
+                      load,
+                      error,
+                      progress,
+                      abort,
+                      transfer,
+                      options
+                    ) => {
+                      const formData = new FormData();
+                      formData.append(fieldName, file, file.name);
+                      formData.append("cat", selectedCategory);
+                      formData.append("user", isLoggedIn.id);
+
+                      if (selectedCategory === undefined) {
+                        error("Please select Category");
+                        abort("Please select Category");
+                      } else {
+                        const request = new XMLHttpRequest();
+                        request.open("POST", "api/cvupload.php");
+                        request.upload.onprogress = (e) => {
+                          progress(e.lengthComputable, e.loaded, e.total);
+                        };
+                        request.onload = function () {
+                          if (request.status >= 200 && request.status < 300) {
+                            load(request.responseText);
+                          } else {
+                            error("oh no");
+                          }
+                        };
+
+                        request.send(formData);
+                        return {
+                          abort: () => {
+                            request.abort();
+                            abort();
+                          },
+                        };
+                      }
+                    },
                   }}
-                  listType="picture"
-                >
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </p>
-                  <p className="ant-upload-hint">
-                    Support for a single or bulk upload. Max - 5 files
-                  </p>
-                </Dragger>
+                  name="filepond"
+                  labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                />
               </div>
             </div>
           </div>
