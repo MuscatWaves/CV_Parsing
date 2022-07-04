@@ -34,10 +34,14 @@
     border-radius: 20px;    
 }
 
+.each-box-cv-profile{
+    word-wrap: break-word
+}
+
 
 .cvprofile-header-second-part{
     display: grid;
-    grid-template-columns: repeat(3, 200px);
+    grid-template-columns: repeat(3, 190px);
     grid-gap: 1.5rem;
 }
 
@@ -126,8 +130,15 @@
 .public-header-image{
     width: 70px;
     height: 70px;
+    margin: 1rem;
     animation: zoom-in 0.8s;
     cursor: pointer;
+}
+
+.download-pdf-cv-profile{
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem;
 }
 
 @media screen and (max-width: 1200px){

@@ -34,7 +34,7 @@ const UserForm = ({
     setNewPassword(e.target.checked);
   };
 
-  const handleUpdateUser = async (values, status) => {
+  const handleUpdateUser = async (values, status = editData.status) => {
     var bodyFormDataUpdate = new FormData();
     editData
       ? bodyFormDataUpdate.append("update_account", true)
@@ -48,7 +48,7 @@ const UserForm = ({
     bodyFormDataUpdate.append("searchcv", values.sc_access === true ? 0 : 1);
     bodyFormDataUpdate.append("rejectcv", values.rc_access === true ? 0 : 1);
     bodyFormDataUpdate.append("buildcv", values.bc_access === true ? 0 : 1);
-    editData && bodyFormDataUpdate.append("status", status || editData.status);
+    editData && bodyFormDataUpdate.append("status", status);
     setLoading(true);
     await axios({
       method: "POST",

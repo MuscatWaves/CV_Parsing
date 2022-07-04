@@ -66,7 +66,7 @@ const UserManage = () => {
       title: "Username",
       render: (record) => (
         <div>
-          <div className="text-black bolder">{record.name}</div>
+          <div className="text-black bold">{record.name}</div>
           <div className="small-text text-grey">{record.email}</div>
           <div className="very-small-text text-light-grey">
             {`Created on ${moment(record.created).format(

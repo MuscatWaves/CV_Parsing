@@ -56,6 +56,7 @@ const CVprofile = () => {
   const [isLoading, setLoading] = useState("");
   const [tableLoading, setTableLoading] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
+  const [userList, setUserList] = useState([]);
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
@@ -205,6 +206,35 @@ const CVprofile = () => {
     setTableLoading(false);
   };
 
+  const getAllUserManageList = async () => {
+    await axios({
+      method: "GET",
+      url: `/api/userlist.php`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        row: 0,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          setUserList(response.data.data);
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
   const handleUploadModal = async (values) => {
     var bodyFormDataUpload = new FormData();
     fileList.forEach((file) => {
@@ -254,6 +284,7 @@ const CVprofile = () => {
 
   useEffect(() => {
     dataParams.type === "app" ? getUserData() : getUserDataPublic();
+    dataParams.type === "app" && getAllUserManageList();
     // eslint-disable-next-line
   }, []);
 
@@ -280,7 +311,11 @@ const CVprofile = () => {
     },
     {
       title: "Uploaded By",
-      dataIndex: "uploaded_by",
+      render: (record) => (
+        <div>
+          {userList.filter((user) => user.id === record.uploaded_by)[0]?.name}
+        </div>
+      ),
     },
     {
       title: "Date",
@@ -288,7 +323,7 @@ const CVprofile = () => {
     },
     {
       title: "Category",
-      dataIndex: "category",
+      render: (record) => <div>{checkCategory(record.category)}</div>,
     },
     {
       title: "Action",
@@ -570,7 +605,7 @@ const CVprofile = () => {
         );
       }
 
-      pdf.save(userData.user.name+".pdf");
+      pdf.save(userData.user.name + ".pdf");
     });
   };
 
@@ -657,7 +692,7 @@ const CVprofile = () => {
                 </div>
                 <div className="cvprofile-header-second-part">
                   {Object.keys(personalDetail).map((keyName, i) => (
-                    <div key={keyName}>
+                    <div key={keyName} className={"each-box-cv-profile"}>
                       <div className="bolder medium-text">
                         {removeUnderScore(keyName)}
                       </div>
@@ -692,7 +727,7 @@ const CVprofile = () => {
                     skills.map(
                       (skill, i) =>
                         skill !== "" && (
-                          <div className="cvprofile-each-skill bolder" key={i}>
+                          <div className="cvprofile-each-skill bold" key={i}>
                             {skill}
                           </div>
                         )
@@ -793,9 +828,13 @@ const CVprofile = () => {
               </div>
             )}
           </div>
-          <Button type="primary" onClick={TriggerCvDownload}>
-            Download
-          </Button>
+          {dataParams.type === "public" && (
+            <div className="download-pdf-cv-profile">
+              <Button type="primary" onClick={TriggerCvDownload}>
+                Download PDF
+              </Button>
+            </div>
+          )}
         </div>
       )) || <Loader minHeight={"70vh"} />}
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
