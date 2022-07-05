@@ -82,11 +82,6 @@ const SearchCV = () => {
     await axios({
       method: "GET",
       url: `${rootUrl}/api/countget.php?category=true`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
     })
       .then(function (response) {
         if (response.status === 200) {
@@ -115,11 +110,6 @@ const SearchCV = () => {
     await axios({
       method: "GET",
       url: `${rootUrl}/api/countget.php?nationality=true`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
     })
       .then(function (response) {
         if (response.status === 200) {
@@ -145,12 +135,9 @@ const SearchCV = () => {
 
   const getData = async (data) => {
     setLoading(true);
-    await axios({
-      method: "GET",
-      url: `${rootUrl}/api/searchcv.php`,
+    let config = {
       headers: {
         Accept: "application/json",
-        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
       params: {
@@ -165,23 +152,23 @@ const SearchCV = () => {
         Gender: data.Gender,
         Search: data.Search,
       },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setLoading(false);
-          setData(response.data);
-          setTotal(response.data.TotalDisplayRecords);
+    };
+    try {
+      const Data = await axios.get(`${rootUrl}/api/searchcv.php`, config);
+      if (Data.status === 200) {
+        setLoading(false);
+        setData(Data.data);
+        setTotal(Data.data.TotalDisplayRecords);
+      } else {
+        if (Data.status === 201) {
+          message.error(Data.data.error, "error");
         } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
+          message.error("Something Went Wrong!", "error");
         }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
+      }
+    } catch (err) {
+      message.error("Something Went Wrong!", "error");
+    }
   };
 
   const checkImageIcon = (gender) =>
