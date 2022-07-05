@@ -56,6 +56,8 @@ const SearchCV = () => {
     searchByFromdate: "",
     searchByTodate: "",
   });
+  const rootUrl =
+    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
 
   const [show, toggleShow] = useState(false);
 
@@ -79,7 +81,7 @@ const SearchCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/countget.php?category=true`,
+      url: `${rootUrl}/api/countget.php?category=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -112,7 +114,7 @@ const SearchCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/countget.php?nationality=true`,
+      url: `${rootUrl}/api/countget.php?nationality=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -145,7 +147,7 @@ const SearchCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/searchcv.php`,
+      url: `${rootUrl}/api/searchcv.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",

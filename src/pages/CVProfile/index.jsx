@@ -60,6 +60,8 @@ const CVprofile = () => {
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const rootUrl =
+    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
   const user =
     dataParams.type === "app" &&
     jwt.verify(token, process.env.REACT_APP_JWT_KEY);
@@ -84,7 +86,7 @@ const CVprofile = () => {
 
     await axios({
       method: "POST",
-      url: `/api/react-post.php`,
+      url: `${rootUrl}/api/react-post.php`,
       data: bodyFormDataLastSeen,
       headers: {
         Accept: "application/json",
@@ -110,7 +112,7 @@ const CVprofile = () => {
   const getUserData = async () => {
     await axios({
       method: "GET",
-      url: `/api/user.php?id=${dataParams.id}`,
+      url: `${rootUrl}/api/user.php?id=${dataParams.id}`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -142,7 +144,7 @@ const CVprofile = () => {
   const getUserDataPublic = async () => {
     await axios({
       method: "GET",
-      url: `/api/publicuser.php?id=${dataParams.id}`,
+      url: `${rootUrl}/api/publicuser.php?id=${dataParams.id}`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -178,7 +180,7 @@ const CVprofile = () => {
     setTableLoading(true);
     await axios({
       method: "POST",
-      url: `/api/react-post.php`,
+      url: `${rootUrl}/api/react-post.php`,
       data: bodyFormDataDelete,
       headers: {
         Accept: "application/json",
@@ -209,7 +211,7 @@ const CVprofile = () => {
   const getAllUserManageList = async () => {
     await axios({
       method: "GET",
-      url: `/api/userlist.php`,
+      url: `${rootUrl}/api/userlist.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -252,7 +254,7 @@ const CVprofile = () => {
     bodyFormDataUpload.append("candidate", userData.user.id);
     await axios({
       method: "POST",
-      url: `/api/react-post.php`,
+      url: `${rootUrl}/api/react-post.php`,
       data: bodyFormDataUpload,
       headers: {
         Accept: "application/json",

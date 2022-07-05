@@ -10,12 +10,14 @@ const UserReport = () => {
   const token = cookies.get("token");
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const rootUrl =
+    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
 
   const getAllUserReportList = async () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/userlist.php`,
+      url: `${rootUrl}/api/userlist.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",

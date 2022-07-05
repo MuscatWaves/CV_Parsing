@@ -17,12 +17,14 @@ const UserManage = () => {
   const [data, setData] = useState([]);
   const cookies = new Cookies();
   const token = cookies.get("token");
+  const rootUrl =
+    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
 
   const getAllUserManageList = async () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/userlist.php`,
+      url: `${rootUrl}/api/userlist.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",

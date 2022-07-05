@@ -25,6 +25,8 @@ const UserForm = ({
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
+  const rootUrl =
+    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
 
   const onClose = () => {
     setModal(false);
@@ -52,7 +54,7 @@ const UserForm = ({
     setLoading(true);
     await axios({
       method: "POST",
-      url: `/api/react-post.php`,
+      url: `${rootUrl}/api/react-post.php`,
       data: bodyFormDataUpdate,
       headers: {
         Accept: "application/json",
