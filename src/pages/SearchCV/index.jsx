@@ -154,24 +154,31 @@ const SearchCV = () => {
         Search: data.Search,
       },
       method: "GET",
-      url: `${rootUrl}/api/searchcv.php`,
+      // url: `${rootUrl}/api/searchcv.php`,
     };
-    try {
-      const Data = await axios(config);
-      if (Data.status === 200) {
+    // try {
+    //   const Data = await axios(config);
+    //   if (Data.status === 200) {
+    //     setLoading(false);
+    //     setData(Data.data);
+    //     setTotal(Data.data.TotalDisplayRecords);
+    //   } else {
+    //     if (Data.status === 201) {
+    //       message.error(Data.data.error, "error");
+    //     } else {
+    //       message.error("Something Went Wrong!", "error");
+    //     }
+    //   }
+    // } catch (err) {
+    //   message.error("Something Went Wrong!", "error");
+    // }
+    fetch(`${rootUrl}/api/searchcv.php`, config)
+      .then((response) => response.json())
+      .then((data) => {
         setLoading(false);
-        setData(Data.data);
-        setTotal(Data.data.TotalDisplayRecords);
-      } else {
-        if (Data.status === 201) {
-          message.error(Data.data.error, "error");
-        } else {
-          message.error("Something Went Wrong!", "error");
-        }
-      }
-    } catch (err) {
-      message.error("Something Went Wrong!", "error");
-    }
+        setData(data);
+        setTotal(data.TotalDisplayRecords);
+      });
   };
 
   const checkImageIcon = (gender) =>
