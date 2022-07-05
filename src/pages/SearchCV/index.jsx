@@ -153,9 +153,11 @@ const SearchCV = () => {
         Gender: data.Gender,
         Search: data.Search,
       },
+      method: "GET",
+      url: `${rootUrl}/api/searchcv.php`,
     };
     try {
-      const Data = await axios.get(`${rootUrl}/api/searchcv.php`, config);
+      const Data = await axios(config);
       if (Data.status === 200) {
         setLoading(false);
         setData(Data.data);
