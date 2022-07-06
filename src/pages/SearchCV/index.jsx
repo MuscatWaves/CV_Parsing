@@ -137,6 +137,7 @@ const SearchCV = () => {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
       },
       params: {
         row: page * 10 - 10,
