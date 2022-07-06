@@ -2,11 +2,11 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://cv.omanjobs.om/api/:path*"
+        "destination": "https://api.omanjobs.om/api/:path*"
       },
       {
         "source": "/api/:path*/",
-        "destination": "https://cv.omanjobs.om/api/:path*/"
+        "destination": "https://api.omanjobs.om/api/:path*/"
       }
     ]
   }
