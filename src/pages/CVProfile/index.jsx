@@ -303,7 +303,7 @@ const CVprofile = () => {
       title: "File",
       render: (record) => (
         <a
-          href={`https://api.omanjobs.om/files/docs/${record.name}`}
+          href={`/files/docs/${record.name}`}
           target="_blank"
           rel="noreferrer"
         >
@@ -360,7 +360,7 @@ const CVprofile = () => {
           key: "2",
           icon: <FaFileDownload />,
           onClick: () => {
-            window.open(`https://api.omanjobs.om/files/cv/${userData.user.cv}`);
+            window.open(`/files/cv/${userData.user.cv}`);
           },
         },
         {
@@ -560,7 +560,7 @@ const CVprofile = () => {
         {
           id: index,
           name: `${checkCategory(attachment.category)} - ${num}`,
-          attachment_link: `https://api.omanjobs.om/files/docs/${attachment.name}`,
+          attachment_link: `/files/docs/${attachment.name}`,
           category: attachment.category,
         },
       ]);
@@ -658,7 +658,7 @@ const CVprofile = () => {
                 className={"cvprofile-picture"}
                 src={
                   userData.user.image
-                    ? `https://api.omanjobs.om/files/images/${userData.user.image}`
+                    ? `/files/images/${userData.user.image}`
                     : checkImageIcon(userData.user.gender)
                 }
                 alt="user"

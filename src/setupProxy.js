@@ -5,6 +5,10 @@ module.exports = function (app) {
     createProxyMiddleware("/api", {
       target: "https://api.omanjobs.om",
       changeOrigin: true,
+    }),
+    createProxyMiddleware("/files", {
+      target: "https://api.omanjobs.om",
+      changeOrigin: true,
     })
   );
 };

@@ -7,6 +7,14 @@
       {
         "source": "/api/:path*/",
         "destination": "https://api.omanjobs.om/api/:path*/"
+      },
+      {
+        "source": "/files/:path*",
+        "destination": "https://api.omanjobs.om/files/:path*"
+      },
+      {
+        "source": "/files/:path*/",
+        "destination": "https://api.omanjobs.om/files/:path*/"
       }
     ]
   }

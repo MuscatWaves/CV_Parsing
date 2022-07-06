@@ -305,7 +305,7 @@ const BuildCV = () => {
                   uid: "-1",
                   name: userData.user.cv,
                   status: "done",
-                  url: `https://api.omanjobs.om/files/cv/${userData.user.cv}`,
+                  url: `/files/cv/${userData.user.cv}`,
                 },
               ],
               name: userData.user.name,
