@@ -19,8 +19,7 @@ const RejectedCV = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const rootUrl =
-    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
+  
   useEffect(() => {
     getAllRejectedCV();
     // eslint-disable-next-line
@@ -44,7 +43,7 @@ const RejectedCV = () => {
     });
     await axios({
       method: "POST",
-      url: `${rootUrl}/api/react-post.php`,
+      url: `/api/react-post.php`,
       data: bodyFormData,
       headers: {
         Accept: "application/json",
@@ -79,7 +78,7 @@ const RejectedCV = () => {
     });
     await axios({
       method: "POST",
-      url: `${rootUrl}/api/react-post.php`,
+      url: `/api/react-post.php`,
       data: bodyFormData,
       headers: {
         Accept: "application/json",
@@ -109,7 +108,7 @@ const RejectedCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/rejectcv.php`,
+      url: `/api/rejectcv.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",

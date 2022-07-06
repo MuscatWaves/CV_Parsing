@@ -11,8 +11,6 @@ import Cookies from "universal-cookie";
 const Login = () => {
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
-  const rootUrl =
-    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
   const handleSubmit = async (values) => {
     const Email = values["email"];
     const Password = values["password"];
@@ -31,7 +29,7 @@ const Login = () => {
     bodyFormData.append("login", "login");
     await axios({
       method: "POST",
-      url: `${rootUrl}/api/login.php`,
+      url: `/api/login.php`,
       data: bodyFormData,
       headers: {
         Accept: "application/json",

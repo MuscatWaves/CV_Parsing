@@ -23,14 +23,13 @@ const UploadCV = () => {
   const [jobMenuLoading, setJobMenuLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState({});
-  const rootUrl =
-    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
+  
 
   const getJobCategoryCount = async () => {
     setJobMenuLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/get.php?industry=true`,
+      url: `/api/get.php?industry=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -62,7 +61,7 @@ const UploadCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/userlist.php`,
+      url: `/api/userlist.php`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -180,7 +179,7 @@ const UploadCV = () => {
                         abort("Please select Category");
                       } else {
                         const request = new XMLHttpRequest();
-                        request.open("POST", `${rootUrl}/api/cvupload.php`);
+                        request.open("POST", `/api/cvupload.php`);
                         request.upload.onprogress = (e) => {
                           progress(e.lengthComputable, e.loaded, e.total);
                         };

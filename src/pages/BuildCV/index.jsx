@@ -26,14 +26,13 @@ const BuildCV = () => {
   const [isLoading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
   const [userDataLoading, setUserDataLoading] = useState("none");
-  const rootUrl =
-    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
+  
 
   const getUserData = async () => {
     setUserDataLoading("loading");
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/user.php?id=${dataParams.id}`,
+      url: `/api/user.php?id=${dataParams.id}`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -66,7 +65,7 @@ const BuildCV = () => {
     setJobMenuLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/get.php?industry=true`,
+      url: `/api/get.php?industry=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -98,7 +97,7 @@ const BuildCV = () => {
     setCountryMenuLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/get.php?nationality=true`,
+      url: `/api/get.php?nationality=true`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -235,7 +234,7 @@ const BuildCV = () => {
     setLoading(true);
     await axios({
       method: "POST",
-      url: `${rootUrl}/api/react-post.php`,
+      url: `/api/react-post.php`,
       data: bodyFormDataBuild,
       headers: {
         Accept: "application/json",

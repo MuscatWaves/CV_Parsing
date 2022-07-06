@@ -56,8 +56,6 @@ const SearchCV = () => {
     searchByFromdate: "",
     searchByTodate: "",
   });
-  const rootUrl =
-    process.env.NODE_ENV === "production" ? "https://cv.omanjobs.om" : "";
 
   const [show, toggleShow] = useState(false);
 
@@ -81,7 +79,7 @@ const SearchCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/countget.php?category=true`,
+      url: `/api/countget.php?category=true`,
     })
       .then(function (response) {
         if (response.status === 200) {
@@ -109,7 +107,7 @@ const SearchCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `${rootUrl}/api/countget.php?nationality=true`,
+      url: `/api/countget.php?nationality=true`,
     })
       .then(function (response) {
         if (response.status === 200) {
@@ -154,7 +152,7 @@ const SearchCV = () => {
       },
     };
     try {
-      const Data = await axios.get(`${rootUrl}/api/searchcv.php`, config);
+      const Data = await axios.get(`/api/searchcv.php`, config);
       if (Data.status === 200) {
         setLoading(false);
         setData(Data.data);
@@ -182,7 +180,7 @@ const SearchCV = () => {
         <img
           src={
             record.image
-              ? `${window.location.origin}/files/images/${record.image}`
+              ? `https://cv.omanjobs.om/files/images/${record.image}`
               : checkImageIcon(record.gender)
           }
           alt={"User"}
