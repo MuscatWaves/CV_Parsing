@@ -61,6 +61,8 @@ const CVprofile = () => {
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const CvDownload = useRef();
+  const [isPdfDownloadLoading, setPdfDownloadLoading] = useState(false);
 
   const user =
     dataParams.type === "app" &&
@@ -303,11 +305,7 @@ const CVprofile = () => {
     {
       title: "File",
       render: (record) => (
-        <a
-          href={`/files/docs/${record.name}`}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a href={`/files/docs/${record.name}`} target="_blank" rel="noreferrer">
           {record.name}
         </a>
       ),
@@ -353,7 +351,10 @@ const CVprofile = () => {
           key: "1",
           icon: <FaUserCheck />,
           onClick: () => {
-            window.open(`/profile/public/${dataParams.id}`, "_blank");
+            const name = `${userData.user.name} ${userData.user.job}`
+              .replace(/\s+/g, "-")
+              .replace(/\./g, "");
+            window.open(`/cv/${dataParams.id}/${name}`, "_blank");
           },
         },
         {
@@ -373,9 +374,12 @@ const CVprofile = () => {
               label: "Clipboard",
               icon: <FaClipboard />,
               onClick: () => {
+                const name = `${userData.user.name} ${userData.user.job}`
+                  .replace(/\s+/g, "-")
+                  .replace(/\./g, "");
                 message.success("Link copied to your clipboard");
                 return navigator.clipboard.writeText(
-                  `${window.location.origin}/profile/public/${userData.user.id}`
+                  `${window.location.origin}/cv/${dataParams.id}/${name}`
                 );
               },
             },
@@ -383,23 +387,31 @@ const CVprofile = () => {
               key: "3-2",
               label: "Whatsapp",
               icon: <FaWhatsapp />,
-              onClick: () =>
+              onClick: () => {
+                const name = `${userData.user.name} ${userData.user.job}`
+                  .replace(/\s+/g, "-")
+                  .replace(/\./g, "");
                 window.open(
                   `https://wa.me/?text=${encodeURIComponent(
-                    `${window.location.origin}/profile/public/${userData.user.id}`
+                    `${window.location.origin}/cv/${dataParams.id}/${name}`
                   )}`
-                ),
+                );
+              },
             },
             {
               key: "3-3",
               label: "Mail",
               icon: <SiGmail />,
-              onClick: () =>
+              onClick: () => {
+                const name = `${userData.user.name} ${userData.user.job}`
+                  .replace(/\s+/g, "-")
+                  .replace(/\./g, "");
                 window.open(
                   `mailto:?subject=&body=${encodeURIComponent(
-                    `${window.location.origin}/profile/public/${userData.user.id}`
+                    `${window.location.origin}/cv/${dataParams.id}/${name}`
                   )}`
-                ),
+                );
+              },
             },
           ],
           icon: <FcShare />,
@@ -572,8 +584,9 @@ const CVprofile = () => {
   const checkImageIcon = (gender) =>
     gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
-  const CvDownload = useRef();
   const TriggerCvDownload = () => {
+    setPdfDownloadLoading(true);
+    message.info("Your pdf is being processed");
     var printMe = CvDownload.current;
     var HTML_Width = printMe.clientWidth;
     var HTML_Height = printMe.clientHeight;
@@ -609,6 +622,8 @@ const CVprofile = () => {
       }
 
       pdf.save(userData.user.name + ".pdf");
+      setPdfDownloadLoading(false);
+      message.success("Your pdf download has been successful");
     });
   };
 
@@ -896,9 +911,13 @@ const CVprofile = () => {
               </div>
             )}
           </div>
-          {dataParams.type === "public" && (
+          {dataParams.type !== "app" && (
             <div className="download-pdf-cv-profile">
-              <Button type="primary" onClick={TriggerCvDownload}>
+              <Button
+                type="primary"
+                onClick={TriggerCvDownload}
+                loading={isPdfDownloadLoading}
+              >
                 Download PDF
               </Button>
             </div>

@@ -1,0 +1,7 @@
+.not-page-found{
+    display: grid;
+    grid-template-rows: 80% 20%;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}

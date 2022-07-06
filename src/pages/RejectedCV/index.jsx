@@ -53,6 +53,7 @@ const RejectedCV = () => {
       .then(function (response) {
         if (response.status === 200) {
           message.success("CV Queued for Rescan.", "success");
+          setSelectedRowKeys([]);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -87,7 +88,8 @@ const RejectedCV = () => {
     })
       .then(function (response) {
         if (response.status === 200) {
-          message.success("CV Queued for Rescan.", "success");
+          message.success("CV Queued for Delete.", "success");
+          setSelectedRowKeys([]);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -157,12 +159,7 @@ const RejectedCV = () => {
         <Button
           type="primary"
           shape="round"
-          onClick={() =>
-            window.open(
-              `/files/cv/${record.file}`,
-              "_blank"
-            )
-          }
+          onClick={() => window.open(`/files/cv/${record.file}`, "_blank")}
         >
           <AiOutlineFileText className="large-text" />
         </Button>
