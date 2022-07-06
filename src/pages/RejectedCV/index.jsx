@@ -19,8 +19,9 @@ const RejectedCV = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  
+
   useEffect(() => {
+    document.title = "Rejected CV";
     getAllRejectedCV();
     // eslint-disable-next-line
   }, [page]);
@@ -30,7 +31,6 @@ const RejectedCV = () => {
   };
 
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log(newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -135,14 +135,6 @@ const RejectedCV = () => {
         message.error("Something Went Wrong!", "error");
       });
   };
-
-  // category: "Accounting"
-  // created: "2022-04-12 05:21:07"
-  // file: "CV-16497552671327909964.pdf"
-  // id: 4576
-  // remarks: "You do not have any more parsing credits"
-  // status: 1
-  // user: 1
 
   const columns = [
     {

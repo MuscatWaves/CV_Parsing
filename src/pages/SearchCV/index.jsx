@@ -262,6 +262,7 @@ const SearchCV = () => {
   ];
 
   useEffect(() => {
+    document.title = "Search CV";
     getJobCategoryCount();
     getNationalityCount();
     // eslint-disable-next-line

@@ -26,7 +26,6 @@ const BuildCV = () => {
   const [isLoading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
   const [userDataLoading, setUserDataLoading] = useState("none");
-  
 
   const getUserData = async () => {
     setUserDataLoading("loading");
@@ -154,6 +153,7 @@ const BuildCV = () => {
   };
 
   useEffect(() => {
+    document.title = "Build CV";
     getJobCategoryCount();
     getNationalityCount();
     dataParams.id && getUserData();

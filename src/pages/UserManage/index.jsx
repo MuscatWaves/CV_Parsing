@@ -17,7 +17,6 @@ const UserManage = () => {
   const [data, setData] = useState([]);
   const cookies = new Cookies();
   const token = cookies.get("token");
-  
 
   const getAllUserManageList = async () => {
     setLoading(true);
@@ -51,6 +50,7 @@ const UserManage = () => {
   };
 
   useEffect(() => {
+    document.title = "User Manage";
     getAllUserManageList();
     // eslint-disable-next-line
   }, []);

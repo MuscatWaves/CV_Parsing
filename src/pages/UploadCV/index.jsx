@@ -23,7 +23,6 @@ const UploadCV = () => {
   const [jobMenuLoading, setJobMenuLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState({});
-  
 
   const getJobCategoryCount = async () => {
     setJobMenuLoading(true);
@@ -95,6 +94,10 @@ const UploadCV = () => {
     getAllUser();
     getJobCategoryCount();
     // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    document.title = "Upload CV";
   }, []);
 
   useEffect(() => {

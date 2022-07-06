@@ -10,7 +10,6 @@ const UserReport = () => {
   const token = cookies.get("token");
   const [isLoading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  
 
   const getAllUserReportList = async () => {
     setLoading(true);
@@ -44,6 +43,7 @@ const UserReport = () => {
   };
 
   useEffect(() => {
+    document.title = "User Report";
     getAllUserReportList();
     // eslint-disable-next-line
   }, []);

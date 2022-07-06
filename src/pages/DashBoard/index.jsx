@@ -92,6 +92,7 @@ const DashBoard = () => {
   ];
 
   useEffect(() => {
+    document.title = "Dashboard";
     if (token) {
       try {
         var user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);

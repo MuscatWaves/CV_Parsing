@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Input, Button, Form, message } from "antd";
 import ojimage from "../../images/oj.png";
@@ -9,6 +9,10 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 
 const Login = () => {
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
   const handleSubmit = async (values) => {
