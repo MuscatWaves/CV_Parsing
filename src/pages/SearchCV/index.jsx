@@ -181,7 +181,7 @@ const SearchCV = () => {
         <img
           src={
             record.image
-              ? `https://cv.omanjobs.om/files/images/${record.image}`
+              ? `/files/images/${record.image}`
               : checkImageIcon(record.gender)
           }
           alt={"User"}

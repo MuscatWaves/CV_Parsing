@@ -159,7 +159,7 @@ const RejectedCV = () => {
           shape="round"
           onClick={() =>
             window.open(
-              `https://cv.omanjobs.om/files/cv/${record.file}`,
+              `/files/cv/${record.file}`,
               "_blank"
             )
           }

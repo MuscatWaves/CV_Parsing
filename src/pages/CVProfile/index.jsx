@@ -304,7 +304,7 @@ const CVprofile = () => {
       title: "File",
       render: (record) => (
         <a
-          href={`https://cv.omanjobs.om/files/docs/${record.name}`}
+          href={`/files/docs/${record.name}`}
           target="_blank"
           rel="noreferrer"
         >
@@ -361,7 +361,7 @@ const CVprofile = () => {
           key: "2",
           icon: <FaFileDownload />,
           onClick: () => {
-            window.open(`https://cv.omanjobs.om/files/cv/${userData.user.cv}`);
+            window.open(`/files/cv/${userData.user.cv}`);
           },
         },
         {
@@ -561,7 +561,7 @@ const CVprofile = () => {
         {
           id: index,
           name: `${checkCategory(attachment.category)} - ${num}`,
-          attachment_link: `https://cv.omanjobs.om/files/docs/${attachment.name}`,
+          attachment_link: `/files/docs/${attachment.name}`,
           category: attachment.category,
         },
       ]);
@@ -717,7 +717,7 @@ const CVprofile = () => {
                 className={"cvprofile-picture"}
                 src={
                   userData.user.image
-                    ? `https://cv.omanjobs.om/files/images/${userData.user.image}`
+                    ? `/files/images/${userData.user.image}`
                     : checkImageIcon(userData.user.gender)
                 }
                 alt="user"
@@ -872,14 +872,14 @@ const CVprofile = () => {
               <div className="grid-gather">
                 {checkWhichFile(userData.user.cv) === "pdf" && (
                   <object
-                    data={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                    data={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
                     type="application/pdf"
                     width="100%"
                     height="800px"
                   >
                     <iframe
                       title={"PDF file for Candidate Resume"}
-                      src={`https://cv.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                      src={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
                     ></iframe>
                   </object>
                 )}
@@ -887,7 +887,7 @@ const CVprofile = () => {
                   (checkWhichFile(userData.user.cv) === "doc" && (
                     <iframe
                       title={"DOC file for Candidate Resume"}
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cv.omanjobs.om/files/cv/${userData.user.cv}`}
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
                       width="100%"
                       height="800px"
                       frameborder="0"
