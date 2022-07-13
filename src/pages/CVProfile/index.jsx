@@ -46,7 +46,6 @@ import ojimage from "../../images/oj.png";
 import FormData from "form-data";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
-import { Helmet } from "react-helmet-async";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -627,6 +626,58 @@ const CVprofile = () => {
     });
   };
 
+  useEffect(() => {
+    if (isLoading === "loaded") {
+      document.title = `${userData.user.name} ${userData.user.job}`;
+      document.getElementsByTagName(
+        "META"
+      )[1].content = `${userData.user.name} ${userData.user.job}`;
+      document.getElementsByTagName("META")[2].content = `Age : ${moment().diff(
+        moment(userData.user.DOB).format("YYYY-MM-DD"),
+        "years"
+      )} yrs Nationality : ${userData.user.nationality} Language : ${
+        userData.user.language
+      }`;
+      //Facebook Meta Tag
+      document.getElementsByTagName(
+        "META"
+      )[4].content = `${window.location.href}`;
+      document.getElementsByTagName(
+        "META"
+      )[5].content = `${userData.user.name} ${userData.user.job}`;
+      document.getElementsByTagName("META")[6].content = `Age : ${moment().diff(
+        moment(userData.user.DOB).format("YYYY-MM-DD"),
+        "years"
+      )} yrs Nationality : ${userData.user.nationality} Language : ${
+        userData.user.language
+      }`;
+      document.getElementsByTagName(
+        "META"
+      )[7].content = `https://cv.omanjobs.om/files/images/${userData.user.image}`;
+      //Twitter Meta Tag
+      document.getElementsByTagName(
+        "META"
+      )[9].content = `${window.location.href}`;
+      document.getElementsByTagName(
+        "META"
+      )[10].content = `${userData.user.name} ${userData.user.job}`;
+      document.getElementsByTagName(
+        "META"
+      )[11].content = `Age : ${moment().diff(
+        moment(userData.user.DOB).format("YYYY-MM-DD"),
+        "years"
+      )} yrs Nationality : ${userData.user.nationality} Language : ${
+        userData.user.language
+      }`;
+      document.getElementsByTagName(
+        "META"
+      )[12].content = `https://cv.omanjobs.om/files/images/${userData.user.image}`;
+    }
+    // eslint-disable-next-line
+  }, [isLoading]);
+
+  console.log(document.getElementsByTagName("META")[5]);
+
   return (
     <div
       className={
@@ -661,64 +712,6 @@ const CVprofile = () => {
       </Modal>
       {(isLoading === "loaded" && (
         <div>
-          <Helmet>
-            <title>{`${userData.user.name} ${userData.user.job}`}</title>
-            <meta
-              name="title"
-              content={`${userData.user.name} ${userData.user.job}`}
-            />
-            <meta
-              name="description"
-              content={`Age : ${moment().diff(
-                moment(userData.user.DOB).format("YYYY-MM-DD"),
-                "years"
-              )} yrs Nationality : ${userData.user.nationality} Language : ${
-                userData.user.language
-              }`}
-            />
-
-            {/* <!-- Open Graph / Facebook --> */}
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content={`${window.location.href}`} />
-            <meta
-              property="og:title"
-              content={`${userData.user.name} ${userData.user.job}`}
-            />
-            <meta
-              property="og:description"
-              content={`Age : ${moment().diff(
-                moment(userData.user.DOB).format("YYYY-MM-DD"),
-                "years"
-              )} yrs Nationality : ${userData.user.nationality} Language : ${
-                userData.user.language
-              }`}
-            />
-            <meta
-              property="og:image"
-              content={`https://cv.omanjobs.om/files/images/${userData.user.image}`}
-            />
-
-            {/* <!-- Twitter --> */}
-            <meta property="twitter:card" content="summary_large_image" />
-            <meta property="twitter:url" content={`${window.location.href}`} />
-            <meta
-              property="twitter:title"
-              content={`${userData.user.name} ${userData.user.job}`}
-            />
-            <meta
-              property="twitter:description"
-              content={`Age : ${moment().diff(
-                moment(userData.user.DOB).format("YYYY-MM-DD"),
-                "years"
-              )} yrs Nationality : ${userData.user.nationality} Language : ${
-                userData.user.language
-              }`}
-            />
-            <meta
-              property="twitter:image"
-              content={`https://cv.omanjobs.om/files/images/${userData.user.image}`}
-            />
-          </Helmet>
           <div
             className={
               dataParams.type === "app"
