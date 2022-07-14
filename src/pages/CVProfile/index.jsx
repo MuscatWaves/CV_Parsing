@@ -759,6 +759,16 @@ const CVprofile = () => {
                 {userData.user.job}
               </div>
               <div className="flex-small-gap">
+                {userData.user.url && (
+                  <a
+                    className="each-skill"
+                    href={userData.user.url}
+                    rel="noreferrer"
+                    target={"_blank"}
+                  >
+                    Portfolio Photo
+                  </a>
+                )}
                 {userData.user.wpv && (
                   <a
                     className="each-skill"
@@ -766,7 +776,7 @@ const CVprofile = () => {
                     rel="noreferrer"
                     target={"_blank"}
                   >
-                    Work Portfolio Video
+                    Portfolio Video
                   </a>
                 )}
                 {userData.user.interview && (
