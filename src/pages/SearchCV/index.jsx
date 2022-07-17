@@ -229,7 +229,7 @@ const SearchCV = () => {
     {
       title: "Email",
       render: (record) => (
-        <div>
+        <div className="flex-small-gap-column">
           <div
             className="pointer link flex-small-gap"
             onClick={() =>
@@ -255,7 +255,7 @@ const SearchCV = () => {
               }
             >
               <HiMail className="large-text" />
-              {record.email}
+              {record.alt_email}
             </div>
           )}
         </div>
@@ -281,7 +281,7 @@ const SearchCV = () => {
               onClick={() => window.open(`https://wa.me/${record.alt_phone}`)}
             >
               <RiMessage3Fill className="large-text" />
-              {record.mobile}
+              {record.alt_phone}
             </div>
           )}
         </div>

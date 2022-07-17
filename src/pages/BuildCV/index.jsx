@@ -316,6 +316,8 @@ const BuildCV = () => {
                   url: `/files/cv/${userData.user.cv}`,
                 },
               ],
+              alt_phone_number: userData.user.alt_phone,
+              alt_email: userData.user.alt_email,
               name: userData.user.name,
               email: userData.user.email,
               job_title: userData.user.job,

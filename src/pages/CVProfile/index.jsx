@@ -430,6 +430,12 @@ const CVprofile = () => {
     ...(dataParams.type === "app" && { email: userData.user.email }),
     gender: userData.user.gender,
     ...(dataParams.type === "app" && { mobile: userData.user.mobile }),
+    ...(dataParams.type === "app" && {
+      alternate_email: userData.user.alt_email,
+    }),
+    ...(dataParams.type === "app" && {
+      alternate_mobile_no: userData.user.alt_phone,
+    }),
     DOB:
       (userData.user.DOB && moment(userData.user.DOB).format("D MMMM YYYY")) ||
       "",

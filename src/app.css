@@ -241,6 +241,12 @@
     gap: 0.5rem;
 }
 
+.flex-small-gap1-column{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .flex-gap-column{
     display: flex;
     flex-direction: column;
