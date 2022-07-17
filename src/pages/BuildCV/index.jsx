@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Form, Input, Button, Select, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Select, Upload, message, Space } from "antd";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import axios from "axios";
@@ -9,6 +8,11 @@ import Cookies from "universal-cookie";
 import moment from "moment";
 import "./buildcv.css";
 import Loader from "../../components/Loader";
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import CustomDatePicker from "../../components/DatePicker";
 
 const BuildCV = () => {
@@ -459,6 +463,99 @@ const BuildCV = () => {
           >
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
           </Form.Item>
+
+          {/*  */}
+          {/* <Form.Item label="Education" className="two-column">
+            <Form.List name="education">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space key={key}>
+                      <div>{`${key + 1})`}</div>
+                      <Space key={key} className={"education-section-build"}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "edu_name"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing Education Name",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Course Name" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "college"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing College Name",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="College/School Name" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "edu_loc"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing Location",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Location" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "edu_from"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing From",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="From" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "edu_to"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing To",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="To" />
+                        </Form.Item>
+                      </Space>
+                      <MinusCircleOutlined
+                        style={{ marginBottom: "20px", fontSize: "25px" }}
+                        onClick={() => remove(name)}
+                      />
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Add Education
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </Form.Item> */}
+          {/*  */}
+
           <Form.Item label="Skills" name="skills" className="two-column">
             <Input.TextArea />
           </Form.Item>

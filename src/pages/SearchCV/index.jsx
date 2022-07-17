@@ -265,7 +265,7 @@ const SearchCV = () => {
     {
       title: "Phone",
       render: (record) => (
-        <div>
+        <div className="flex-small-gap-column">
           {record.mobile && (
             <div
               className="pointer link-green flex-small-gap"
