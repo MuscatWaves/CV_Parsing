@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Form, Input, Button, DatePicker, Select, Upload, message } from "antd";
+import { Form, Input, Button, Select, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
@@ -9,6 +9,7 @@ import Cookies from "universal-cookie";
 import moment from "moment";
 import "./buildcv.css";
 import Loader from "../../components/Loader";
+import CustomDatePicker from "../../components/DatePicker";
 
 const BuildCV = () => {
   const dataParams = useParams();
@@ -26,6 +27,7 @@ const BuildCV = () => {
   const [isLoading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
   const [userDataLoading, setUserDataLoading] = useState("none");
+  const [date, selectDate] = useState();
 
   const getUserData = async () => {
     setUserDataLoading("loading");
@@ -44,6 +46,7 @@ const BuildCV = () => {
             user: response.data.data.user[0],
             attachments: response.data.data.attachments,
           });
+          selectDate(moment(response.data.data.user[0].DOB));
           setUserDataLoading("loaded");
         } else {
           if (response.status === 201) {
@@ -176,10 +179,15 @@ const BuildCV = () => {
     dataParams.id && bodyFormDataBuild.append("update", dataParams.id);
     bodyFormDataBuild.append("name", checkValue(values.name, "str"));
     bodyFormDataBuild.append("email", values.email);
-    bodyFormDataBuild.append("dob", moment(values.dob).format("MM/DD/YYYY"));
+    bodyFormDataBuild.append("dob", date.format("MM/DD/YYYY"));
     bodyFormDataBuild.append("job", checkValue(values.job_title, "str"));
     bodyFormDataBuild.append("gender", checkValue(values.gender, "str"));
     bodyFormDataBuild.append("country", checkValue(values.country, "str"));
+    bodyFormDataBuild.append("alt_email", checkValue(values.alt_email, "str"));
+    bodyFormDataBuild.append(
+      "alt_phone",
+      checkValue(values.alt_phone_number, "str")
+    );
     bodyFormDataBuild.append(
       "nationality",
       checkValue(values.nationality, "str")
@@ -309,7 +317,6 @@ const BuildCV = () => {
                 },
               ],
               name: userData.user.name,
-              dob: moment(userData.user.DOB),
               email: userData.user.email,
               job_title: userData.user.job,
               gender: userData.user.gender,
@@ -374,9 +381,10 @@ const BuildCV = () => {
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
           </Form.Item>
-          <Form.Item name="name">
+          <Form.Item name="name" label={"Name"}>
             <Input placeholder="Name of the candidate" />
           </Form.Item>
+          <CustomDatePicker date={date} selectDate={selectDate} />
           <Form.Item
             name="email"
             rules={[
@@ -386,16 +394,6 @@ const BuildCV = () => {
             ]}
           >
             <Input placeholder="Email of the candidate*" />
-          </Form.Item>
-          <Form.Item
-            name="dob"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <DatePicker placeholder="Date of Birth*" />
           </Form.Item>
           <Form.Item name="job_title">
             <Input placeholder="Job Title" />
@@ -442,6 +440,12 @@ const BuildCV = () => {
           </Form.Item>
           <Form.Item name="phone_number">
             <Input placeholder="Phone Number" type="number" />
+          </Form.Item>
+          <Form.Item name="alt_email">
+            <Input placeholder="Alternative Email" type="email" />
+          </Form.Item>
+          <Form.Item name="alt_phone_number">
+            <Input placeholder="Alternative Phone Number" type="number" />
           </Form.Item>
           <Form.Item label="Education" name="education" className="two-column">
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />

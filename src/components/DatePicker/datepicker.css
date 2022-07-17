@@ -1,0 +1,13 @@
+.custom-datepicker{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.custom-datepicker-wrapper{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 0.5rem;
+}

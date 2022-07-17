@@ -229,34 +229,63 @@ const SearchCV = () => {
     {
       title: "Email",
       render: (record) => (
-        <div
-          className="pointer link flex-small-gap"
-          onClick={() =>
-            window.open(
-              `mailto:${record.email}?subject=${encodeURIComponent(
-                "Oman Jobs"
-              )}&body=${encodeURIComponent("For Recruiter - Write here")}`
-            )
-          }
-        >
-          <HiMail className="large-text" />
-          {record.email}
+        <div>
+          <div
+            className="pointer link flex-small-gap"
+            onClick={() =>
+              window.open(
+                `mailto:${record.email}?subject=${encodeURIComponent(
+                  "Oman Jobs"
+                )}&body=${encodeURIComponent("For Recruiter - Write here")}`
+              )
+            }
+          >
+            <HiMail className="large-text" />
+            {record.email}
+          </div>
+          {record.alt_email && (
+            <div
+              className="pointer link flex-small-gap"
+              onClick={() =>
+                window.open(
+                  `mailto:${record.alt_email}?subject=${encodeURIComponent(
+                    "Oman Jobs"
+                  )}&body=${encodeURIComponent("For Recruiter - Write here")}`
+                )
+              }
+            >
+              <HiMail className="large-text" />
+              {record.email}
+            </div>
+          )}
         </div>
       ),
       width: "320px",
     },
     {
       title: "Phone",
-      render: (record) =>
-        record.mobile && (
-          <div
-            className="pointer link-green flex-small-gap"
-            onClick={() => window.open(`https://wa.me/${record.mobile}`)}
-          >
-            <RiMessage3Fill className="large-text" />
-            {record.mobile}
-          </div>
-        ),
+      render: (record) => (
+        <div>
+          {record.mobile && (
+            <div
+              className="pointer link-green flex-small-gap"
+              onClick={() => window.open(`https://wa.me/${record.mobile}`)}
+            >
+              <RiMessage3Fill className="large-text" />
+              {record.mobile}
+            </div>
+          )}
+          {record.alt_phone && (
+            <div
+              className="pointer link-green flex-small-gap"
+              onClick={() => window.open(`https://wa.me/${record.alt_phone}`)}
+            >
+              <RiMessage3Fill className="large-text" />
+              {record.mobile}
+            </div>
+          )}
+        </div>
+      ),
       width: "200px",
     },
   ];

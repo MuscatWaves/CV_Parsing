@@ -521,7 +521,6 @@ const CVprofile = () => {
                   >
                     <Upload
                       {...UploadProps}
-                      accept=".pdf,.docx,.xslx"
                       maxCount={1}
                       showUploadList={{ showRemoveIcon: false }}
                     >
