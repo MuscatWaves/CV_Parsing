@@ -49,6 +49,7 @@ import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 import { Helmet } from "react-helmet-async";
 import UpdateWork from "./UpdateWork";
+import UpdateEducation from "./UpdateEducation";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -77,6 +78,15 @@ const CVprofile = () => {
   const [updateWeData, setUpdateWeData] = useState({});
   const [isDeleteWeModal, setDeleteWeModal] = useState(false);
   const [deleteWeData, setDeleteWeData] = useState("");
+  const [isDeleteWeLoading, setDeleteWeLoading] = useState(false);
+
+  // Update Education
+
+  const [isUpdateEduModal, setUpdateEduModal] = useState(false);
+  const [updateEduData, setUpdateEduData] = useState({});
+  const [isDeleteEduModal, setDeleteEduModal] = useState(false);
+  const [deleteEduData, setDeleteEduData] = useState("");
+  const [isDeleteEduLoading, setDeleteEduLoading] = useState(false);
 
   const user =
     dataParams.type === "app" &&
@@ -663,10 +673,18 @@ const CVprofile = () => {
                 <AiFillEdit
                   className="hover-blue"
                   style={{ fontSize: "22px" }}
+                  onClick={() => {
+                    setUpdateEduData(education);
+                    setUpdateEduModal(true);
+                  }}
                 />
                 <AiFillDelete
                   className="hover-red"
                   style={{ fontSize: "22px" }}
+                  onClick={() => {
+                    setDeleteEduData(education);
+                    setDeleteEduModal(true);
+                  }}
                 />
               </div>
             )}
@@ -693,8 +711,13 @@ const CVprofile = () => {
                     setUpdateWeData(work);
                     setUpdateWeModal(true);
                   }}
+                  className="hover-blue"
                 />
-                <AiFillDelete style={{ fontSize: "22px" }} />
+                <AiFillDelete style={{ fontSize: "22px" }} 
+                  className="hover-red" onClick={() => {
+                    setDeleteWeData(work);
+                    setDeleteWeModal(true);
+                  }}/>
               </div>
             )}
           </div>
@@ -746,12 +769,49 @@ const CVprofile = () => {
 
       {/* Work Experience */}
 
-      <UpdateWork
+      {isUpdateWeModal && <UpdateWork
         data={updateWeData}
         setData={setUpdateWeData}
         visible={isUpdateWeModal}
         toggleVisible={setUpdateWeModal}
-      />
+      />}
+      <Modal
+        title="Delete Work Experience Confirmation"
+        visible={isDeleteWeModal}
+        onOk={() => console.log()}
+        onCancel={() => {
+          setDeleteWeData("")
+          setDeleteWeModal(false)
+        }}
+        okText={"Delete"}
+        okType={"danger"}
+        confirmLoading={isDeleteWeLoading}
+      >
+        <p>{`Are you sure you want to delete "${deleteWeData.name}" from Experience?`}</p>
+      </Modal>
+
+      {/* Education */}
+
+      {isUpdateEduModal && <UpdateEducation
+        data={updateEduData}
+        setData={setUpdateEduData}
+        visible={isUpdateEduModal}
+        toggleVisible={setUpdateEduModal}
+      />}
+      <Modal
+        title="Delete Education Confirmation"
+        visible={isDeleteEduModal}
+        onOk={() => console.log()}
+        onCancel={() => {
+          setDeleteEduData("")
+          setDeleteEduModal(false)
+        }}
+        okText={"Delete"}
+        okType={"danger"}
+        confirmLoading={isDeleteEduLoading}
+      >
+        <p>{`Are you sure you want to delete "${deleteEduData.name}" from Education?`}</p>
+      </Modal>
 
       {(isLoading === "loaded" && (
         <div>

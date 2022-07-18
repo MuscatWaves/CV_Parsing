@@ -265,7 +265,7 @@ const BuildCV = () => {
         bodyFormDataBuild.append("edu_from_month[]", education.edu_from_month);
         bodyFormDataBuild.append("edu_to_year[]", education.edu_to_year);
         bodyFormDataBuild.append("edu_to_month[]", education.edu_to_month);
-        return;
+        return "";
       });
     !dataParams.id &&
       values.new_work_exp.map((work) => {
@@ -276,7 +276,7 @@ const BuildCV = () => {
         bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month);
         bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year);
         bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month);
-        return;
+        return "";
       });
     setLoading(true);
     await axios({

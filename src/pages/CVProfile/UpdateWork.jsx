@@ -8,7 +8,7 @@ const UpdateWork = ({ data, setData, visible, toggleVisible }) => {
 
   const handleCancel = () => {
     toggleVisible(false);
-    setData(null);
+    setData({});
     form.resetFields();
   };
 
@@ -17,8 +17,6 @@ const UpdateWork = ({ data, setData, visible, toggleVisible }) => {
     console.log(values);
     setLoading(false);
   };
-
-  console.log(visible, data);
 
   return (
     <Modal
