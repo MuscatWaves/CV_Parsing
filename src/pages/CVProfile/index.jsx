@@ -36,7 +36,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
-import { categorySelection } from "./constants.ts";
+import { categorySelection, education_dummy, work_experience_dummy  } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
@@ -452,7 +452,7 @@ const CVprofile = () => {
   const string = (str) =>
     isLoading === "loaded" &&
     str
-      .split("\r\n")
+      .split(/\r\n|\n/)
       .map((line, i) =>
         line === "" ? <br key={i} /> : <div key={i}>{line}</div>
       );
@@ -631,6 +631,28 @@ const CVprofile = () => {
       message.success("Your pdf download has been successful");
     });
   };
+
+  const makeEducationSection = () => <div className="flex-gap-column">
+    {education_dummy.map((education) => 
+    <div>
+      <div className="medium-text bolder text-orange">{education.edu_name}</div>
+      <div className="medium-text bolder">{education.college}</div>
+      <div className="text-light-grey bold">{`${education.edu_from} - ${education.edu_to}`}</div>
+      <div className="bold text-grey medium-text">{education.edu_loc}</div>
+    </div>)
+  }
+  </div>
+
+const makeExperienceSection = () => <div className="flex-gap-column">
+{work_experience_dummy.map((work) => 
+<div>
+  <div className="medium-2-text bolder text-orange">{work.ex_name}</div>
+  <div className="medium-text bolder">{work.desg}</div>
+  <div className="text-light-grey bold">{`${work.ex_from} - ${work.ex_to}`}</div>
+  <div className="bold text-grey medium-text">{string(work.desc)}</div>
+</div>)
+}
+</div>
 
   return (
     <div
@@ -854,6 +876,7 @@ const CVprofile = () => {
                 <div className="cvprofile-skills-chain medium-text text-grey">
                   {string(userData.user.education)}
                 </div>
+                {/* {makeEducationSection()} */}
               </div>
               {dataParams.type !== "app" && (
                 <div className="cvprofile-skills slide-in-left-animation">
@@ -885,6 +908,7 @@ const CVprofile = () => {
                 <div className="each-experience medium-text text-grey">
                   {string(userData.user.company)}
                 </div>
+                {/* {makeExperienceSection()} */}
               </div>
             </div>
             {dataParams.type === "app" && (

@@ -70,6 +70,16 @@
     grid-row: 1;
 }
 
+.work-exp-section-build{
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+}
+
+.work-exp-section-build > div:nth-child(5){
+    grid-column: 1/5;
+    grid-row: 2;
+}
+
 @media screen and (max-width: 900px) {
     .buildCvForm{
         display: flex;

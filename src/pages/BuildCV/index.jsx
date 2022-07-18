@@ -475,14 +475,14 @@ const BuildCV = () => {
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
           </Form.Item>
 
-          {/*  */}
+          {/* Education Grid */}
+
           {/* <Form.Item label="Education" className="two-column">
             <Form.List name="education">
               {(fields, { add, remove }) => (
                 <>
                   {fields.map(({ key, name, ...restField }) => (
                     <Space key={key}>
-                      <div>{`${key + 1})`}</div>
                       <Space key={key} className={"education-section-build"}>
                         <Form.Item
                           {...restField}
@@ -565,6 +565,98 @@ const BuildCV = () => {
               )}
             </Form.List>
           </Form.Item> */}
+
+          {/* Work Experience */}
+
+          {/* <Form.Item label="Work Experience" className="two-column">
+            <Form.List name="work_exp">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space key={key}>
+                      <Space key={key} className={"work-exp-section-build"}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "ex_name"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing Experience Name",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Company Name" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "desg"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing Designation",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Designation" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "ex_from"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing From",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="From" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "ex_to"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing To",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="To" />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "desc"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "Missing Description",
+                            },
+                          ]}
+                        >
+                          <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} placeholder="Description"/>
+                        </Form.Item>
+                      </Space>
+                      <MinusCircleOutlined
+                        style={{ marginBottom: "20px", fontSize: "25px" }}
+                        onClick={() => remove(name)}
+                      />
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Add Work Experience
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
+          </Form.Item> */}
+
           {/*  */}
 
           <Form.Item label="Skills" name="skills" className="two-column">
