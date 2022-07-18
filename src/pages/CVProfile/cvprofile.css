@@ -147,6 +147,26 @@
     margin: 1.5rem;
 }
 
+.hover-blue{
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.hover-blue:hover{
+    transform: scale(1.05);
+    color: #51a6f5;
+}
+
+.hover-red{
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.hover-red:hover{
+    transform: scale(1.05);
+    color: #ff4c41;
+}
+
 @media screen and (max-width: 1200px){
     .cvprofile-body{
         display: flex;

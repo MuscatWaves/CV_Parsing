@@ -16,7 +16,7 @@ const PageNotFound = lazy(() => import("../components/NoPageFound"));
 const Routing = () => {
   return (
     <div>
-      <Suspense fallback={<Loader minHeight={"90vh"} />}>
+      <Suspense fallback={<Loader minHeight={"80vh"} />}>
         <Router>
           <Routes>
             <Route path="/" element={<Login />}></Route>

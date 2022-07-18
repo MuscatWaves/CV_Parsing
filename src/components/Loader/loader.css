@@ -16,5 +16,5 @@
 .loader-image{
     width: 200px;
     height: 200px;
-    animation: slide-in-left 0.8s;
+    animation: zoom-in 0.8s;
 }

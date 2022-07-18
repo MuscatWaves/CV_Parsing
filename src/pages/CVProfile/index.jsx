@@ -9,6 +9,7 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
+import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import {
   Button,
@@ -36,7 +37,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
-import { categorySelection, education_dummy, work_experience_dummy  } from "./constants.ts";
+import { categorySelection } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
@@ -47,13 +48,19 @@ import FormData from "form-data";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 import { Helmet } from "react-helmet-async";
+import UpdateWork from "./UpdateWork";
 
 const CVprofile = () => {
   const dataParams = useParams();
   const [form] = Form.useForm();
   const cookies = new Cookies();
   const token = cookies.get("token");
-  const [userData, setUserData] = useState({ user: {}, attachments: [] });
+  const [userData, setUserData] = useState({
+    user: {},
+    attachments: [],
+    educations: [],
+    experience: [],
+  });
   const [isLoading, setLoading] = useState("");
   const [tableLoading, setTableLoading] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
@@ -63,6 +70,13 @@ const CVprofile = () => {
   const [fileList, setFileList] = useState([]);
   const CvDownload = useRef();
   const [isPdfDownloadLoading, setPdfDownloadLoading] = useState(false);
+
+  // Update Work Experience
+
+  const [isUpdateWeModal, setUpdateWeModal] = useState(false);
+  const [updateWeData, setUpdateWeData] = useState({});
+  const [isDeleteWeModal, setDeleteWeModal] = useState(false);
+  const [deleteWeData, setDeleteWeData] = useState("");
 
   const user =
     dataParams.type === "app" &&
@@ -126,6 +140,8 @@ const CVprofile = () => {
           setUserData({
             user: response.data.data.user[0],
             attachments: response.data.data.attachments,
+            experience: response.data.data.experience,
+            educations: response.data.data.educations,
           });
           setLoading("loaded");
         } else {
@@ -158,6 +174,8 @@ const CVprofile = () => {
           setUserData({
             user: response.data.data.user[0],
             attachments: response.data.data.attachments,
+            experience: response.data.data.experience,
+            educations: response.data.data.educations,
           });
           setLoading("loaded");
         } else {
@@ -632,27 +650,63 @@ const CVprofile = () => {
     });
   };
 
-  const makeEducationSection = () => <div className="flex-gap-column">
-    {education_dummy.map((education) => 
-    <div>
-      <div className="medium-text bolder text-orange">{education.edu_name}</div>
-      <div className="medium-text bolder">{education.college}</div>
-      <div className="text-light-grey bold">{`${education.edu_from} - ${education.edu_to}`}</div>
-      <div className="bold text-grey medium-text">{education.edu_loc}</div>
-    </div>)
-  }
-  </div>
+  const makeEducationSection = () => (
+    <div className="flex-gap-column">
+      {userData.educations.map((education) => (
+        <div key={education.id}>
+          <div className="flex-between" style={{ padding: 0 }}>
+            <div className="medium-text bolder text-orange">
+              {education.name}
+            </div>
+            {dataParams.type === "app" && (
+              <div className="flex-small-gap">
+                <AiFillEdit
+                  className="hover-blue"
+                  style={{ fontSize: "22px" }}
+                />
+                <AiFillDelete
+                  className="hover-red"
+                  style={{ fontSize: "22px" }}
+                />
+              </div>
+            )}
+          </div>
+          <div className="medium-text bolder">{education.college}</div>
+          <div className="text-light-grey bold">{`${education.from_month} ${education.from_year} - ${education.to_month} ${education.to_year}`}</div>
+          <div className="bold text-grey medium-text">{education.location}</div>
+        </div>
+      ))}
+    </div>
+  );
 
-const makeExperienceSection = () => <div className="flex-gap-column">
-{work_experience_dummy.map((work) => 
-<div>
-  <div className="medium-2-text bolder text-orange">{work.ex_name}</div>
-  <div className="medium-text bolder">{work.desg}</div>
-  <div className="text-light-grey bold">{`${work.ex_from} - ${work.ex_to}`}</div>
-  <div className="bold text-grey medium-text">{string(work.desc)}</div>
-</div>)
-}
-</div>
+  const makeExperienceSection = () => (
+    <div className="flex-gap-column">
+      {userData.experience.map((work) => (
+        <div key={work.id}>
+          <div className="flex-between" style={{ padding: 0 }}>
+            <div className="medium-2-text bolder text-orange">{work.name}</div>
+            {dataParams.type === "app" && (
+              <div className="flex-small-gap">
+                <AiFillEdit
+                  style={{ fontSize: "22px" }}
+                  onClick={() => {
+                    setUpdateWeData(work);
+                    setUpdateWeModal(true);
+                  }}
+                />
+                <AiFillDelete style={{ fontSize: "22px" }} />
+              </div>
+            )}
+          </div>
+          <div className="medium-text bolder">{work.designation}</div>
+          <div className="text-light-grey bold">{`${work.from_month} ${work.from_year} - ${work.to_month} ${work.to_year}`}</div>
+          <div className="bold text-grey medium-text">
+            {work.description && string(work.description)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div
@@ -674,6 +728,9 @@ const makeExperienceSection = () => <div className="flex-gap-column">
           />
         </>
       )}
+
+      {/* Attachments Section Modals*/}
+
       {uploadModal()}
       <Modal
         title="Delete Confirmation"
@@ -686,6 +743,16 @@ const makeExperienceSection = () => <div className="flex-gap-column">
       >
         <p>{`Are you sure you want to delete "${deletionData.name}" from attachments?`}</p>
       </Modal>
+
+      {/* Work Experience */}
+
+      <UpdateWork
+        data={updateWeData}
+        setData={setUpdateWeData}
+        visible={isUpdateWeModal}
+        toggleVisible={setUpdateWeModal}
+      />
+
       {(isLoading === "loaded" && (
         <div>
           <Helmet
@@ -873,10 +940,13 @@ const makeExperienceSection = () => <div className="flex-gap-column">
               </div>
               <div className="cvprofile-skills slide-in-left-animation">
                 <div className="bolder large-text text-orange">Education</div>
-                <div className="cvprofile-skills-chain medium-text text-grey">
-                  {string(userData.user.education)}
-                </div>
-                {/* {makeEducationSection()} */}
+                {userData.user.education ? (
+                  <div className="cvprofile-skills-chain medium-text text-grey">
+                    {string(userData.user.education)}
+                  </div>
+                ) : (
+                  makeEducationSection()
+                )}
               </div>
               {dataParams.type !== "app" && (
                 <div className="cvprofile-skills slide-in-left-animation">
@@ -905,10 +975,13 @@ const makeExperienceSection = () => <div className="flex-gap-column">
                 Work Experience
               </div>
               <div className="experiences-list">
-                <div className="each-experience medium-text text-grey">
-                  {string(userData.user.company)}
-                </div>
-                {/* {makeExperienceSection()} */}
+                {userData.user.company ? (
+                  <div className="each-experience medium-text text-grey">
+                    {string(userData.user.company)}
+                  </div>
+                ) : (
+                  makeExperienceSection()
+                )}
               </div>
             </div>
             {dataParams.type === "app" && (
@@ -975,7 +1048,7 @@ const makeExperienceSection = () => <div className="flex-gap-column">
             </div>
           )}
         </div>
-      )) || <Loader minHeight={"70vh"} />}
+      )) || <Loader minHeight={dataParams.type === "app" ? "70vh" : "85vh"} />}
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>
   );
