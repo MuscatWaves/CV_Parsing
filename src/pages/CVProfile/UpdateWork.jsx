@@ -29,23 +29,23 @@ const UpdateWork = ({
     if (!data.id) {
       bodyFormDataUpdate.append("add_experience", true);
       bodyFormDataUpdate.append("id", userId);
-      bodyFormDataUpdate.append("ex_name[]", values.ex_name);
-      bodyFormDataUpdate.append("desc[]", values.desc);
-      bodyFormDataUpdate.append("desg[]", values.desg);
-      bodyFormDataUpdate.append("ex_from_year[]", values.ex_from_year);
-      bodyFormDataUpdate.append("ex_from_month[]", values.ex_from_month);
-      bodyFormDataUpdate.append("ex_to_year[]", values.ex_to_year);
-      bodyFormDataUpdate.append("ex_to_month[]", values.ex_to_month);
+      bodyFormDataUpdate.append("ex_name[]", values.ex_name || "");
+      bodyFormDataUpdate.append("desc[]", values.desc || "");
+      bodyFormDataUpdate.append("desg[]", values.desg || "");
+      bodyFormDataUpdate.append("ex_from_year[]", values.ex_from_year || "");
+      bodyFormDataUpdate.append("ex_from_month[]", values.ex_from_month || "");
+      bodyFormDataUpdate.append("ex_to_year[]", values.ex_to_year || "");
+      bodyFormDataUpdate.append("ex_to_month[]", values.ex_to_month || "");
     } else {
       bodyFormDataUpdate.append("update_experience", true);
       bodyFormDataUpdate.append("id", data.id);
-      bodyFormDataUpdate.append("ex_name", values.ex_name);
-      bodyFormDataUpdate.append("desc", values.desc);
-      bodyFormDataUpdate.append("desg", values.desg);
-      bodyFormDataUpdate.append("ex_from_year", values.ex_from_year);
-      bodyFormDataUpdate.append("ex_from_month", values.ex_from_month);
-      bodyFormDataUpdate.append("ex_to_year", values.ex_to_year);
-      bodyFormDataUpdate.append("ex_to_month", values.ex_to_month);
+      bodyFormDataUpdate.append("ex_name", values.ex_name || "");
+      bodyFormDataUpdate.append("desc", values.desc || "");
+      bodyFormDataUpdate.append("desg", values.desg || "");
+      bodyFormDataUpdate.append("ex_from_year", values.ex_from_year || "");
+      bodyFormDataUpdate.append("ex_from_month", values.ex_from_month || "");
+      bodyFormDataUpdate.append("ex_to_year", values.ex_to_year || "");
+      bodyFormDataUpdate.append("ex_to_month", values.ex_to_month || "");
     }
 
     setLoading(true);
@@ -118,41 +118,41 @@ const UpdateWork = ({
         </Form.Item>
         <Form.Item
           name="ex_from_month"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //   },
+          // ]}
         >
           <Select placeholder="From month" options={monthSelectionLabel} />
         </Form.Item>
         <Form.Item
           name="ex_from_year"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //   },
+          // ]}
         >
           <Select placeholder="From year" options={makeYear()} />
         </Form.Item>
         <Form.Item
           name="ex_to_month"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //   },
+          // ]}
         >
           <Select placeholder="To Month" options={monthSelectionLabel} />
         </Form.Item>
         <Form.Item
           name="ex_to_year"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //   },
+          // ]}
         >
           <Select placeholder="To Year" options={makeYear()} />
         </Form.Item>

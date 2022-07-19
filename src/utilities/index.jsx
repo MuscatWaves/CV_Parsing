@@ -37,6 +37,7 @@ export const monthSelectionLabel = [
   { label: "October", value: "October", code: "Oct" },
   { label: "November", value: "November", code: "Nov" },
   { label: "December", value: "December", code: "Dec" },
+  { label: "Present", value: "Present", code: "Present" },
 ];
 
 export const makeYear = () => {
@@ -47,9 +48,8 @@ export const makeYear = () => {
     for (let i = 0; i < len; i++) a[i] = start + i;
     return a;
   };
-
-  const yearSelection = range(1950, moment().year());
   let newYear = [];
+  const yearSelection = range(1950, moment().year());
   yearSelection.map(
     (year) => (newYear = [...newYear, { label: year, value: String(year) }])
   );
@@ -57,6 +57,10 @@ export const makeYear = () => {
 };
 
 export const codeMonth = (value) => {
+  if (!value) {
+    console.log(true);
+    return;
+  }
   const month = monthSelectionLabel.filter((month) => month.value === value);
   return month[0].code;
 };

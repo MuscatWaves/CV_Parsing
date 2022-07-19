@@ -276,7 +276,7 @@ const BuildCV = () => {
         bodyFormDataBuild.append("desg[]", work.desg);
         bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year);
         bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month);
-        bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year);
+        bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year || "");
         bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month);
         return "";
       });
@@ -717,16 +717,7 @@ const BuildCV = () => {
                               options={monthSelectionLabel}
                             />
                           </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "ex_to_year"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing To year",
-                              },
-                            ]}
-                          >
+                          <Form.Item {...restField} name={[name, "ex_to_year"]}>
                             <Select
                               placeholder="To Year"
                               options={makeYear()}

@@ -848,11 +848,11 @@ const CVprofile = () => {
             )}
           </div>
           <div className="medium-text bolder">{work.designation}</div>
-          <div className="text-light-grey bold">{`${codeMonth(
-            work.from_month
-          )} ${work.from_year} - ${codeMonth(work.to_month)} ${
-            work.to_year
-          }`}</div>
+          <div className="text-light-grey bold">{`${
+            work.from_month && codeMonth(work.from_month)
+          } ${work.from_year} ${
+            work.to_month && "- " + codeMonth(work.to_month)
+          } ${work.to_year}`}</div>
           <div className="bold text-grey medium-text">
             {work.description && string(work.description)}
           </div>
