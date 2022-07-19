@@ -40,7 +40,7 @@ export const monthSelectionLabel = [
   { label: "Present", value: "Present", code: "Present" },
 ];
 
-export const makeYear = () => {
+export const makeYear = (birth) => {
   const range = (start, end) => {
     /* generate a range : [start, start+1, ..., end-1, end] */
     var len = end - start + 1;
@@ -53,7 +53,7 @@ export const makeYear = () => {
   yearSelection.map(
     (year) => (newYear = [...newYear, { label: year, value: String(year) }])
   );
-  return newYear;
+  return birth ? newYear : newYear.reverse();
 };
 
 export const codeMonth = (value) => {

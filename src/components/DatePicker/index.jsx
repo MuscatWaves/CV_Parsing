@@ -32,7 +32,7 @@ const CustomDatePicker = ({ date, selectDate }) => {
           label={"Year"}
           value={year}
           placeholder={"Year"}
-          options={makeYear()}
+          options={makeYear("birth")}
           onChange={(value) => {
             setMonth(null);
             setDay(null);

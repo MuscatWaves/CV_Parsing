@@ -136,7 +136,7 @@ const UpdateEducation = ({
             },
           ]}
         >
-          <Select placeholder="From Year" options={makeYear()} />
+          <Select placeholder="From Year" options={makeYear()} showSearch />
         </Form.Item>
         <Form.Item
           name="edu_to_month"
@@ -156,7 +156,7 @@ const UpdateEducation = ({
             },
           ]}
         >
-          <Select placeholder="To Year" options={makeYear()} />
+          <Select placeholder="To Year" options={makeYear()} showSearch />
         </Form.Item>
       </Form>
     </Modal>

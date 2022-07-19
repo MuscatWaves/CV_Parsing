@@ -118,43 +118,29 @@ const UpdateWork = ({
         </Form.Item>
         <Form.Item
           name="ex_from_month"
-          // rules={[
-          //   {
-          //     required: true,
-          //   },
-          // ]}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
         >
           <Select placeholder="From month" options={monthSelectionLabel} />
         </Form.Item>
         <Form.Item
           name="ex_from_year"
-          // rules={[
-          //   {
-          //     required: true,
-          //   },
-          // ]}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
         >
-          <Select placeholder="From year" options={makeYear()} />
+          <Select placeholder="From year" options={makeYear()} showSearch />
         </Form.Item>
-        <Form.Item
-          name="ex_to_month"
-          // rules={[
-          //   {
-          //     required: true,
-          //   },
-          // ]}
-        >
+        <Form.Item name="ex_to_month">
           <Select placeholder="To Month" options={monthSelectionLabel} />
         </Form.Item>
-        <Form.Item
-          name="ex_to_year"
-          // rules={[
-          //   {
-          //     required: true,
-          //   },
-          // ]}
-        >
-          <Select placeholder="To Year" options={makeYear()} />
+        <Form.Item name="ex_to_year">
+          <Select placeholder="To Year" options={makeYear()} showSearch />
         </Form.Item>
         <Form.Item name="desc">
           <Input.TextArea

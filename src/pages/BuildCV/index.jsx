@@ -262,8 +262,14 @@ const BuildCV = () => {
         bodyFormDataBuild.append("edu_name[]", education.edu_name);
         bodyFormDataBuild.append("college[]", education.college);
         bodyFormDataBuild.append("edu_loc[]", education.edu_loc);
-        bodyFormDataBuild.append("edu_from_year[]", education.edu_from_year);
-        bodyFormDataBuild.append("edu_from_month[]", education.edu_from_month);
+        bodyFormDataBuild.append(
+          "edu_from_year[]",
+          education.edu_from_year || ""
+        );
+        bodyFormDataBuild.append(
+          "edu_from_month[]",
+          education.edu_from_month || ""
+        );
         bodyFormDataBuild.append("edu_to_year[]", education.edu_to_year);
         bodyFormDataBuild.append("edu_to_month[]", education.edu_to_month);
         return "";
@@ -558,12 +564,6 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "edu_from_month"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing From month",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="From Month"
@@ -573,16 +573,11 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "edu_from_year"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing From year",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="From Year"
                               options={makeYear()}
+                              showSearch
                             />
                           </Form.Item>
                           <Form.Item
@@ -613,6 +608,7 @@ const BuildCV = () => {
                             <Select
                               placeholder="To Year"
                               options={makeYear()}
+                              showSearch
                             />
                           </Form.Item>
                         </Space>
@@ -700,6 +696,7 @@ const BuildCV = () => {
                             <Select
                               placeholder="From year"
                               options={makeYear()}
+                              showSearch
                             />
                           </Form.Item>
                           <Form.Item
@@ -721,6 +718,7 @@ const BuildCV = () => {
                             <Select
                               placeholder="To Year"
                               options={makeYear()}
+                              showSearch
                             />
                           </Form.Item>
                           <Form.Item

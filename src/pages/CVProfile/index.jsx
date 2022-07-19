@@ -852,7 +852,7 @@ const CVprofile = () => {
             work.from_month && codeMonth(work.from_month)
           } ${work.from_year} ${
             work.to_month && "- " + codeMonth(work.to_month)
-          } ${work.to_year}`}</div>
+          } ${work.to_month === "Present" ? "" : work.to_year}`}</div>
           <div className="bold text-grey medium-text">
             {work.description && string(work.description)}
           </div>
