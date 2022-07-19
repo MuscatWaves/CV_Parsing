@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { removeUnderScore } from "../../utilities";
+import { removeUnderScore, codeMonth } from "../../utilities";
 import {
   DownOutlined,
   MinusCircleOutlined,
@@ -236,6 +236,78 @@ const CVprofile = () => {
         message.error("Something Went Wrong!", "error");
       });
     setTableLoading(false);
+  };
+
+  const deleteEducationData = async () => {
+    var bodyFormDataDelete = new FormData();
+    bodyFormDataDelete.append("deleteEducation", true);
+    bodyFormDataDelete.append("id", deleteEduData.id);
+    setDeleteEduLoading(true);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataDelete,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The education has been sucessfully deleted");
+          setDeleteEduLoading(false);
+          setDeleteEduModal(false);
+          setDeleteEduData("");
+          setLoading(true);
+          getUserData();
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const deleteWorkExpData = async () => {
+    var bodyFormDataDelete = new FormData();
+    bodyFormDataDelete.append("deleteExperience", true);
+    bodyFormDataDelete.append("id", deleteEduData.id);
+    setDeleteWeLoading(true);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataDelete,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The Work experience has been sucessfully deleted");
+          setDeleteWeLoading(false);
+          setDeleteWeData("");
+          setDeleteWeModal(false);
+          setLoading(true);
+          getUserData();
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
   };
 
   const getAllUserManageList = async () => {
@@ -690,7 +762,13 @@ const CVprofile = () => {
             )}
           </div>
           <div className="medium-text bolder">{education.college}</div>
-          <div className="text-light-grey bold">{`${education.from_month} ${education.from_year} - ${education.to_month} ${education.to_year}`}</div>
+          <div className="text-light-grey bold">{`${codeMonth(
+            education.from_month,
+            "code"
+          )} ${education.from_year} - ${codeMonth(
+            education.to_month,
+            "code"
+          )} ${education.to_year}`}</div>
           <div className="bold text-grey medium-text">{education.location}</div>
         </div>
       ))}
@@ -713,16 +791,24 @@ const CVprofile = () => {
                   }}
                   className="hover-blue"
                 />
-                <AiFillDelete style={{ fontSize: "22px" }} 
-                  className="hover-red" onClick={() => {
+                <AiFillDelete
+                  style={{ fontSize: "22px" }}
+                  className="hover-red"
+                  onClick={() => {
                     setDeleteWeData(work);
                     setDeleteWeModal(true);
-                  }}/>
+                  }}
+                />
               </div>
             )}
           </div>
           <div className="medium-text bolder">{work.designation}</div>
-          <div className="text-light-grey bold">{`${work.from_month} ${work.from_year} - ${work.to_month} ${work.to_year}`}</div>
+          <div className="text-light-grey bold">{`${codeMonth(
+            work.from_month,
+            "code"
+          )} ${work.from_year} - ${codeMonth(work.to_month, "code")} ${
+            work.to_year
+          }`}</div>
           <div className="bold text-grey medium-text">
             {work.description && string(work.description)}
           </div>
@@ -769,19 +855,25 @@ const CVprofile = () => {
 
       {/* Work Experience */}
 
-      {isUpdateWeModal && <UpdateWork
-        data={updateWeData}
-        setData={setUpdateWeData}
-        visible={isUpdateWeModal}
-        toggleVisible={setUpdateWeModal}
-      />}
+      {isUpdateWeModal && (
+        <UpdateWork
+          data={updateWeData}
+          setData={setUpdateWeData}
+          visible={isUpdateWeModal}
+          toggleVisible={setUpdateWeModal}
+          getUserData={
+            dataParams.type === "app" ? getUserData : getUserDataPublic
+          }
+          setPageLoading={setLoading}
+        />
+      )}
       <Modal
         title="Delete Work Experience Confirmation"
         visible={isDeleteWeModal}
-        onOk={() => console.log()}
+        onOk={deleteWorkExpData}
         onCancel={() => {
-          setDeleteWeData("")
-          setDeleteWeModal(false)
+          setDeleteWeData("");
+          setDeleteWeModal(false);
         }}
         okText={"Delete"}
         okType={"danger"}
@@ -792,19 +884,25 @@ const CVprofile = () => {
 
       {/* Education */}
 
-      {isUpdateEduModal && <UpdateEducation
-        data={updateEduData}
-        setData={setUpdateEduData}
-        visible={isUpdateEduModal}
-        toggleVisible={setUpdateEduModal}
-      />}
+      {isUpdateEduModal && (
+        <UpdateEducation
+          data={updateEduData}
+          setData={setUpdateEduData}
+          visible={isUpdateEduModal}
+          toggleVisible={setUpdateEduModal}
+          getUserData={
+            dataParams.type === "app" ? getUserData : getUserDataPublic
+          }
+          setPageLoading={setLoading}
+        />
+      )}
       <Modal
         title="Delete Education Confirmation"
         visible={isDeleteEduModal}
-        onOk={() => console.log()}
+        onOk={deleteEducationData}
         onCancel={() => {
-          setDeleteEduData("")
-          setDeleteEduModal(false)
+          setDeleteEduData("");
+          setDeleteEduModal(false);
         }}
         okText={"Delete"}
         okType={"danger"}

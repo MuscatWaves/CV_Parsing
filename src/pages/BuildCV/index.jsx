@@ -257,6 +257,7 @@ const BuildCV = () => {
     profilePicture && bodyFormDataBuild.append("image", profilePicture);
     cvFile && bodyFormDataBuild.append("cv", cvFile);
     !dataParams.id &&
+      values.new_education &&
       values.new_education.map((education) => {
         bodyFormDataBuild.append("edu_name[]", education.edu_name);
         bodyFormDataBuild.append("college[]", education.college);
@@ -268,6 +269,7 @@ const BuildCV = () => {
         return "";
       });
     !dataParams.id &&
+      values.new_work_exp &&
       values.new_work_exp.map((work) => {
         bodyFormDataBuild.append("ex_name[]", work.ex_name);
         bodyFormDataBuild.append("desc[]", work.desc);
@@ -488,9 +490,12 @@ const BuildCV = () => {
           <Form.Item name="alt_phone_number">
             <Input placeholder="Alternative Phone Number" type="number" />
           </Form.Item>
+          {/* {dataParams.id && userData.user.education && ( */}
           <Form.Item label="Education" name="education" className="two-column">
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
           </Form.Item>
+          {/* )} */}
+          {/* {dataParams.id && userData.user.company && ( */}
           <Form.Item
             label="Work Experience"
             name="work_exp"
@@ -498,6 +503,7 @@ const BuildCV = () => {
           >
             <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
           </Form.Item>
+          {/* )} */}
 
           {/* Education Grid */}
 
@@ -618,7 +624,6 @@ const BuildCV = () => {
                         onClick={() => add()}
                         block
                         icon={<PlusOutlined />}
-                        disabled
                       >
                         Add Education
                       </Button>
@@ -751,7 +756,6 @@ const BuildCV = () => {
                         onClick={() => add()}
                         block
                         icon={<PlusOutlined />}
-                        disabled
                       >
                         Add Work Experience
                       </Button>

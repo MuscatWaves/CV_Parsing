@@ -10,18 +10,18 @@ export const removeUnderScore = (str) => {
 };
 
 export const monthSelection = [
-  { label: "January", value: "01" },
-  { label: "February", value: "02" },
-  { label: "March", value: "03" },
-  { label: "April", value: "04" },
-  { label: "May", value: "05" },
-  { label: "June", value: "06" },
-  { label: "July", value: "07" },
-  { label: "August", value: "08" },
-  { label: "September", value: "09" },
-  { label: "October", value: "10" },
-  { label: "November", value: "11" },
-  { label: "December", value: "12" },
+  { label: "January", value: "01", code: "Jan" },
+  { label: "February", value: "02", code: "Feb" },
+  { label: "March", value: "03", code: "Mar" },
+  { label: "April", value: "04", code: "April" },
+  { label: "May", value: "05", code: "May" },
+  { label: "June", value: "06", code: "Jun" },
+  { label: "July", value: "07", code: "Jul" },
+  { label: "August", value: "08", code: "Aug" },
+  { label: "September", value: "09", code: "Sep" },
+  { label: "October", value: "10", code: "Oct" },
+  { label: "November", value: "11", code: "Nov" },
+  { label: "December", value: "12", code: "Dec" },
 ];
 
 export const makeYear = () => {
@@ -39,4 +39,11 @@ export const makeYear = () => {
     (year) => (newYear = [...newYear, { label: year, value: String(year) }])
   );
   return newYear;
+};
+
+export const codeMonth = (value, type) => {
+  const month = monthSelection.filter(
+    (month) => Number(month.value) === Number(value)
+  );
+  return type === "code" ? month[0].code : month[0].label;
 };
