@@ -24,6 +24,21 @@ export const monthSelection = [
   { label: "December", value: "12", code: "Dec" },
 ];
 
+export const monthSelectionLabel = [
+  { label: "January", value: "January", code: "Jan" },
+  { label: "February", value: "February", code: "Feb" },
+  { label: "March", value: "March", code: "Mar" },
+  { label: "April", value: "April", code: "Apr" },
+  { label: "May", value: "May", code: "May" },
+  { label: "June", value: "June", code: "Jun" },
+  { label: "July", value: "July", code: "Jul" },
+  { label: "August", value: "August", code: "Aug" },
+  { label: "September", value: "September", code: "Sep" },
+  { label: "October", value: "October", code: "Oct" },
+  { label: "November", value: "November", code: "Nov" },
+  { label: "December", value: "December", code: "Dec" },
+];
+
 export const makeYear = () => {
   const range = (start, end) => {
     /* generate a range : [start, start+1, ..., end-1, end] */
@@ -41,9 +56,7 @@ export const makeYear = () => {
   return newYear;
 };
 
-export const codeMonth = (value, type) => {
-  const month = monthSelection.filter(
-    (month) => Number(month.value) === Number(value)
-  );
-  return type === "code" ? month[0].code : month[0].label;
+export const codeMonth = (value) => {
+  const month = monthSelectionLabel.filter((month) => month.value === value);
+  return month[0].code;
 };

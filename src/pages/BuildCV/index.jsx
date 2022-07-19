@@ -14,7 +14,7 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import CustomDatePicker from "../../components/DatePicker";
-import { monthSelection, makeYear } from "../../utilities";
+import { monthSelectionLabel, makeYear } from "../../utilities";
 
 const BuildCV = () => {
   const dataParams = useParams();
@@ -490,20 +490,24 @@ const BuildCV = () => {
           <Form.Item name="alt_phone_number">
             <Input placeholder="Alternative Phone Number" type="number" />
           </Form.Item>
-          {/* {dataParams.id && userData.user.education && ( */}
-          <Form.Item label="Education" name="education" className="two-column">
-            <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
-          </Form.Item>
-          {/* )} */}
-          {/* {dataParams.id && userData.user.company && ( */}
-          <Form.Item
-            label="Work Experience"
-            name="work_exp"
-            className="two-column"
-          >
-            <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
-          </Form.Item>
-          {/* )} */}
+          {dataParams.id && userData.user.education && (
+            <Form.Item
+              label="Education"
+              name="education"
+              className="two-column"
+            >
+              <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
+            </Form.Item>
+          )}
+          {dataParams.id && userData.user.company && (
+            <Form.Item
+              label="Work Experience"
+              name="work_exp"
+              className="two-column"
+            >
+              <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
+            </Form.Item>
+          )}
 
           {/* Education Grid */}
 
@@ -563,7 +567,7 @@ const BuildCV = () => {
                           >
                             <Select
                               placeholder="From Month"
-                              options={monthSelection}
+                              options={monthSelectionLabel}
                             />
                           </Form.Item>
                           <Form.Item
@@ -593,7 +597,7 @@ const BuildCV = () => {
                           >
                             <Select
                               placeholder="To month"
-                              options={monthSelection}
+                              options={monthSelectionLabel}
                             />
                           </Form.Item>
                           <Form.Item
@@ -680,7 +684,7 @@ const BuildCV = () => {
                           >
                             <Select
                               placeholder="From month"
-                              options={monthSelection}
+                              options={monthSelectionLabel}
                             />
                           </Form.Item>
                           <Form.Item
@@ -710,7 +714,7 @@ const BuildCV = () => {
                           >
                             <Select
                               placeholder="To Month"
-                              options={monthSelection}
+                              options={monthSelectionLabel}
                             />
                           </Form.Item>
                           <Form.Item

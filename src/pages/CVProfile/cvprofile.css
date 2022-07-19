@@ -167,6 +167,17 @@
     color: #ff4c41;
 }
 
+.plus-button-cv-profile{
+    font-size: 32px;
+    color: #f07d00;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.plus-button-cv-profile:hover{
+transform: scale(1.2);
+}
+
 @media screen and (max-width: 1200px){
     .cvprofile-body{
         display: flex;

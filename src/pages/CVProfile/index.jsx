@@ -9,7 +9,7 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import {
   Button,
@@ -87,6 +87,11 @@ const CVprofile = () => {
   const [isDeleteEduModal, setDeleteEduModal] = useState(false);
   const [deleteEduData, setDeleteEduData] = useState("");
   const [isDeleteEduLoading, setDeleteEduLoading] = useState(false);
+
+  //Delete CV
+
+  const [deleteCVModal, setDeleteCVModal] = useState(false);
+  const [deleteCVLoading, setDeleteCVLoading] = useState(false);
 
   const user =
     dataParams.type === "app" &&
@@ -277,7 +282,7 @@ const CVprofile = () => {
   const deleteWorkExpData = async () => {
     var bodyFormDataDelete = new FormData();
     bodyFormDataDelete.append("deleteExperience", true);
-    bodyFormDataDelete.append("id", deleteEduData.id);
+    bodyFormDataDelete.append("id", deleteWeData.id);
     setDeleteWeLoading(true);
     await axios({
       method: "POST",
@@ -297,6 +302,40 @@ const CVprofile = () => {
           setDeleteWeModal(false);
           setLoading(true);
           getUserData();
+        } else {
+          if (response.status === 201) {
+            message.error(response.data.error, "error");
+          } else {
+            message.error("Something Went Wrong!", "error");
+          }
+        }
+      })
+      .catch(function (response) {
+        message.error("Something Went Wrong!", "error");
+      });
+  };
+
+  const deleteFullCV = async () => {
+    var bodyFormDataDelete = new FormData();
+    bodyFormDataDelete.append("deletecv", true);
+    bodyFormDataDelete.append("id", userData.user.id);
+    setDeleteCVLoading(true);
+    await axios({
+      method: "POST",
+      url: `/api/react-post.php`,
+      data: bodyFormDataDelete,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(function (response) {
+        if (response.status === 200) {
+          message.success("The CV has been sucessfully deleted");
+          setDeleteCVLoading(false);
+          setDeleteCVModal(false);
+          navigateTo("/searchCV");
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -521,6 +560,14 @@ const CVprofile = () => {
           key: "4",
           icon: <FaUserEdit />,
           onClick: () => navigateTo(`/cv/update/${userData.user.id}`),
+        },
+        user.type === "1" && {
+          label: "Delete CV",
+          key: "5",
+          icon: <FaUserEdit />,
+          onClick: () => {
+            setDeleteCVModal(true);
+          },
         },
       ]}
     />
@@ -763,12 +810,10 @@ const CVprofile = () => {
           </div>
           <div className="medium-text bolder">{education.college}</div>
           <div className="text-light-grey bold">{`${codeMonth(
-            education.from_month,
-            "code"
-          )} ${education.from_year} - ${codeMonth(
-            education.to_month,
-            "code"
-          )} ${education.to_year}`}</div>
+            education.from_month
+          )} ${education.from_year} - ${codeMonth(education.to_month)} ${
+            education.to_year
+          }`}</div>
           <div className="bold text-grey medium-text">{education.location}</div>
         </div>
       ))}
@@ -804,9 +849,8 @@ const CVprofile = () => {
           </div>
           <div className="medium-text bolder">{work.designation}</div>
           <div className="text-light-grey bold">{`${codeMonth(
-            work.from_month,
-            "code"
-          )} ${work.from_year} - ${codeMonth(work.to_month, "code")} ${
+            work.from_month
+          )} ${work.from_year} - ${codeMonth(work.to_month)} ${
             work.to_year
           }`}</div>
           <div className="bold text-grey medium-text">
@@ -865,6 +909,7 @@ const CVprofile = () => {
             dataParams.type === "app" ? getUserData : getUserDataPublic
           }
           setPageLoading={setLoading}
+          userId={userData.user.id}
         />
       )}
       <Modal
@@ -894,6 +939,7 @@ const CVprofile = () => {
             dataParams.type === "app" ? getUserData : getUserDataPublic
           }
           setPageLoading={setLoading}
+          userId={userData.user.id}
         />
       )}
       <Modal
@@ -910,6 +956,24 @@ const CVprofile = () => {
       >
         <p>{`Are you sure you want to delete "${deleteEduData.name}" from Education?`}</p>
       </Modal>
+
+      {/* Delete CV */}
+
+      <Modal
+        title="Delete CV Confirmation"
+        visible={deleteCVModal}
+        onOk={deleteFullCV}
+        onCancel={() => {
+          setDeleteCVModal(false);
+        }}
+        okText={"Delete"}
+        okType={"danger"}
+        confirmLoading={deleteCVLoading}
+      >
+        <p>{`Are you sure you want to delete "${userData.user.name}"'s CV?`}</p>
+      </Modal>
+
+      {/* Main Page */}
 
       {(isLoading === "loaded" && (
         <div>
@@ -1097,13 +1161,36 @@ const CVprofile = () => {
                 </div>
               </div>
               <div className="cvprofile-skills slide-in-left-animation">
-                <div className="bolder large-text text-orange">Education</div>
                 {userData.user.education ? (
-                  <div className="cvprofile-skills-chain medium-text text-grey">
-                    {string(userData.user.education)}
-                  </div>
+                  <>
+                    <div className="bolder large-text text-orange">
+                      Education
+                    </div>
+                    <div className="cvprofile-skills-chain medium-text text-grey">
+                      {string(userData.user.education)}
+                    </div>
+                  </>
                 ) : (
-                  makeEducationSection()
+                  <>
+                    <div className="flex-between" style={{ padding: 0 }}>
+                      <div
+                        className="bolder large-text text-black"
+                        style={{ padding: "0.3rem 0" }}
+                      >
+                        Education
+                      </div>
+                      {dataParams.type === "app" && (
+                        <AiOutlinePlus
+                          className="plus-button-cv-profile"
+                          onClick={() => {
+                            setUpdateEduData({});
+                            setUpdateEduModal(true);
+                          }}
+                        />
+                      )}
+                    </div>
+                    {makeEducationSection()}
+                  </>
                 )}
               </div>
               {dataParams.type !== "app" && (
@@ -1129,16 +1216,34 @@ const CVprofile = () => {
               )}
             </div>
             <div className="cvprofile-skills long-box slide-in-right-animation">
-              <div className="bolder large-text text-orange">
-                Work Experience
-              </div>
               <div className="experiences-list">
                 {userData.user.company ? (
-                  <div className="each-experience medium-text text-grey">
-                    {string(userData.user.company)}
-                  </div>
+                  <>
+                    <div className="bolder large-text text-orange">
+                      Work Experience
+                    </div>
+                    <div className="each-experience medium-text text-grey">
+                      {string(userData.user.company)}
+                    </div>
+                  </>
                 ) : (
-                  makeExperienceSection()
+                  <>
+                    <div className="flex-between" style={{ padding: "10px 0" }}>
+                      <div className="bolder large-text text-black">
+                        Work Experience
+                      </div>
+                      {dataParams.type === "app" && (
+                        <AiOutlinePlus
+                          className="plus-button-cv-profile"
+                          onClick={() => {
+                            setUpdateWeData({});
+                            setUpdateWeModal(true);
+                          }}
+                        />
+                      )}
+                    </div>
+                    {makeExperienceSection()}
+                  </>
                 )}
               </div>
             </div>
