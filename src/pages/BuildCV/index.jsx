@@ -195,7 +195,7 @@ const BuildCV = () => {
     bodyFormDataBuild.append("Add_Cv", true);
     dataParams.id && bodyFormDataBuild.append("update", dataParams.id);
     bodyFormDataBuild.append("name", checkValue(values.name, "str"));
-    bodyFormDataBuild.append("email", values.email);
+    bodyFormDataBuild.append("email", values.email.trim());
     bodyFormDataBuild.append("dob", date.format("MM/DD/YYYY"));
     bodyFormDataBuild.append("job", checkValue(values.job_title, "str"));
     bodyFormDataBuild.append("gender", checkValue(values.gender, "str"));

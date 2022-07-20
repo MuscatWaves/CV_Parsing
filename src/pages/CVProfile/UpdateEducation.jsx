@@ -118,24 +118,10 @@ const UpdateEducation = ({
         <Form.Item name="edu_loc">
           <Input placeholder="Location" />
         </Form.Item>
-        <Form.Item
-          name="edu_from_month"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
+        <Form.Item name="edu_from_month">
           <Select placeholder="From Month" options={monthSelectionLabel} />
         </Form.Item>
-        <Form.Item
-          name="edu_from_year"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
+        <Form.Item name="edu_from_year">
           <Select placeholder="From Year" options={makeYear()} showSearch />
         </Form.Item>
         <Form.Item

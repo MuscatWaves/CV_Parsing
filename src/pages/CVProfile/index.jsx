@@ -518,7 +518,7 @@ const CVprofile = () => {
                   .replace(/\./g, "");
                 message.success("Link copied to your clipboard");
                 return navigator.clipboard.writeText(
-                  `${window.location.origin}/cv/${dataParams.id}/${name}`
+                  `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
                 );
               },
             },
@@ -532,7 +532,7 @@ const CVprofile = () => {
                   .replace(/\./g, "");
                 window.open(
                   `https://wa.me/?text=${encodeURIComponent(
-                    `${window.location.origin}/cv/${dataParams.id}/${name}`
+                    `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
                   )}`
                 );
               },
@@ -547,7 +547,7 @@ const CVprofile = () => {
                   .replace(/\./g, "");
                 window.open(
                   `mailto:?subject=&body=${encodeURIComponent(
-                    `${window.location.origin}/cv/${dataParams.id}/${name}`
+                    `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
                   )}`
                 );
               },
@@ -705,34 +705,6 @@ const CVprofile = () => {
     return n[n.length - 1];
   };
 
-  const checkCategory = (cat) =>
-    categorySelection.filter((category) => category.value === cat)[0].label;
-
-  const arrangeDocuments = () => {
-    var edList = [];
-    let currentCategory;
-    let num = 1;
-    const check = [...userData.attachments];
-    const sorted = check.sort((a, b) => a.category - b.category);
-    sorted.map((attachment, index) => {
-      currentCategory === attachment.category ? (num = num + 1) : (num = 1);
-      currentCategory =
-        currentCategory === attachment.category
-          ? currentCategory
-          : attachment.category;
-      return (edList = [
-        ...edList,
-        {
-          id: index,
-          name: `${checkCategory(attachment.category)} - ${num}`,
-          attachment_link: `/files/docs/${attachment.name}`,
-          category: attachment.category,
-        },
-      ]);
-    });
-    return edList;
-  };
-
   const checkImageIcon = (gender) =>
     gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
@@ -809,11 +781,11 @@ const CVprofile = () => {
             )}
           </div>
           <div className="medium-text bolder">{education.college}</div>
-          <div className="text-light-grey bold">{`${codeMonth(
-            education.from_month
-          )} ${education.from_year} - ${codeMonth(education.to_month)} ${
-            education.to_year
-          }`}</div>
+          <div className="text-light-grey bold">{`${
+            education.from_month && codeMonth(education.from_month)
+          } ${education.from_year && `${education.from_year} - `}${codeMonth(
+            education.to_month
+          )} ${education.to_year}`}</div>
           <div className="bold text-grey medium-text">{education.location}</div>
         </div>
       ))}
@@ -853,13 +825,32 @@ const CVprofile = () => {
           } ${work.from_year} ${
             work.to_month && "- " + codeMonth(work.to_month)
           } ${work.to_month === "Present" ? "" : work.to_year}`}</div>
-          <div className="bold text-grey medium-text">
+          <div
+            className="bold text-grey medium-text small-margin-top"
+            style={{ textAlign: "justify" }}
+          >
             {work.description && string(work.description)}
           </div>
         </div>
       ))}
     </div>
   );
+
+  const checkCategory = (cat, desc) => {
+    const data = categorySelection.filter(
+      (category) => category.value === Number(cat)
+    )[0];
+    return data.label;
+  };
+
+  const groupBy = (array, property) => {
+    var hash = {};
+    for (var i = 0; i < array.length; i++) {
+      if (!hash[array[i][property]]) hash[array[i][property]] = [];
+      hash[array[i][property]].push(array[i]);
+    }
+    return hash;
+  };
 
   return (
     <div
@@ -1193,27 +1184,6 @@ const CVprofile = () => {
                   </>
                 )}
               </div>
-              {dataParams.type !== "app" && (
-                <div className="cvprofile-skills slide-in-left-animation">
-                  <div className="bolder large-text text-orange">
-                    Attachments
-                  </div>
-                  <div className="cvprofile-attachments medium-text text-grey">
-                    {arrangeDocuments().map((attachment) => (
-                      <a
-                        href={attachment.attachment_link}
-                        key={attachment.id}
-                        className={"flex-small-gap link"}
-                        target={"_blank"}
-                        rel="noreferrer"
-                      >
-                        <GrAttachment />
-                        <div>{attachment.name}</div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
             <div className="cvprofile-skills long-box slide-in-right-animation">
               <div className="experiences-list">
@@ -1298,6 +1268,41 @@ const CVprofile = () => {
                   ))}
               </div>
             )}
+          </div>
+          <div className="attachments-public-section-wrapper">
+            <div className="attachments-public-section">
+              {dataParams.type !== "app" &&
+                Object.keys(groupBy(userData.attachments, "category")).map(
+                  (section, index) => (
+                    <div
+                      className="cvprofile-skills slide-in-left-animation"
+                      key={index}
+                    >
+                      <div className="bolder large-text text-orange">
+                        {`Attachments - [${checkCategory(section)}]`}
+                      </div>
+                      <div className="cvprofile-attachments medium-text text-grey">
+                        {groupBy(userData.attachments, "category")[section].map(
+                          (attachment, index) => (
+                            <a
+                              href={attachment.attachment_link}
+                              key={attachment.id}
+                              className={"flex-small-gap link"}
+                              target={"_blank"}
+                              rel="noreferrer"
+                            >
+                              <GrAttachment />
+                              <div>{`${checkCategory(section)} - ${
+                                index + 1
+                              }`}</div>
+                            </a>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )
+                )}
+            </div>
           </div>
           {dataParams.type !== "app" && (
             <div className="download-pdf-cv-profile">
