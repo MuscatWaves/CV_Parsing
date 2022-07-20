@@ -1068,7 +1068,11 @@ const CVprofile = () => {
               <div className="flex-small-gap">
                 {userData.user.url && (
                   <a
-                    className="each-skill"
+                    className={
+                      dataParams.type === "app"
+                        ? "each-skill"
+                        : "each-skill-public"
+                    }
                     href={userData.user.url}
                     rel="noreferrer"
                     target={"_blank"}
@@ -1078,7 +1082,11 @@ const CVprofile = () => {
                 )}
                 {userData.user.wpv && (
                   <a
-                    className="each-skill"
+                    className={
+                      dataParams.type === "app"
+                        ? "each-skill"
+                        : "each-skill-public"
+                    }
                     href={userData.user.wpv}
                     rel="noreferrer"
                     target={"_blank"}
@@ -1088,7 +1096,11 @@ const CVprofile = () => {
                 )}
                 {userData.user.interview && (
                   <a
-                    className="each-skill"
+                    className={
+                      dataParams.type === "app"
+                        ? "each-skill"
+                        : "each-skill-public"
+                    }
                     href={userData.user.interview}
                     rel="noreferrer"
                     target={"_blank"}
