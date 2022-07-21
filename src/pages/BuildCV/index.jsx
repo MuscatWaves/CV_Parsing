@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Form, Input, Button, Select, Upload, message, Space } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Upload,
+  message,
+  Space,
+  notification,
+} from "antd";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import axios from "axios";
@@ -270,8 +279,11 @@ const BuildCV = () => {
           "edu_from_month[]",
           education.edu_from_month || ""
         );
-        bodyFormDataBuild.append("edu_to_year[]", education.edu_to_year);
-        bodyFormDataBuild.append("edu_to_month[]", education.edu_to_month);
+        bodyFormDataBuild.append("edu_to_year[]", education.edu_to_year || "");
+        bodyFormDataBuild.append(
+          "edu_to_month[]",
+          education.edu_to_month || ""
+        );
         return "";
       });
     !dataParams.id &&
@@ -280,10 +292,10 @@ const BuildCV = () => {
         bodyFormDataBuild.append("ex_name[]", work.ex_name);
         bodyFormDataBuild.append("desc[]", work.desc);
         bodyFormDataBuild.append("desg[]", work.desg);
-        bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year);
-        bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month);
+        bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year || "");
+        bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month || "");
         bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year || "");
-        bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month);
+        bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month || "");
         return "";
       });
     setLoading(true);
@@ -308,7 +320,15 @@ const BuildCV = () => {
             : navigateTo(`/searchcv`);
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            notification.error({
+              message: (
+                <div className="bold text-red">
+                  {"Unable to create this profile"}
+                </div>
+              ),
+              description: <div className="bolder">{response.data.error}</div>,
+              duration: 6,
+            });
             setLoading(false);
           } else {
             message.error("Something Went Wrong!", "error");
@@ -339,6 +359,7 @@ const BuildCV = () => {
       {(userDataLoading === "loaded" && (
         <Form
           className="buildCvForm"
+          onSubmit={(e) => e.preventDefault()}
           onFinish={handleSubmit}
           size="large"
           layout="vertical"
@@ -436,6 +457,7 @@ const BuildCV = () => {
           <CustomDatePicker date={date} selectDate={selectDate} />
           <Form.Item
             name="email"
+            label="Email"
             rules={[
               {
                 required: true,
@@ -444,16 +466,16 @@ const BuildCV = () => {
           >
             <Input placeholder="Email of the candidate*" />
           </Form.Item>
-          <Form.Item name="job_title">
+          <Form.Item name="job_title" label={"Job Title"}>
             <Input placeholder="Job Title" />
           </Form.Item>
-          <Form.Item name="gender">
+          <Form.Item name="gender" label={"Gender"}>
             <Select placeholder="Select Gender">
               <Select.Option value="male">Male</Select.Option>
               <Select.Option value="female">Female</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item name="martial_status">
+          <Form.Item name="martial_status" label={"Martial Status"}>
             <Select placeholder="Martial Status">
               <Select.Option value="single">Single</Select.Option>
               <Select.Option value="married">Married</Select.Option>
@@ -463,7 +485,7 @@ const BuildCV = () => {
               <Select.Option value="other">Other</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item name="country">
+          <Form.Item name="country" label={"Country"}>
             <Select
               placeholder="Country"
               options={countryResult}
@@ -471,7 +493,7 @@ const BuildCV = () => {
               disabled={countryMenuLoading}
             />
           </Form.Item>
-          <Form.Item name="nationality">
+          <Form.Item name="nationality" label={"Nationality"}>
             <Select
               placeholder="Select Nationality"
               options={nationalityResult}
@@ -479,7 +501,7 @@ const BuildCV = () => {
               loading={countryMenuLoading}
             ></Select>
           </Form.Item>
-          <Form.Item name="job_category">
+          <Form.Item name="job_category" label={"Job Category"}>
             <Select
               placeholder="Select Job Category"
               options={jobCategoryResult}
@@ -487,13 +509,13 @@ const BuildCV = () => {
               loading={jobMenuLoading}
             ></Select>
           </Form.Item>
-          <Form.Item name="phone_number">
+          <Form.Item name="phone_number" label={"Phone Number"}>
             <Input placeholder="Phone Number" type="number" />
           </Form.Item>
-          <Form.Item name="alt_email">
+          <Form.Item name="alt_email" label={"Alternative Email"}>
             <Input placeholder="Alternative Email" type="email" />
           </Form.Item>
-          <Form.Item name="alt_phone_number">
+          <Form.Item name="alt_phone_number" label={"Alternative Phone Number"}>
             <Input placeholder="Alternative Phone Number" type="number" />
           </Form.Item>
           {dataParams.id && userData.user.education && (
@@ -583,12 +605,6 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "edu_to_month"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing To month",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="To month"
@@ -598,12 +614,6 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "edu_to_year"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing To Year",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="To Year"
@@ -671,12 +681,6 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "ex_from_month"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing From month",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="From month"
@@ -686,12 +690,6 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "ex_from_year"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing From year",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="From year"
@@ -702,12 +700,6 @@ const BuildCV = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "ex_to_month"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing To month",
-                              },
-                            ]}
                           >
                             <Select
                               placeholder="To Month"

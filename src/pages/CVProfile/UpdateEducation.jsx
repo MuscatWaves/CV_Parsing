@@ -32,20 +32,23 @@ const UpdateEducation = ({
       bodyFormDataUpdate.append("edu_name[]", values.edu_name);
       bodyFormDataUpdate.append("college[]", values.college);
       bodyFormDataUpdate.append("edu_loc[]", values.edu_loc);
-      bodyFormDataUpdate.append("edu_from_year[]", values.edu_from_year);
-      bodyFormDataUpdate.append("edu_from_month[]", values.edu_from_month);
-      bodyFormDataUpdate.append("edu_to_year[]", values.edu_to_year);
-      bodyFormDataUpdate.append("edu_to_month[]", values.edu_to_month);
+      bodyFormDataUpdate.append("edu_from_year[]", values.edu_from_year || "");
+      bodyFormDataUpdate.append(
+        "edu_from_month[]",
+        values.edu_from_month || ""
+      );
+      bodyFormDataUpdate.append("edu_to_year[]", values.edu_to_year || "");
+      bodyFormDataUpdate.append("edu_to_month[]", values.edu_to_month || "");
     } else {
       bodyFormDataUpdate.append("update_education", true);
       bodyFormDataUpdate.append("id", data.id);
       bodyFormDataUpdate.append("edu_name", values.edu_name);
       bodyFormDataUpdate.append("college", values.college);
       bodyFormDataUpdate.append("edu_loc", values.edu_loc);
-      bodyFormDataUpdate.append("edu_from_year", values.edu_from_year);
-      bodyFormDataUpdate.append("edu_from_month", values.edu_from_month);
-      bodyFormDataUpdate.append("edu_to_year", values.edu_to_year);
-      bodyFormDataUpdate.append("edu_to_month", values.edu_to_month);
+      bodyFormDataUpdate.append("edu_from_year", values.edu_from_year || "");
+      bodyFormDataUpdate.append("edu_from_month", values.edu_from_month || "");
+      bodyFormDataUpdate.append("edu_to_year", values.edu_to_year || "");
+      bodyFormDataUpdate.append("edu_to_month", values.edu_to_month || "");
     }
     setLoading(true);
     await axios({
@@ -109,40 +112,68 @@ const UpdateEducation = ({
           }),
         }}
       >
-        <Form.Item name="edu_name">
+        <Form.Item
+          name="edu_name"
+          label={"Course Name"}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Input placeholder="Course Name" />
         </Form.Item>
-        <Form.Item name="college">
+        <Form.Item
+          name="college"
+          label={"College/School Name"}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Input placeholder="College/School Name" />
         </Form.Item>
-        <Form.Item name="edu_loc">
+        <Form.Item
+          name="edu_loc"
+          label={"Location"}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Input placeholder="Location" />
         </Form.Item>
-        <Form.Item name="edu_from_month">
-          <Select placeholder="From Month" options={monthSelectionLabel} />
+        <Form.Item name="edu_from_month" label={"From Month"}>
+          <Select
+            placeholder="From Month"
+            options={monthSelectionLabel}
+            allowClear
+          />
         </Form.Item>
-        <Form.Item name="edu_from_year">
-          <Select placeholder="From Year" options={makeYear()} showSearch />
+        <Form.Item name="edu_from_year" label={"From Year"}>
+          <Select
+            placeholder="From Year"
+            options={makeYear()}
+            showSearch
+            allowClear
+          />
         </Form.Item>
-        <Form.Item
-          name="edu_to_month"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select placeholder="To month" options={monthSelectionLabel} />
+        <Form.Item name="edu_to_month" label={"To month"}>
+          <Select
+            placeholder="To month"
+            options={monthSelectionLabel}
+            allowClear
+          />
         </Form.Item>
-        <Form.Item
-          name="edu_to_year"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select placeholder="To Year" options={makeYear()} showSearch />
+        <Form.Item name="edu_to_year" label={"To Year"}>
+          <Select
+            placeholder="To Year"
+            options={makeYear()}
+            showSearch
+            allowClear
+          />
         </Form.Item>
       </Form>
     </Modal>

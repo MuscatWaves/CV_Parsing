@@ -57,10 +57,6 @@ export const makeYear = (birth) => {
 };
 
 export const codeMonth = (value) => {
-  if (!value) {
-    console.log(true);
-    return;
-  }
   const month = monthSelectionLabel.filter((month) => month.value === value);
   return month[0].code;
 };

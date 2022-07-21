@@ -110,39 +110,66 @@ const UpdateWork = ({
           desc: data.description,
         }}
       >
-        <Form.Item name="ex_name">
-          <Input placeholder="Company Name" />
+        <Form.Item
+          name="ex_name"
+          label="Company Name"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input
+            placeholder="Company Name"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          />
         </Form.Item>
-        <Form.Item name={"desg"}>
+        <Form.Item
+          name={"desg"}
+          label="Designation"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Input placeholder="Designation" />
         </Form.Item>
-        <Form.Item
-          name="ex_from_month"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select placeholder="From month" options={monthSelectionLabel} />
+        <Form.Item name="ex_from_month" label="From Month">
+          <Select
+            placeholder="From month"
+            options={monthSelectionLabel}
+            allowClear
+          />
         </Form.Item>
-        <Form.Item
-          name="ex_from_year"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select placeholder="From year" options={makeYear()} showSearch />
+        <Form.Item name="ex_from_year" label="From Year">
+          <Select
+            placeholder="From year"
+            options={makeYear()}
+            showSearch
+            allowClear
+          />
         </Form.Item>
-        <Form.Item name="ex_to_month">
-          <Select placeholder="To Month" options={monthSelectionLabel} />
+        <Form.Item name="ex_to_month" label={"To Month"}>
+          <Select
+            placeholder="To Month"
+            options={monthSelectionLabel}
+            allowClear
+          />
         </Form.Item>
-        <Form.Item name="ex_to_year">
-          <Select placeholder="To Year" options={makeYear()} showSearch />
+        <Form.Item name="ex_to_year" label={"To Year"}>
+          <Select
+            placeholder="To Year"
+            options={makeYear()}
+            showSearch
+            allowClear
+          />
         </Form.Item>
-        <Form.Item name="desc">
+        <Form.Item name="desc" label={"Description"}>
           <Input.TextArea
             autoSize={{ minRows: 4, maxRows: 8 }}
             placeholder="Description"

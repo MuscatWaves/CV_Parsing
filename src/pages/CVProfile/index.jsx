@@ -783,9 +783,11 @@ const CVprofile = () => {
           <div className="medium-text bolder">{education.college}</div>
           <div className="text-light-grey bold">{`${
             education.from_month && codeMonth(education.from_month)
-          } ${education.from_year && `${education.from_year} - `}${codeMonth(
-            education.to_month
-          )} ${education.to_year}`}</div>
+          } ${education.from_year && `${education.from_year}`}${
+            (education.from_month || education.from_year) && ` - `
+          }${education.to_month && codeMonth(education.to_month)} ${
+            education.to_year && education.to_year
+          }`}</div>
           <div className="bold text-grey medium-text">{education.location}</div>
         </div>
       ))}
@@ -822,9 +824,11 @@ const CVprofile = () => {
           <div className="medium-text bolder">{work.designation}</div>
           <div className="text-light-grey bold">{`${
             work.from_month && codeMonth(work.from_month)
-          } ${work.from_year} ${
-            work.to_month && "- " + codeMonth(work.to_month)
-          } ${work.to_month === "Present" ? "" : work.to_year}`}</div>
+          } ${work.from_year && work.from_year}${
+            (work.from_month || work.from_year) && ` - `
+          }${work.to_month && codeMonth(work.to_month)} ${
+            work.to_month === "Present" ? "" : work.to_year
+          }`}</div>
           <div
             className="bold text-grey medium-text small-margin-top"
             style={{ textAlign: "justify" }}
