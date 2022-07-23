@@ -192,153 +192,178 @@ const BuildCV = () => {
   }, []);
 
   const handleSubmit = async (values) => {
-    const profilePicture =
-      values.profile_picture.length !== 0
-        ? values.profile_picture[0].originFileObj
-        : null;
-    const cvFile =
-      values.profile_cv.length !== 0
-        ? values.profile_cv[0].originFileObj
-        : null;
-    var bodyFormDataBuild = new FormData();
-    bodyFormDataBuild.append("Add_Cv", true);
-    dataParams.id && bodyFormDataBuild.append("update", dataParams.id);
-    bodyFormDataBuild.append("name", checkValue(values.name, "str"));
-    bodyFormDataBuild.append("email", values.email.trim());
-    bodyFormDataBuild.append("dob", date.format("MM/DD/YYYY"));
-    bodyFormDataBuild.append("job", checkValue(values.job_title, "str"));
-    bodyFormDataBuild.append("gender", checkValue(values.gender, "str"));
-    bodyFormDataBuild.append("country", checkValue(values.country, "str"));
-    bodyFormDataBuild.append("alt_email", checkValue(values.alt_email, "str"));
-    bodyFormDataBuild.append(
-      "alt_phone",
-      checkValue(values.alt_phone_number, "str")
-    );
-    bodyFormDataBuild.append(
-      "nationality",
-      checkValue(values.nationality, "str")
-    );
-    bodyFormDataBuild.append(
-      "maritalstatus",
-      checkValue(values.martial_status, "str")
-    );
-    bodyFormDataBuild.append(
-      "category",
-      checkValue(values.job_category, "str")
-    );
-    bodyFormDataBuild.append(
-      "mobile",
-      checkValue(Number(values.phone_number), "int")
-    );
-    bodyFormDataBuild.append(
-      "url",
-      checkValue(values.work_portfolio_photos, "str")
-    );
-    bodyFormDataBuild.append(
-      "wpv",
-      checkValue(values.work_portfolio_videos, "str")
-    );
-    bodyFormDataBuild.append(
-      "interview",
-      checkValue(values.interview_link, "str")
-    );
-    bodyFormDataBuild.append(
-      "passport",
-      checkValue(values.passport_number, "str")
-    );
-    bodyFormDataBuild.append(
-      "civil_id",
-      checkValue(values.civil_id_number, "str")
-    );
-    bodyFormDataBuild.append(
-      "height",
-      checkValue(Number(values.height), "int")
-    );
-    bodyFormDataBuild.append(
-      "weight",
-      checkValue(Number(values.weight), "int")
-    );
-    bodyFormDataBuild.append("skills", checkValue(values.skills, "str"));
-    bodyFormDataBuild.append("education", checkValue(values.education, "str"));
-    bodyFormDataBuild.append("company", checkValue(values.work_exp, "str"));
-    bodyFormDataBuild.append("address", checkValue(values.address, "str"));
-    bodyFormDataBuild.append("language", checkValue(values.languages, "str"));
-    profilePicture && bodyFormDataBuild.append("image", profilePicture);
-    cvFile && bodyFormDataBuild.append("cv", cvFile);
-    !dataParams.id &&
-      values.new_education &&
-      values.new_education.map((education) => {
-        bodyFormDataBuild.append("edu_name[]", education.edu_name);
-        bodyFormDataBuild.append("college[]", education.college);
-        bodyFormDataBuild.append("edu_loc[]", education.edu_loc);
-        bodyFormDataBuild.append(
-          "edu_from_year[]",
-          education.edu_from_year || ""
-        );
-        bodyFormDataBuild.append(
-          "edu_from_month[]",
-          education.edu_from_month || ""
-        );
-        bodyFormDataBuild.append("edu_to_year[]", education.edu_to_year || "");
-        bodyFormDataBuild.append(
-          "edu_to_month[]",
-          education.edu_to_month || ""
-        );
-        return "";
-      });
-    !dataParams.id &&
-      values.new_work_exp &&
-      values.new_work_exp.map((work) => {
-        bodyFormDataBuild.append("ex_name[]", work.ex_name);
-        bodyFormDataBuild.append("desc[]", work.desc);
-        bodyFormDataBuild.append("desg[]", work.desg);
-        bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year || "");
-        bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month || "");
-        bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year || "");
-        bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month || "");
-        return "";
-      });
-    setLoading(true);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataBuild,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          dataParams.id
-            ? message.success("The profile has been updated successfully")
-            : message.success("The profile has been created successfully");
-          setLoading(false);
-          dataParams.id
-            ? navigateTo(`/searchcv/profile/app/${dataParams.id}`)
-            : navigateTo(`/searchcv`);
-        } else {
-          if (response.status === 201) {
-            notification.error({
-              message: (
-                <div className="bold text-red">
-                  {"Unable to create this profile"}
-                </div>
-              ),
-              description: <div className="bolder">{response.data.error}</div>,
-              duration: 6,
-            });
-            setLoading(false);
-          } else {
-            message.error("Something Went Wrong!", "error");
-            setLoading(false);
-          }
-        }
+    if (date?.format("MM/DD/YYYY")) {
+      const profilePicture =
+        values.profile_picture.length !== 0
+          ? values.profile_picture[0].originFileObj
+          : null;
+      const cvFile =
+        values.profile_cv.length !== 0
+          ? values.profile_cv[0].originFileObj
+          : null;
+      var bodyFormDataBuild = new FormData();
+      bodyFormDataBuild.append("Add_Cv", true);
+      dataParams.id && bodyFormDataBuild.append("update", dataParams.id);
+      bodyFormDataBuild.append("name", checkValue(values.name, "str"));
+      bodyFormDataBuild.append("email", values.email.trim());
+      bodyFormDataBuild.append("dob", date.format("MM/DD/YYYY"));
+      bodyFormDataBuild.append("job", checkValue(values.job_title, "str"));
+      bodyFormDataBuild.append("gender", checkValue(values.gender, "str"));
+      bodyFormDataBuild.append("country", checkValue(values.country, "str"));
+      bodyFormDataBuild.append(
+        "alt_email",
+        checkValue(values.alt_email, "str")
+      );
+      bodyFormDataBuild.append(
+        "alt_phone",
+        checkValue(values.alt_phone_number, "str")
+      );
+      bodyFormDataBuild.append(
+        "nationality",
+        checkValue(values.nationality, "str")
+      );
+      bodyFormDataBuild.append(
+        "maritalstatus",
+        checkValue(values.martial_status, "str")
+      );
+      bodyFormDataBuild.append(
+        "category",
+        checkValue(values.job_category, "str")
+      );
+      bodyFormDataBuild.append(
+        "mobile",
+        checkValue(Number(values.phone_number), "int")
+      );
+      bodyFormDataBuild.append(
+        "url",
+        checkValue(values.work_portfolio_photos, "str")
+      );
+      bodyFormDataBuild.append(
+        "wpv",
+        checkValue(values.work_portfolio_videos, "str")
+      );
+      bodyFormDataBuild.append(
+        "interview",
+        checkValue(values.interview_link, "str")
+      );
+      bodyFormDataBuild.append(
+        "passport",
+        checkValue(values.passport_number, "str")
+      );
+      bodyFormDataBuild.append(
+        "civil_id",
+        checkValue(values.civil_id_number, "str")
+      );
+      bodyFormDataBuild.append(
+        "height",
+        checkValue(Number(values.height), "int")
+      );
+      bodyFormDataBuild.append(
+        "weight",
+        checkValue(Number(values.weight), "int")
+      );
+      bodyFormDataBuild.append("skills", checkValue(values.skills, "str"));
+      bodyFormDataBuild.append(
+        "education",
+        checkValue(values.education, "str")
+      );
+      bodyFormDataBuild.append("company", checkValue(values.work_exp, "str"));
+      bodyFormDataBuild.append("address", checkValue(values.address, "str"));
+      bodyFormDataBuild.append("language", checkValue(values.languages, "str"));
+      profilePicture && bodyFormDataBuild.append("image", profilePicture);
+      cvFile && bodyFormDataBuild.append("cv", cvFile);
+      !dataParams.id &&
+        values.new_education &&
+        values.new_education.map((education) => {
+          bodyFormDataBuild.append("edu_name[]", education.edu_name);
+          bodyFormDataBuild.append("college[]", education.college);
+          bodyFormDataBuild.append("edu_loc[]", education.edu_loc);
+          bodyFormDataBuild.append(
+            "edu_from_year[]",
+            education.edu_from_year || ""
+          );
+          bodyFormDataBuild.append(
+            "edu_from_month[]",
+            education.edu_from_month || ""
+          );
+          bodyFormDataBuild.append(
+            "edu_to_year[]",
+            education.edu_to_year || ""
+          );
+          bodyFormDataBuild.append(
+            "edu_to_month[]",
+            education.edu_to_month || ""
+          );
+          return "";
+        });
+      !dataParams.id &&
+        values.new_work_exp &&
+        values.new_work_exp.map((work) => {
+          bodyFormDataBuild.append("ex_name[]", work.ex_name);
+          bodyFormDataBuild.append("desc[]", work.desc);
+          bodyFormDataBuild.append("desg[]", work.desg);
+          bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year || "");
+          bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month || "");
+          bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year || "");
+          bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month || "");
+          return "";
+        });
+      setLoading(true);
+      await axios({
+        method: "POST",
+        url: `/api/react-post.php`,
+        data: bodyFormDataBuild,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
+        .then(function (response) {
+          if (response.status === 200) {
+            dataParams.id
+              ? message.success("The profile has been updated successfully")
+              : message.success("The profile has been created successfully");
+            setLoading(false);
+            dataParams.id
+              ? navigateTo(`/searchcv/profile/app/${dataParams.id}`)
+              : navigateTo(`/searchcv`);
+          } else {
+            if (response.status === 201) {
+              notification.error({
+                message: (
+                  <div className="bold text-red">
+                    {"Unable to create this profile"}
+                  </div>
+                ),
+                description: (
+                  <div className="bolder">{response.data.error}</div>
+                ),
+                duration: 6,
+              });
+              setLoading(false);
+            } else {
+              message.error("Something Went Wrong!", "error");
+              setLoading(false);
+            }
+          }
+        })
+        .catch(function (response) {
+          message.error("Something Went Wrong!", "error");
+        });
+    } else {
+      notification.error({
+        message: (
+          <div className="bold text-red">{"Unable to create this profile"}</div>
+        ),
+        description: <div className="bolder">{`Invalid Date of Birth`}</div>,
+        duration: 6,
       });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   const normFile = (e) => {
