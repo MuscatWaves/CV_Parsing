@@ -1272,16 +1272,16 @@ const CVprofile = () => {
                     ></iframe>
                   </object>
                 )}
-                {checkWhichFile(userData.user.cv) === "docx" ||
-                  (checkWhichFile(userData.user.cv) === "doc" && (
-                    <iframe
-                      title={"DOC file for Candidate Resume"}
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
-                      width="100%"
-                      height="800px"
-                      frameborder="0"
-                    ></iframe>
-                  ))}
+                {(checkWhichFile(userData.user.cv) === "docx" ||
+                  checkWhichFile(userData.user.cv) === "doc") && (
+                  <iframe
+                    title={"DOC file for Candidate Resume"}
+                    src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
+                    width="100%"
+                    height="800px"
+                    frameborder="0"
+                  ></iframe>
+                )}
               </div>
             )}
           </div>
