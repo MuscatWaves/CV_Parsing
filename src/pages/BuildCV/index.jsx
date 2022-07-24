@@ -738,16 +738,7 @@ const BuildCV = () => {
                               showSearch
                             />
                           </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "desc"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing Description",
-                              },
-                            ]}
-                          >
+                          <Form.Item {...restField} name={[name, "desc"]}>
                             <Input.TextArea
                               autoSize={{ minRows: 4, maxRows: 8 }}
                               placeholder="Description"
