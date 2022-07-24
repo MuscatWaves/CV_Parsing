@@ -300,7 +300,7 @@ const BuildCV = () => {
         values.new_work_exp &&
         values.new_work_exp.map((work) => {
           bodyFormDataBuild.append("ex_name[]", work.ex_name);
-          bodyFormDataBuild.append("desc[]", work.desc);
+          bodyFormDataBuild.append("desc[]", work.desc || "");
           bodyFormDataBuild.append("desg[]", work.desg);
           bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year || "");
           bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month || "");
