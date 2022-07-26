@@ -1301,7 +1301,7 @@ const CVprofile = () => {
                         {groupBy(userData.attachments, "category")[section].map(
                           (attachment, index) => (
                             <a
-                              href={attachment.attachment_link}
+                              href={`/files/docs/${attachment.name}`}
                               key={attachment.id}
                               className={"flex-small-gap link"}
                               target={"_blank"}
