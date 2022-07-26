@@ -11,6 +11,7 @@ import jwt from "jsonwebtoken";
 import { Button, message } from "antd";
 import Cookies from "universal-cookie";
 import Authentication from "../../components/Authentication";
+import { m } from "framer-motion";
 import "./DashBoard.css";
 
 const DashBoard = () => {
@@ -30,6 +31,33 @@ const DashBoard = () => {
   const navigate = useNavigate();
   const navigateTo = (path) => {
     navigate(path);
+  };
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.8,
+      },
+    },
+  };
+
+  const item = {
+    hidden: {
+      opacity: 0,
+      y: "180px",
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      delay: 0.8,
+      transition: {
+        type: "spring",
+        stiffness: 40,
+        damping: 9,
+      },
+    },
   };
 
   const cards = [
@@ -129,20 +157,23 @@ const DashBoard = () => {
         <div>
           <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
         </div>
-        <div>
-          <span className="welcome-message">
+        <m.div variants={container} initial="hidden" animate="show">
+          <m.span className="welcome-message" variants={item}>
             <h1 className="text-orange bold">Welcome</h1>
             <h1 className="text-grey">{isLoggedIn.name}</h1>
-          </span>
-          <div
+          </m.span>
+          <m.div
             className={
               checkNumberOfCards() > 4 ? "main-card grid-3" : "main-card"
             }
+            variants={container}
+            initial="hidden"
+            animate="show"
           >
             {cards.map(
               (card) =>
                 card.permission && (
-                  <div
+                  <m.div
                     key={card.id}
                     className="card"
                     onMouseEnter={() =>
@@ -155,6 +186,7 @@ const DashBoard = () => {
                       setHoverState((hover) => ({ ...hover, [card.name]: "" }))
                     }
                     onClick={() => navigateTo(card.path)}
+                    variants={item}
                   >
                     <card.icon
                       className={
@@ -172,17 +204,18 @@ const DashBoard = () => {
                           ? `${hoverState[card.name]}`
                           : "text-light-grey"
                       }
+                      variants={item}
                     >
                       {card.description}
                     </p>
                     <div className="go-corner" href="#">
                       <div className="go-arrow">→</div>
                     </div>
-                  </div>
+                  </m.div>
                 )
             )}
-          </div>
-        </div>
+          </m.div>
+        </m.div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>

@@ -1,155 +1,149 @@
-.dashboard{
-    display: flex;
-    flex-direction: column;
+.dashboard {
+  display: flex;
+  flex-direction: column;
 }
 
-.dashboard-body{
-    display: flex;
-    align-items: center;
-    min-height: 82vh;
-    justify-content: center;
+.dashboard-body {
+  display: flex;
+  align-items: center;
+  min-height: 82vh;
+  justify-content: center;
 }
 
-.main-card{
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 1rem;
+.main-card {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 1rem;
 }
 
-.grid-3{
-    grid-template-columns: repeat(3, auto);
+.grid-3 {
+  grid-template-columns: repeat(3, auto);
 }
 
-.card{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    gap: 0.2rem;
-    max-width: 400px;
-    background-color: rgba(255, 255, 255, 0.452);
-    border-radius: 4px;
-    padding: 1.5rem 2rem;
-    margin: 12px;
-    border-radius: 20px;
-    text-decoration: none;
-    z-index: 0;
-    overflow: hidden;
-    animation: zoom-in 0.7s;
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  gap: 0.2rem;
+  max-width: 400px;
+  background-color: rgba(255, 255, 255, 0.452);
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  margin: 12px;
+  border-radius: 20px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
 }
 
-.card::before{
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: -16px;
-    right: -16px;   
-    background: #f07c00;
-    height: 32px;
-    width: 32px;
-    border-radius: 32px;
-    transform: scale(1);
-    transform-origin: 50% 50%;
-    transition: transform 0.25s ease-out;
+.card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: #f07c00;
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.25s ease-out;
 }
 
-.card:hover::before{
-    transform: scale(30);
+.card:hover::before {
+  transform: scale(30);
 }
 
-.card:hover{
-    color: #fff;
+.card:hover {
+  color: #fff;
 }
 
-.welcome-message{
-    font-size: 16px;
-    display: flex;
-    gap: 0.5rem;
-    margin: 1rem;
-    justify-content: center;
-    animation: fade-in 0.8s;
+.welcome-message {
+  font-size: 16px;
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem;
+  justify-content: center;
 }
 
-.hover{
-    color: #fff;
+.hover {
+  color: #fff;
 }
-
 
 .go-corner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    overflow: hidden;
-    top: 0;
-    right: 0;
-    background: #f07c00;
-    border-radius: 0 4px 0 32px;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  background: #f07c00;
+  border-radius: 0 4px 0 32px;
+}
+
 .go-arrow {
-    margin-top: -4px;
-    margin-right: -4px;
-    font-size: 15px;
-    color: white;
-    font-family: courier, sans;
+  margin-top: -4px;
+  margin-right: -4px;
+  font-size: 15px;
+  color: white;
+  font-family: courier, sans;
 }
 
-.bold{
-    font-weight: 600;
+.bold {
+  font-weight: 600;
 }
 
-.bolder{
-    font-weight: 700;
+.bolder {
+  font-weight: 700;
 }
 
-.card-icon{
-    font-size: 40px;
+.card-icon {
+  font-size: 40px;
 }
 
-.oj-image-dashboard{
-    animation: slide-in-left 0.8s;
-    width: 300px;
-    height: 300px;
+.oj-image-dashboard {
+  width: 300px;
+  height: 300px;
 }
 
-.dashboard-lg{
-    display: flex;
-    justify-content: flex-end;
-    padding: 1.6rem 2rem;
-    animation: slide-in-bottom 0.8s;
+.dashboard-lg {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.6rem 2rem;
 }
 
-@media screen and (max-width: 1336px){
-    .oj-image-dashboard{
-        width: 250px;
-        height: 250px;
-    }
+@media screen and (max-width: 1336px) {
+  .oj-image-dashboard {
+    width: 250px;
+    height: 250px;
+  }
 
-    .grid-3{
-        grid-template-columns: repeat(2, auto);
-    }
+  .grid-3 {
+    grid-template-columns: repeat(2, auto);
+  }
 }
 
 @media screen and (max-width: 700px) {
+  .dashboard-body {
+    flex-direction: column;
+  }
 
-    .dashboard-body{
-        flex-direction: column;
-    }
+  .welcome-message {
+    font-size: 10px;
+  }
 
-    .welcome-message{
-        font-size: 10px;
-    }
+  .oj-image-dashboard {
+    width: 200px;
+    height: 200px;
+  }
 
-    .oj-image-dashboard{
-        width: 200px;
-        height: 200px;
-    }
-
-    .main-card{
-        grid-template-columns: repeat(1, auto);
-    }
+  .main-card {
+    grid-template-columns: repeat(1, auto);
+  }
 }
