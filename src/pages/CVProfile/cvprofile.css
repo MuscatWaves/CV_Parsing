@@ -152,8 +152,8 @@
 }
 
 .public-header-image {
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
   margin: 1rem;
   animation: zoom-in 0.8s;
   cursor: pointer;
