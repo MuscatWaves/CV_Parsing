@@ -1,4 +1,5 @@
 import moment from "moment";
+import { categorySelection } from "../pages/CVProfile/constants";
 
 export const removeUnderScore = (str) => {
   var i,
@@ -59,4 +60,25 @@ export const makeYear = (birth) => {
 export const codeMonth = (value) => {
   const month = monthSelectionLabel.filter((month) => month.value === value);
   return month[0].code;
+};
+
+export const checkCategory = (cat, desc) => {
+  const data = categorySelection.filter(
+    (category) => category.value === Number(cat)
+  )[0];
+  return data.label;
+};
+
+export const groupBy = (array, property) => {
+  var hash = {};
+  for (var i = 0; i < array.length; i++) {
+    if (!hash[array[i][property]]) hash[array[i][property]] = [];
+    hash[array[i][property]].push(array[i]);
+  }
+  return hash;
+};
+
+export const checkWhichFile = (cv) => {
+  var n = cv?.split(".");
+  return n[n.length - 1];
 };

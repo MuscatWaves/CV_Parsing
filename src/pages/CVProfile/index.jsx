@@ -2,7 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { removeUnderScore, codeMonth } from "../../utilities";
+import {
+  removeUnderScore,
+  codeMonth,
+  checkCategory,
+  groupBy,
+  checkWhichFile,
+} from "../../utilities";
 import {
   DownOutlined,
   MinusCircleOutlined,
@@ -37,7 +43,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
-import { categorySelection } from "./constants.ts";
+import { categorySelection, container, item } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
@@ -47,9 +53,9 @@ import ojimage from "../../images/oj.png";
 import FormData from "form-data";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
-import { Helmet } from "react-helmet-async";
 import UpdateWork from "./UpdateWork";
 import UpdateEducation from "./UpdateEducation";
+import { m } from "framer-motion";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -700,11 +706,6 @@ const CVprofile = () => {
     </Modal>
   );
 
-  const checkWhichFile = (cv) => {
-    var n = cv?.split(".");
-    return n[n.length - 1];
-  };
-
   const checkImageIcon = (gender) =>
     gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
@@ -840,22 +841,6 @@ const CVprofile = () => {
     </div>
   );
 
-  const checkCategory = (cat, desc) => {
-    const data = categorySelection.filter(
-      (category) => category.value === Number(cat)
-    )[0];
-    return data.label;
-  };
-
-  const groupBy = (array, property) => {
-    var hash = {};
-    for (var i = 0; i < array.length; i++) {
-      if (!hash[array[i][property]]) hash[array[i][property]] = [];
-      hash[array[i][property]].push(array[i]);
-    }
-    return hash;
-  };
-
   return (
     <div
       className={
@@ -971,87 +956,19 @@ const CVprofile = () => {
       {/* Main Page */}
 
       {(isLoading === "loaded" && (
-        <div>
-          <Helmet
-            title={`${userData.user.name} ${userData.user.job}`}
-            meta={[
-              {
-                name: "title",
-                content: `${userData.user.name} ${userData.user.job}`,
-              },
-              {
-                name: "description",
-                content: `Age : ${moment().diff(
-                  moment(userData.user.DOB).format("YYYY-MM-DD"),
-                  "years"
-                )} yrs Nationality : ${userData.user.nationality} Language : ${
-                  userData.user.language
-                }`,
-              },
-              {
-                property: "og:url",
-                content: `${window.location.href}`,
-              },
-              // OpenGraph / Facebook
-              {
-                property: "og:type",
-                content: "website",
-              },
-              {
-                property: "og:url",
-                content: `${window.location.href}`,
-              },
-              {
-                property: "og:title",
-                content: `${userData.user.name} ${userData.user.job}`,
-              },
-              {
-                property: "og:description",
-                content: `Age : ${moment().diff(
-                  moment(userData.user.DOB).format("YYYY-MM-DD"),
-                  "years"
-                )} yrs Nationality : ${userData.user.nationality} Language : ${
-                  userData.user.language
-                }`,
-              },
-              {
-                property: "og:image",
-                content: `https://cv.omanjobs.om/files/images/${userData.user.image}`,
-              },
-              //Twitter
-              {
-                property: "twitter:card",
-                content: "summary_large_image",
-              },
-              { property: "twitter:url", content: `${window.location.href}` },
-              {
-                property: "twitter:title",
-                content: `${userData.user.name} ${userData.user.job}`,
-              },
-              {
-                property: "twitter:description",
-                content: `Age : ${moment().diff(
-                  moment(userData.user.DOB).format("YYYY-MM-DD"),
-                  "years"
-                )} yrs Nationality : ${userData.user.nationality} Language : ${
-                  userData.user.language
-                }`,
-              },
-              {
-                property: "twitter:image",
-                content: `https://cv.omanjobs.om/files/images/${userData.user.image}`,
-              },
-            ]}
-          />
-          <div
+        <m.div>
+          <m.div
             className={
               dataParams.type === "app"
                 ? "cvprofile-body"
                 : "cvprofile-body cvprofile-body-public"
             }
             ref={CvDownload}
+            variants={container}
+            animate="show"
+            initial="hidden"
           >
-            <div className="cvprofile-header-first-part slide-in-left-animation">
+            <m.div className="cvprofile-header-first-part" variants={item}>
               <img
                 className={"cvprofile-picture"}
                 src={
@@ -1113,8 +1030,11 @@ const CVprofile = () => {
                   </a>
                 )}
               </div>
-            </div>
-            <div className="cvprofile-header-second-part-section long-box slide-in-right-animation">
+            </m.div>
+            <m.div
+              className="cvprofile-header-second-part-section long-box"
+              variants={item}
+            >
               <div className="flex-gap-column">
                 <div className="bolder large-text text-orange">
                   Personal Details
@@ -1137,11 +1057,11 @@ const CVprofile = () => {
                 className="public-header-image"
                 alt="Oman jobs"
               />
-            </div>
-            <div className="experiences-list">
+            </m.div>
+            <m.div className="experiences-list" variants={item}>
               {dataParams.type === "app" && (
                 <Dropdown overlay={menu}>
-                  <Button className="button-primary zoom-in-animation">
+                  <Button className="button-primary">
                     <Space>
                       More Options
                       <DownOutlined />
@@ -1149,7 +1069,7 @@ const CVprofile = () => {
                   </Button>
                 </Dropdown>
               )}
-              <div className="cvprofile-skills slide-in-left-animation">
+              <m.div className="cvprofile-skills" variants={item}>
                 <div className="bolder large-text text-black">Soft Skills</div>
                 <div className="cvprofile-skills-chain">
                   {(skills !== "" &&
@@ -1166,8 +1086,8 @@ const CVprofile = () => {
                     </div>
                   )}
                 </div>
-              </div>
-              <div className="cvprofile-skills slide-in-left-animation">
+              </m.div>
+              <m.div className="cvprofile-skills" variants={item}>
                 {userData.user.education ? (
                   <>
                     <div className="bolder large-text text-orange">
@@ -1199,9 +1119,9 @@ const CVprofile = () => {
                     {makeEducationSection()}
                   </>
                 )}
-              </div>
-            </div>
-            <div className="cvprofile-skills long-box slide-in-right-animation">
+              </m.div>
+            </m.div>
+            <m.div className="cvprofile-skills long-box" variants={item}>
               <div className="experiences-list">
                 {userData.user.company ? (
                   <>
@@ -1232,15 +1152,18 @@ const CVprofile = () => {
                   </>
                 )}
               </div>
-            </div>
+            </m.div>
             {dataParams.type === "app" && (
-              <div className="grid-gather attachments-section">
+              <m.div
+                className="grid-gather attachments-section"
+                variants={item}
+              >
                 <div className="flex-between">
                   <div className="bolder large-text text-orange">
                     Attachments
                   </div>
                   <Button
-                    className="button-primary zoom-in-animation"
+                    className="button-primary"
                     onClick={() => toggleUploadModal(true)}
                   >
                     Upload
@@ -1255,10 +1178,10 @@ const CVprofile = () => {
                     rowKey={"id"}
                   />
                 </div>
-              </div>
+              </m.div>
             )}
             {dataParams.type === "app" && (
-              <div className="grid-gather">
+              <m.div className="grid-gather" variants={item}>
                 {checkWhichFile(userData.user.cv) === "pdf" && (
                   <object
                     data={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
@@ -1282,18 +1205,15 @@ const CVprofile = () => {
                     frameborder="0"
                   ></iframe>
                 )}
-              </div>
+              </m.div>
             )}
-          </div>
-          <div className="attachments-public-section-wrapper">
+          </m.div>
+          <m.div className="attachments-public-section-wrapper" variants={item}>
             <div className="attachments-public-section">
               {dataParams.type !== "app" &&
                 Object.keys(groupBy(userData.attachments, "category")).map(
                   (section, index) => (
-                    <div
-                      className="cvprofile-skills slide-in-left-animation"
-                      key={index}
-                    >
+                    <div className="cvprofile-skills" key={index}>
                       <div className="bolder large-text text-orange">
                         {`Attachments - [${checkCategory(section)}]`}
                       </div>
@@ -1319,7 +1239,7 @@ const CVprofile = () => {
                   )
                 )}
             </div>
-          </div>
+          </m.div>
           {dataParams.type !== "app" && (
             <div className="download-pdf-cv-profile">
               <Button
@@ -1331,7 +1251,7 @@ const CVprofile = () => {
               </Button>
             </div>
           )}
-        </div>
+        </m.div>
       )) || <Loader minHeight={dataParams.type === "app" ? "70vh" : "85vh"} />}
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
     </div>

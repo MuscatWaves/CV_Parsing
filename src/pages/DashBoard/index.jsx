@@ -33,33 +33,6 @@ const DashBoard = () => {
     navigate(path);
   };
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.8,
-      },
-    },
-  };
-
-  const item = {
-    hidden: {
-      opacity: 0,
-      y: "180px",
-    },
-    show: {
-      opacity: 1,
-      y: 0,
-      delay: 0.8,
-      transition: {
-        type: "spring",
-        stiffness: 40,
-        damping: 9,
-      },
-    },
-  };
-
   const cards = [
     {
       id: 1,
@@ -154,11 +127,39 @@ const DashBoard = () => {
         </Button>
       </div>
       <div className="dashboard-body">
-        <div>
+        <m.div
+          initial={{
+            opacity: 0,
+            x: "-50px",
+          }}
+          animate={{
+            opacity: 1,
+            x: "0",
+            transition: {
+              type: "spring",
+              damping: 8,
+              stiffness: 40,
+            },
+          }}
+        >
           <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
-        </div>
-        <m.div variants={container} initial="hidden" animate="show">
-          <m.span className="welcome-message" variants={item}>
+        </m.div>
+        <m.div
+          initial={{
+            opacity: 0,
+            y: "-50px",
+          }}
+          animate={{
+            opacity: 1,
+            y: "0",
+            transition: {
+              type: "spring",
+              damping: 8,
+              stiffness: 40,
+            },
+          }}
+        >
+          <m.span className="welcome-message">
             <h1 className="text-orange bold">Welcome</h1>
             <h1 className="text-grey">{isLoggedIn.name}</h1>
           </m.span>
@@ -166,12 +167,9 @@ const DashBoard = () => {
             className={
               checkNumberOfCards() > 4 ? "main-card grid-3" : "main-card"
             }
-            variants={container}
-            initial="hidden"
-            animate="show"
           >
             {cards.map(
-              (card) =>
+              (card, index) =>
                 card.permission && (
                   <m.div
                     key={card.id}
@@ -186,7 +184,6 @@ const DashBoard = () => {
                       setHoverState((hover) => ({ ...hover, [card.name]: "" }))
                     }
                     onClick={() => navigateTo(card.path)}
-                    variants={item}
                   >
                     <card.icon
                       className={
@@ -204,7 +201,6 @@ const DashBoard = () => {
                           ? `${hoverState[card.name]}`
                           : "text-light-grey"
                       }
-                      variants={item}
                     >
                       {card.description}
                     </p>
