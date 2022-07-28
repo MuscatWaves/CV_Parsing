@@ -115,6 +115,10 @@ const CVprofile = () => {
     // fileList,
   };
 
+  const makeTitle = () => {
+    document.title = `${userData.user.name} - ${userData.user.job}`;
+  };
+
   const lastSeen = async () => {
     var bodyFormDataLastSeen = new FormData();
     bodyFormDataLastSeen.append("lastseen", true);
@@ -957,6 +961,7 @@ const CVprofile = () => {
 
       {(isLoading === "loaded" && (
         <m.div>
+          {makeTitle()}
           <m.div
             className={
               dataParams.type === "app"
@@ -1052,11 +1057,14 @@ const CVprofile = () => {
                   ))}
                 </div>
               </div>
-              <img
-                src={ojimage}
-                className="public-header-image"
-                alt="Oman jobs"
-              />
+              <div className="video-play-button">
+                <img
+                  src={ojimage}
+                  className="public-header-image"
+                  alt="Oman jobs"
+                  onClick={() => window.open("https://www.omanjobs.om/")}
+                />
+              </div>
             </m.div>
             <m.div className="experiences-list" variants={item}>
               {dataParams.type === "app" && (

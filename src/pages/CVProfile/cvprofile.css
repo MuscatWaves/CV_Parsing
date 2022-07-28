@@ -209,6 +209,14 @@
   justify-content: center;
 }
 
+.video-play-button {
+  height: fit-content;
+  border-radius: 100px;
+  background-color: #d5d5d542;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  animation: glow 1s infinite alternate;
+}
+
 @media screen and (max-width: 1200px) {
   .cvprofile-body {
     display: flex;
@@ -259,5 +267,14 @@
   .cvprofile-header-second-part {
     display: flex;
     flex-direction: column;
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px -10px #f07c008a;
+  }
+  to {
+    box-shadow: 0 0 10px 10px #f07c0059;
   }
 }
