@@ -8,6 +8,7 @@ import { AiOutlineFileText } from "react-icons/ai";
 import "./rejectedcv.css";
 import moment from "moment";
 import FormData from "form-data";
+import { m } from "framer-motion";
 
 const RejectedCV = () => {
   const cookies = new Cookies();
@@ -169,7 +170,12 @@ const RejectedCV = () => {
   ];
 
   return (
-    <div>
+    <m.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Header />
       <Navigation
         previous_page={"Dashboard"}
@@ -242,7 +248,7 @@ const RejectedCV = () => {
         </div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
-    </div>
+    </m.div>
   );
 };
 

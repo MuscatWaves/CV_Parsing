@@ -7,6 +7,7 @@ import FormData from "form-data";
 import isEmail from "validator/lib/isEmail";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import { m } from "framer-motion";
 
 const Login = () => {
   useEffect(() => {
@@ -66,7 +67,13 @@ const Login = () => {
   };
 
   return (
-    <div className="login-body">
+    <m.div
+      className="login-body"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Form
         name="normal_login"
         className="login-form"
@@ -126,7 +133,7 @@ const Login = () => {
           Login
         </Button>
       </Form>
-    </div>
+    </m.div>
   );
 };
 

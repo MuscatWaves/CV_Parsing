@@ -30,7 +30,7 @@ export const item = {
     transition: {
       type: "spring",
       stiffness: 40,
-      damping: 9,
+      damping: 8.5,
     },
   },
 };

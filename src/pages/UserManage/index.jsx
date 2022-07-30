@@ -9,6 +9,7 @@ import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
 import moment from "moment";
 import UserForm from "./UserForm";
+import { m } from "framer-motion";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
@@ -131,7 +132,12 @@ const UserManage = () => {
   ];
 
   return (
-    <div>
+    <m.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Header />
       {isModalOpen && (
         <UserForm
@@ -169,7 +175,7 @@ const UserManage = () => {
         />
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
-    </div>
+    </m.div>
   );
 };
 

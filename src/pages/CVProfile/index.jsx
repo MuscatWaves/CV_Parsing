@@ -55,7 +55,7 @@ import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 import UpdateWork from "./UpdateWork";
 import UpdateEducation from "./UpdateEducation";
-import { m } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -846,12 +846,16 @@ const CVprofile = () => {
   );
 
   return (
-    <div
+    <m.div
       className={
         dataParams.type === "app"
           ? "cvprofile"
           : "padding-top-public-cv cvprofile"
       }
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
     >
       {dataParams.type === "app" && (
         <>
@@ -959,275 +963,290 @@ const CVprofile = () => {
 
       {/* Main Page */}
 
-      {(isLoading === "loaded" && (
-        <m.div>
-          {makeTitle()}
+      <AnimatePresence>
+        {(isLoading === "loaded" && (
           <m.div
-            className={
-              dataParams.type === "app"
-                ? "cvprofile-body"
-                : "cvprofile-body cvprofile-body-public"
-            }
-            ref={CvDownload}
-            variants={container}
-            animate="show"
-            initial="hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <m.div className="cvprofile-header-first-part" variants={item}>
-              <img
-                className={"cvprofile-picture"}
-                src={
-                  userData.user.image
-                    ? `/files/images/${userData.user.image}`
-                    : checkImageIcon(userData.user.gender)
-                }
-                alt="user"
-                width={"170px"}
-                height={"170px"}
-              />
-              <div className="text-orange bolder large-text">
-                {userData.user.name}
-              </div>
-              <div className="text-grey medium-text bold">
-                {userData.user.job}
-              </div>
-              <div className="flex-small-gap">
-                {userData.user.url && (
-                  <a
-                    className={
-                      dataParams.type === "app"
-                        ? "each-skill"
-                        : "each-skill-public"
-                    }
-                    href={userData.user.url}
-                    rel="noreferrer"
-                    target={"_blank"}
-                  >
-                    Portfolio Photo
-                  </a>
-                )}
-                {userData.user.wpv && (
-                  <a
-                    className={
-                      dataParams.type === "app"
-                        ? "each-skill"
-                        : "each-skill-public"
-                    }
-                    href={userData.user.wpv}
-                    rel="noreferrer"
-                    target={"_blank"}
-                  >
-                    Portfolio Video
-                  </a>
-                )}
-                {userData.user.interview && (
-                  <a
-                    className={
-                      dataParams.type === "app"
-                        ? "each-skill"
-                        : "each-skill-public"
-                    }
-                    href={userData.user.interview}
-                    rel="noreferrer"
-                    target={"_blank"}
-                  >
-                    Interview Video
-                  </a>
-                )}
-              </div>
-            </m.div>
+            {makeTitle()}
             <m.div
-              className="cvprofile-header-second-part-section long-box"
-              variants={item}
+              className={
+                dataParams.type === "app"
+                  ? "cvprofile-body"
+                  : "cvprofile-body cvprofile-body-public"
+              }
+              ref={CvDownload}
+              variants={container}
+              animate="show"
+              initial="hidden"
             >
-              <div className="flex-gap-column">
-                <div className="bolder large-text text-orange">
-                  Personal Details
-                </div>
-                <div className="cvprofile-header-second-part">
-                  {Object.keys(personalDetail).map((keyName, i) => (
-                    <div key={keyName} className={"each-box-cv-profile"}>
-                      <div className="bolder medium-text">
-                        {removeUnderScore(keyName)}
-                      </div>
-                      <div className="text-grey medium-text">
-                        {personalDetail[keyName] || "Not Provided"}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="video-play-button">
+              <m.div className="cvprofile-header-first-part" variants={item}>
                 <img
-                  src={ojimage}
-                  className="public-header-image"
-                  alt="Oman jobs"
-                  onClick={() => window.open("https://www.omanjobs.om/")}
+                  className={"cvprofile-picture"}
+                  src={
+                    userData.user.image
+                      ? `/files/images/${userData.user.image}`
+                      : checkImageIcon(userData.user.gender)
+                  }
+                  alt="user"
+                  width={"170px"}
+                  height={"170px"}
                 />
-              </div>
-            </m.div>
-            <m.div className="experiences-list" variants={item}>
-              {dataParams.type === "app" && (
-                <Dropdown overlay={menu}>
-                  <Button className="button-primary">
-                    <Space>
-                      More Options
-                      <DownOutlined />
-                    </Space>
-                  </Button>
-                </Dropdown>
-              )}
-              <m.div className="cvprofile-skills" variants={item}>
-                <div className="bolder large-text text-black">Soft Skills</div>
-                <div className="cvprofile-skills-chain">
-                  {(skills !== "" &&
-                    skills.map(
-                      (skill, i) =>
-                        skill !== "" && (
-                          <div className="cvprofile-each-skill bold" key={i}>
-                            {skill}
-                          </div>
-                        )
-                    )) || (
-                    <div className="text-grey medium-text">
-                      No Skills Provided
-                    </div>
+                <div className="text-orange bolder large-text">
+                  {userData.user.name}
+                </div>
+                <div className="text-grey medium-text bold">
+                  {userData.user.job}
+                </div>
+                <div className="flex-small-gap">
+                  {userData.user.url && (
+                    <a
+                      className={
+                        dataParams.type === "app"
+                          ? "each-skill"
+                          : "each-skill-public"
+                      }
+                      href={userData.user.url}
+                      rel="noreferrer"
+                      target={"_blank"}
+                    >
+                      Portfolio Photo
+                    </a>
+                  )}
+                  {userData.user.wpv && (
+                    <a
+                      className={
+                        dataParams.type === "app"
+                          ? "each-skill"
+                          : "each-skill-public"
+                      }
+                      href={userData.user.wpv}
+                      rel="noreferrer"
+                      target={"_blank"}
+                    >
+                      Portfolio Video
+                    </a>
+                  )}
+                  {userData.user.interview && (
+                    <a
+                      className={
+                        dataParams.type === "app"
+                          ? "each-skill"
+                          : "each-skill-public"
+                      }
+                      href={userData.user.interview}
+                      rel="noreferrer"
+                      target={"_blank"}
+                    >
+                      Interview Video
+                    </a>
                   )}
                 </div>
               </m.div>
-              <m.div className="cvprofile-skills" variants={item}>
-                {userData.user.education ? (
-                  <>
-                    <div className="bolder large-text text-orange">
-                      Education
-                    </div>
-                    <div className="cvprofile-skills-chain medium-text text-grey">
-                      {string(userData.user.education)}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex-between" style={{ padding: 0 }}>
-                      <div
-                        className="bolder large-text text-black"
-                        style={{ padding: "0.3rem 0" }}
-                      >
-                        Education
-                      </div>
-                      {dataParams.type === "app" && (
-                        <AiOutlinePlus
-                          className="plus-button-cv-profile"
-                          onClick={() => {
-                            setUpdateEduData({});
-                            setUpdateEduModal(true);
-                          }}
-                        />
-                      )}
-                    </div>
-                    {makeEducationSection()}
-                  </>
-                )}
-              </m.div>
-            </m.div>
-            <m.div className="cvprofile-skills long-box" variants={item}>
-              <div className="experiences-list">
-                {userData.user.company ? (
-                  <>
-                    <div className="bolder large-text text-orange">
-                      Work Experience
-                    </div>
-                    <div className="each-experience medium-text text-grey">
-                      {string(userData.user.company)}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex-between" style={{ padding: "10px 0" }}>
-                      <div className="bolder large-text text-black">
-                        Work Experience
-                      </div>
-                      {dataParams.type === "app" && (
-                        <AiOutlinePlus
-                          className="plus-button-cv-profile"
-                          onClick={() => {
-                            setUpdateWeData({});
-                            setUpdateWeModal(true);
-                          }}
-                        />
-                      )}
-                    </div>
-                    {makeExperienceSection()}
-                  </>
-                )}
-              </div>
-            </m.div>
-            {dataParams.type === "app" && (
               <m.div
-                className="grid-gather attachments-section"
+                className="cvprofile-header-second-part-section long-box"
                 variants={item}
               >
-                <div className="flex-between">
+                <div className="flex-gap-column">
                   <div className="bolder large-text text-orange">
-                    Attachments
+                    Personal Details
                   </div>
-                  <Button
-                    className="button-primary"
-                    onClick={() => toggleUploadModal(true)}
-                  >
-                    Upload
-                  </Button>
+                  <div className="cvprofile-header-second-part">
+                    {Object.keys(personalDetail).map((keyName, i) => (
+                      <div key={keyName} className={"each-box-cv-profile"}>
+                        <div className="bolder medium-text">
+                          {removeUnderScore(keyName)}
+                        </div>
+                        <div className="text-grey medium-text">
+                          {personalDetail[keyName] || "Not Provided"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <Table
-                    dataSource={userData.attachments}
-                    columns={columns}
-                    loading={tableLoading}
-                    pagination={false}
-                    rowKey={"id"}
+                <div className="video-play-button">
+                  <img
+                    src={ojimage}
+                    className="public-header-image"
+                    alt="Oman jobs"
+                    onClick={() => window.open("https://www.omanjobs.om/")}
                   />
                 </div>
               </m.div>
-            )}
-            {dataParams.type === "app" && (
-              <m.div className="grid-gather" variants={item}>
-                {checkWhichFile(userData.user.cv) === "pdf" && (
-                  <object
-                    data={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                    type="application/pdf"
-                    width="100%"
-                    height="800px"
-                  >
-                    <iframe
-                      title={"PDF file for Candidate Resume"}
-                      src={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                    ></iframe>
-                  </object>
+              <m.div className="experiences-list" variants={item}>
+                {dataParams.type === "app" && (
+                  <Dropdown overlay={menu}>
+                    <Button className="button-primary">
+                      <Space>
+                        More Options
+                        <DownOutlined />
+                      </Space>
+                    </Button>
+                  </Dropdown>
                 )}
-                {(checkWhichFile(userData.user.cv) === "docx" ||
-                  checkWhichFile(userData.user.cv) === "doc") && (
-                  <iframe
-                    title={"DOC file for Candidate Resume"}
-                    src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
-                    width="100%"
-                    height="800px"
-                    frameborder="0"
-                  ></iframe>
-                )}
-              </m.div>
-            )}
-          </m.div>
-          <m.div className="attachments-public-section-wrapper" variants={item}>
-            <div className="attachments-public-section">
-              {dataParams.type !== "app" &&
-                Object.keys(groupBy(userData.attachments, "category")).map(
-                  (section, index) => (
-                    <div className="cvprofile-skills" key={index}>
-                      <div className="bolder large-text text-orange">
-                        {`Attachments - [${checkCategory(section)}]`}
+                <m.div className="cvprofile-skills" variants={item}>
+                  <div className="bolder large-text text-black">
+                    Soft Skills
+                  </div>
+                  <div className="cvprofile-skills-chain">
+                    {(skills !== "" &&
+                      skills.map(
+                        (skill, i) =>
+                          skill !== "" && (
+                            <div className="cvprofile-each-skill bold" key={i}>
+                              {skill}
+                            </div>
+                          )
+                      )) || (
+                      <div className="text-grey medium-text">
+                        No Skills Provided
                       </div>
-                      <div className="cvprofile-attachments medium-text text-grey">
-                        {groupBy(userData.attachments, "category")[section].map(
-                          (attachment, index) => (
+                    )}
+                  </div>
+                </m.div>
+                <m.div className="cvprofile-skills" variants={item}>
+                  {userData.user.education ? (
+                    <>
+                      <div className="bolder large-text text-orange">
+                        Education
+                      </div>
+                      <div className="cvprofile-skills-chain medium-text text-grey">
+                        {string(userData.user.education)}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex-between" style={{ padding: 0 }}>
+                        <div
+                          className="bolder large-text text-black"
+                          style={{ padding: "0.3rem 0" }}
+                        >
+                          Education
+                        </div>
+                        {dataParams.type === "app" && (
+                          <AiOutlinePlus
+                            className="plus-button-cv-profile"
+                            onClick={() => {
+                              setUpdateEduData({});
+                              setUpdateEduModal(true);
+                            }}
+                          />
+                        )}
+                      </div>
+                      {makeEducationSection()}
+                    </>
+                  )}
+                </m.div>
+              </m.div>
+              <m.div className="cvprofile-skills long-box" variants={item}>
+                <div className="experiences-list">
+                  {userData.user.company ? (
+                    <>
+                      <div className="bolder large-text text-orange">
+                        Work Experience
+                      </div>
+                      <div className="each-experience medium-text text-grey">
+                        {string(userData.user.company)}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        className="flex-between"
+                        style={{ padding: "10px 0" }}
+                      >
+                        <div className="bolder large-text text-black">
+                          Work Experience
+                        </div>
+                        {dataParams.type === "app" && (
+                          <AiOutlinePlus
+                            className="plus-button-cv-profile"
+                            onClick={() => {
+                              setUpdateWeData({});
+                              setUpdateWeModal(true);
+                            }}
+                          />
+                        )}
+                      </div>
+                      {makeExperienceSection()}
+                    </>
+                  )}
+                </div>
+              </m.div>
+              {dataParams.type === "app" && (
+                <m.div
+                  className="grid-gather attachments-section"
+                  variants={item}
+                >
+                  <div className="flex-between">
+                    <div className="bolder large-text text-orange">
+                      Attachments
+                    </div>
+                    <Button
+                      className="button-primary"
+                      onClick={() => toggleUploadModal(true)}
+                    >
+                      Upload
+                    </Button>
+                  </div>
+                  <div>
+                    <Table
+                      dataSource={userData.attachments}
+                      columns={columns}
+                      loading={tableLoading}
+                      pagination={false}
+                      rowKey={"id"}
+                    />
+                  </div>
+                </m.div>
+              )}
+              {dataParams.type === "app" && (
+                <m.div className="grid-gather" variants={item}>
+                  {checkWhichFile(userData.user.cv) === "pdf" && (
+                    <object
+                      data={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                      type="application/pdf"
+                      width="100%"
+                      height="800px"
+                    >
+                      <iframe
+                        title={"PDF file for Candidate Resume"}
+                        src={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                      ></iframe>
+                    </object>
+                  )}
+                  {(checkWhichFile(userData.user.cv) === "docx" ||
+                    checkWhichFile(userData.user.cv) === "doc") && (
+                    <iframe
+                      title={"DOC file for Candidate Resume"}
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
+                      width="100%"
+                      height="800px"
+                      frameborder="0"
+                    ></iframe>
+                  )}
+                </m.div>
+              )}
+            </m.div>
+            <m.div
+              className="attachments-public-section-wrapper"
+              variants={item}
+            >
+              <div className="attachments-public-section">
+                {dataParams.type !== "app" &&
+                  Object.keys(groupBy(userData.attachments, "category")).map(
+                    (section, index) => (
+                      <div className="cvprofile-skills" key={index}>
+                        <div className="bolder large-text text-orange">
+                          {`Attachments - [${checkCategory(section)}]`}
+                        </div>
+                        <div className="cvprofile-attachments medium-text text-grey">
+                          {groupBy(userData.attachments, "category")[
+                            section
+                          ].map((attachment, index) => (
                             <a
                               href={`/files/docs/${attachment.name}`}
                               key={attachment.id}
@@ -1240,29 +1259,31 @@ const CVprofile = () => {
                                 index + 1
                               }`}</div>
                             </a>
-                          )
-                        )}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )
-                )}
-            </div>
+                    )
+                  )}
+              </div>
+            </m.div>
+            {dataParams.type !== "app" && (
+              <div className="download-pdf-cv-profile">
+                <Button
+                  type="primary"
+                  onClick={TriggerCvDownload}
+                  loading={isPdfDownloadLoading}
+                >
+                  Download PDF
+                </Button>
+              </div>
+            )}
           </m.div>
-          {dataParams.type !== "app" && (
-            <div className="download-pdf-cv-profile">
-              <Button
-                type="primary"
-                onClick={TriggerCvDownload}
-                loading={isPdfDownloadLoading}
-              >
-                Download PDF
-              </Button>
-            </div>
-          )}
-        </m.div>
-      )) || <Loader minHeight={dataParams.type === "app" ? "70vh" : "85vh"} />}
+        )) || (
+          <Loader minHeight={dataParams.type === "app" ? "70vh" : "85vh"} />
+        )}
+      </AnimatePresence>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
-    </div>
+    </m.div>
   );
 };
 

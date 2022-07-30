@@ -113,7 +113,13 @@ const DashBoard = () => {
     cards.filter((card) => card?.permission).length;
 
   return (
-    <div className="dashboard">
+    <m.div
+      className="dashboard"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Authentication />
       <div className="dashboard-lg">
         <Button
@@ -214,7 +220,7 @@ const DashBoard = () => {
         </m.div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
-    </div>
+    </m.div>
   );
 };
 

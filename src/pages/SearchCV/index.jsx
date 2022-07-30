@@ -28,6 +28,8 @@ import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
 import { removeUnderScore } from "../../utilities";
 import { FaSearch } from "react-icons/fa";
+import { m } from "framer-motion";
+import { item } from "../CVProfile/constants";
 import "./searchcv.css";
 
 const SearchCV = () => {
@@ -328,7 +330,12 @@ const SearchCV = () => {
   };
 
   const Filter = () => (
-    <div className="filter-modal slide-in-top-animation">
+    <m.div
+      className="filter-modal"
+      variants={item}
+      initial="hidden"
+      animate="show"
+    >
       <div className="medium-text bolder text-black">Filter Options</div>
       <div className="filter-modal-inner">
         <div className="each-filter-modal-inner">
@@ -445,7 +452,7 @@ const SearchCV = () => {
           Search
         </Button>
       </div>
-    </div>
+    </m.div>
   );
 
   const makeFiltered = () => (
@@ -564,7 +571,13 @@ const SearchCV = () => {
   );
 
   return (
-    <div className="searchCV">
+    <m.div
+      className="searchCV"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Header />
       <div>
         <Navigation
@@ -631,7 +644,7 @@ const SearchCV = () => {
         </div>
       </div>
       <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
-    </div>
+    </m.div>
   );
 };
 

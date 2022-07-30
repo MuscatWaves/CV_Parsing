@@ -24,6 +24,7 @@ import {
 } from "@ant-design/icons";
 import CustomDatePicker from "../../components/DatePicker";
 import { monthSelectionLabel, makeYear } from "../../utilities";
+import { m } from "framer-motion";
 
 const BuildCV = () => {
   const dataParams = useParams();
@@ -374,7 +375,13 @@ const BuildCV = () => {
   };
 
   return (
-    <div className="cv-body">
+    <m.div
+      className="cv-body"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Header />
       <Navigation
         previous_page={"Dashboard"}
@@ -843,7 +850,7 @@ const BuildCV = () => {
         </Form>
       )) || <Loader minHeight={"70vh"} />}
       <div className="copyright-1">@ 2022 Copyright Powered by Oman Jobs</div>
-    </div>
+    </m.div>
   );
 };
 
