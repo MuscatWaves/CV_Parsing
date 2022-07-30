@@ -1,6 +1,7 @@
 import { Spin } from "antd";
 import React, { useEffect } from "react";
 import ojimage from "../../images/oj.png";
+import { LazyMotion, domAnimation, AnimatePresence, m } from "framer-motion";
 import "./loader.css";
 
 const Loader = ({ minHeight }) => {
@@ -9,12 +10,23 @@ const Loader = ({ minHeight }) => {
   }, []);
 
   return (
-    <div className="loading-data" style={{ minHeight: minHeight }}>
-      <div className="inner-loading-data">
-        <img src={ojimage} className="loader-image" alt="Oman jobs" />
-        <Spin size="large" />
-      </div>
-    </div>
+    <AnimatePresence>
+      <LazyMotion features={domAnimation}>
+        <m.div
+          className="loading-data"
+          style={{ minHeight: minHeight }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="inner-loading-data">
+            <img src={ojimage} className="loader-image" alt="Oman jobs" />
+            <Spin size="large" />
+          </div>
+        </m.div>
+      </LazyMotion>
+    </AnimatePresence>
   );
 };
 
