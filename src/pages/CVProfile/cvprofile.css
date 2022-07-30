@@ -152,8 +152,8 @@
 }
 
 .public-header-image {
-  width: 65px;
-  height: 65px;
+  width: 55px;
+  height: 55px;
   margin: 1rem;
   animation: zoom-in 0.8s;
   cursor: pointer;
@@ -258,7 +258,7 @@
   }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 460px) {
   .cvprofile-header-second-part-section {
     width: 100%;
     margin: 1rem;
@@ -272,9 +272,9 @@
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 10px -10px #f07c008a;
+    box-shadow: 0 0 12px -12px #f07c008a;
   }
   to {
-    box-shadow: 0 0 10px 10px #f07c0059;
+    box-shadow: 0 0 12px 12px #f07c0059;
   }
 }

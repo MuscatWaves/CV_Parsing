@@ -49,7 +49,7 @@ import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
 import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
-import ojimage from "../../images/oj.png";
+import ojimage from "../../images/oj-small.png";
 import FormData from "form-data";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
