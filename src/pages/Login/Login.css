@@ -29,7 +29,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url("../../images/main-background.webp");
+  background: var(--background-card-color);
   width: 100%;
   height: 100vh;
 }
@@ -40,12 +40,11 @@ p {
   padding-top: 2rem;
   max-width: 500px;
   max-height: 700px;
-  background-color: #fff;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   border-radius: 20px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: var(--shadow-1), var(--shadow-2);
   animation: zoom-in 0.6s;
 }
 

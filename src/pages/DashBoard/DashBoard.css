@@ -39,6 +39,7 @@
   overflow: hidden;
   color: var(--light-grey-color);
   transition: 0.3s;
+  box-shadow: var(--shadow-1), var(--shadow-2);
 }
 
 .card::before {
@@ -131,7 +132,7 @@
   width: 80px;
   height: 80px;
   padding: 1rem;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 @media screen and (max-width: 1336px) {
