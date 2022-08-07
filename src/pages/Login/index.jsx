@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Input, Button, Form, message } from "antd";
-import ojimage from "../../images/oj.png";
-import "./Login.css";
+import ojimage from "../../images/oj-small.png";
 import FormData from "form-data";
 import isEmail from "validator/lib/isEmail";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { m } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = "Login";
   }, []);
@@ -25,9 +27,6 @@ const Login = () => {
       setLoading(false);
       return;
     }
-
-    message.info("Authentication in progress");
-
     var bodyFormData = new FormData();
     bodyFormData.append("email", Email);
     bodyFormData.append("password", Password);
@@ -43,26 +42,26 @@ const Login = () => {
     })
       .then(function (response) {
         if (response.status === 200 && response.data.token) {
-          message.success("Login Successfull, Redirecting...", "success");
+          message.success("Login Successfull");
           cookies.set("token", response.data.token.token, {
             path: "/",
             maxAge: 60 * 60 * 24 * 365,
           });
-          window.location.replace("/dashboard");
+          navigate("/dashboard");
           setLoading(false);
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            message.error(response.data.error);
             setLoading(false);
           } else {
-            message.error("Something Went Wrong!", "error");
+            message.error("Something Went Wrong!");
             setLoading(false);
           }
         }
       })
       .catch(function (response) {
         setLoading(false);
-        message.error("Something Went Wrong!", "error");
+        message.error("Something Went Wrong!");
       });
   };
 
@@ -72,7 +71,7 @@ const Login = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.7 }}
     >
       <Form
         name="normal_login"
@@ -82,8 +81,10 @@ const Login = () => {
         }}
         onFinish={handleSubmit}
       >
-        <img className="oj-image" src={ojimage} alt={"Oman Jobs"} />
-        <p className="oj-title">Log in to CV Parser</p>
+        <div className="login-image-container">
+          <img className="oj-image" src={ojimage} alt={"Oman Jobs"} />
+        </div>
+        <p className="login-welcome-message">Welcome back!</p>
         <div className="name-bodies">
           <p className="name-title">Email</p>
           <Form.Item
@@ -130,7 +131,17 @@ const Login = () => {
           size="large"
           loading={isLoading}
         >
-          Login
+          {isLoading ? (
+            <m.span
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              Authenticating
+            </m.span>
+          ) : (
+            "Login"
+          )}
         </Button>
       </Form>
     </m.div>

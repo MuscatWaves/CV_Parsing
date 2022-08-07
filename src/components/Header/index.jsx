@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, message } from "antd";
-import ojimage from "../../images/oj.png";
+import ojimage from "../../images/oj-small.png";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import Authentication from "../../components/Authentication";

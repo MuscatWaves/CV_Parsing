@@ -1,96 +1,24 @@
 import React, { useState, useEffect } from "react";
-import ojimage from "../../images/oj.png";
-import { RiUserSearchLine } from "react-icons/ri";
-import { AiOutlineUsergroupAdd, AiOutlinePoweroff } from "react-icons/ai";
-import { HiOutlineDocumentReport } from "react-icons/hi";
-import { RiFileUserLine } from "react-icons/ri";
-import { TbFileUpload } from "react-icons/tb";
-import { FiUserX } from "react-icons/fi";
+import ojimage from "../../images/oj-small.png";
+import { AiOutlinePoweroff } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import jwt from "jsonwebtoken";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import Cookies from "universal-cookie";
 import Authentication from "../../components/Authentication";
 import { m } from "framer-motion";
 import "./DashBoard.css";
+import { removeCookie } from "../../utilities";
+import { animate, cards, c_animate, c_intial, intial } from "./constants";
 
 const DashBoard = () => {
-  const [hoverState, setHoverState] = useState({
-    card1: "",
-    card2: "",
-    card3: "",
-    card4: "",
-    card5: "",
-    card6: "",
-  });
   const [isLoggedIn, setLoggedIn] = useState({});
-
   const cookies = new Cookies();
   const token = cookies.get("token");
-
   const navigate = useNavigate();
   const navigateTo = (path) => {
     navigate(path);
   };
-
-  const cards = [
-    {
-      id: 1,
-      name: "card1",
-      icon: TbFileUpload,
-      title: "Upload CV",
-      description: "To upload bulk CV's for parsing",
-      permission: isLoggedIn.ucaccess === "0" ? true : false,
-      path: "/uploadcv",
-    },
-    {
-      id: 2,
-      name: "card2",
-      icon: FiUserX,
-      title: "Rejected CV",
-      description: "Here are the list of the Rejected CV by API.",
-      permission: isLoggedIn.rcaccess === "0" ? true : false,
-      path: "/rejectedcv",
-    },
-    {
-      id: 3,
-      name: "card3",
-      icon: RiUserSearchLine,
-      title: "Search CV",
-      description: "Here, You can view all the CV with profile details.",
-      permission: isLoggedIn.scaccess === "0" ? true : false,
-      path: "/searchcv",
-    },
-    {
-      id: 4,
-      name: "card4",
-      icon: RiFileUserLine,
-      title: "Build CV",
-      description: "Here you can Create CV for Jobseeker or Modify the CV.",
-      permission: isLoggedIn.bcaccess === "0" ? true : false,
-      path: "/cv/create",
-    },
-    {
-      id: 5,
-      name: "card5",
-      icon: AiOutlineUsergroupAdd,
-      title: "Add/Manage User",
-      description:
-        "Here you can add/manage account to provide the access to this dashboard.",
-      permission: isLoggedIn.type === "1" ? true : false,
-      path: "/userManage",
-    },
-    {
-      id: 6,
-      name: "card6",
-      icon: HiOutlineDocumentReport,
-      title: "User Report",
-      description:
-        "Here you can View the User Report. How many CV uploaded by user.",
-      permission: isLoggedIn.type === "1" ? true : false,
-      path: "/userReport",
-    },
-  ];
 
   useEffect(() => {
     document.title = "Dashboard";
@@ -102,15 +30,8 @@ const DashBoard = () => {
     }
   }, [token]);
 
-  const removeCookie = () => {
-    const cookies = new Cookies();
-    cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });
-    message.success("Logged Out");
-    navigateTo("/");
-  };
-
   const checkNumberOfCards = () =>
-    cards.filter((card) => card?.permission).length;
+    cards(isLoggedIn).filter((card) => card?.permission).length;
 
   return (
     <m.div
@@ -118,7 +39,7 @@ const DashBoard = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6 }}
     >
       <Authentication />
       <div className="dashboard-lg">
@@ -126,45 +47,17 @@ const DashBoard = () => {
           className="header-log-out-btn"
           type="primary"
           danger
-          onClick={removeCookie}
+          onClick={() => removeCookie(navigateTo)}
           shape={"round"}
         >
           <AiOutlinePoweroff className="large-text" />
         </Button>
       </div>
       <div className="dashboard-body">
-        <m.div
-          initial={{
-            opacity: 0,
-            x: "-50px",
-          }}
-          animate={{
-            opacity: 1,
-            x: "0",
-            transition: {
-              type: "spring",
-              damping: 8,
-              stiffness: 40,
-            },
-          }}
-        >
+        <m.div initial={intial} animate={animate}>
           <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
         </m.div>
-        <m.div
-          initial={{
-            opacity: 0,
-            y: "-50px",
-          }}
-          animate={{
-            opacity: 1,
-            y: "0",
-            transition: {
-              type: "spring",
-              damping: 8,
-              stiffness: 40,
-            },
-          }}
-        >
+        <m.div initial={c_intial} animate={c_animate}>
           <m.span className="welcome-message">
             <h1 className="text-orange bold">Welcome</h1>
             <h1 className="text-grey">{isLoggedIn.name}</h1>
@@ -174,42 +67,19 @@ const DashBoard = () => {
               checkNumberOfCards() > 4 ? "main-card grid-3" : "main-card"
             }
           >
-            {cards.map(
+            {cards(isLoggedIn).map(
               (card, index) =>
                 card.permission && (
                   <m.div
                     key={card.id}
                     className="card"
-                    onMouseEnter={() =>
-                      setHoverState((hover) => ({
-                        ...hover,
-                        [card.name]: "hover",
-                      }))
-                    }
-                    onMouseLeave={() =>
-                      setHoverState((hover) => ({ ...hover, [card.name]: "" }))
-                    }
                     onClick={() => navigateTo(card.path)}
                   >
-                    <card.icon
-                      className={
-                        hoverState[card.name]
-                          ? "card-icon"
-                          : "card-icon text-orange"
-                      }
-                    />
-                    <h2 className={`bolder ${hoverState[card.name]}`}>
-                      {card.title}
-                    </h2>
-                    <p
-                      className={
-                        hoverState[card.name]
-                          ? `${hoverState[card.name]}`
-                          : "text-light-grey"
-                      }
-                    >
-                      {card.description}
-                    </p>
+                    <div className="dash-card-icon">
+                      <card.icon style={{ fontSize: "40px" }} />
+                    </div>
+                    <h2>{card.title}</h2>
+                    <p>{card.description}</p>
                     <div className="go-corner" href="#">
                       <div className="go-arrow">→</div>
                     </div>
@@ -219,7 +89,9 @@ const DashBoard = () => {
           </m.div>
         </m.div>
       </div>
-      <div className="copyright">@ 2022 Copyright Powered by Oman Jobs</div>
+      <div className="copyright text-grey">
+        @ 2022 Copyright Powered by Oman Jobs
+      </div>
     </m.div>
   );
 };

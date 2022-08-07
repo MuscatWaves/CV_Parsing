@@ -1,20 +1,17 @@
-.navigation-header{
-    display: flex;
-    gap: 0.8rem;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 700;
-    padding: 0.8rem 1.5rem;
+.navigation-header {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 0.8rem 1.5rem;
 }
 
-.navigation-icon{
-    margin-bottom: 15px;
-}
-
-.navigation-main{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 1.5rem;
+.navigation-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 1.5rem;
+  margin-bottom: 10px;
 }

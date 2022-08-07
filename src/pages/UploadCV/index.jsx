@@ -15,7 +15,7 @@ import FormData from "form-data";
 const UploadCV = () => {
   const cookies = new Cookies();
   const token = cookies.get("token");
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState("none");
   const [data, setData] = useState({});
   const mainUser = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
   const [selectedCategory, setSelectedCategory] = useState("Accounting");
@@ -57,7 +57,7 @@ const UploadCV = () => {
   };
 
   const getAllUser = async () => {
-    setLoading(true);
+    setLoading("loading");
     await axios({
       method: "GET",
       url: `/api/userlist.php`,
@@ -72,7 +72,7 @@ const UploadCV = () => {
     })
       .then(function (response) {
         if (response.status === 200) {
-          setLoading(false);
+          setLoading("loaded");
           const ourUser = response.data.data.filter(
             (user) => user.id === Number(mainUser.id)
           );
@@ -126,7 +126,7 @@ const UploadCV = () => {
         current_page={"Upload CV"}
       />
       <div>
-        {(!isLoading && (
+        {(isLoading === "loaded" && (
           <div className="uploadCV">
             <div className="status-list slide-in-left-animation">
               <div className="bolder large-text text-orange">

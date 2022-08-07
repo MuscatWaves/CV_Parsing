@@ -1,5 +1,12 @@
 @import "~antd/dist/antd.css";
 
+:root {
+  --black-color: #272727;
+  --grey-color: #6b6b6b;
+  --light-grey-color: #9e9fa7;
+  --orange-color: #f07d00;
+}
+
 .App {
   /* background-image: linear-gradient(rgba(0, 0, 0, 0.040), rgba(0, 0, 0, 0.060)), url("./images/main-background.webp"); */
   background: rgb(221, 221, 221);
@@ -10,6 +17,10 @@
   );
   min-height: 100vh;
   scroll-behavior: smooth;
+}
+
+p {
+  margin: 0;
 }
 
 /* Global Styles used */
@@ -25,6 +36,7 @@
   border-radius: 20px;
   margin-top: 1rem;
   color: #fff;
+  border: 1px solid #f07d00;
 }
 
 .button-primary:hover {

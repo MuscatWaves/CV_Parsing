@@ -1,5 +1,7 @@
 import moment from "moment";
 import { categorySelection } from "../pages/CVProfile/constants";
+import Cookies from "universal-cookie";
+import { message } from "antd";
 
 export const removeUnderScore = (str) => {
   var i,
@@ -81,4 +83,11 @@ export const groupBy = (array, property) => {
 export const checkWhichFile = (cv) => {
   var n = cv?.split(".");
   return n[n.length - 1];
+};
+
+export const removeCookie = (navigate) => {
+  const cookies = new Cookies();
+  cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });
+  message.success("Logged Out");
+  navigate("/");
 };
