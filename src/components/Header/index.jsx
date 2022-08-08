@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import ojimage from "../../images/oj-small.png";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import Authentication from "../../components/Authentication";
 import jwt from "jsonwebtoken";
 import { AiOutlinePoweroff } from "react-icons/ai";
 import { FiUser } from "react-icons/fi";
+import { removeCookie } from "../../utilities";
 import "./header.css";
 
 const Header = () => {
@@ -17,13 +18,6 @@ const Header = () => {
     navigate(path);
   };
   const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
-
-  const removeCookie = () => {
-    const cookies = new Cookies();
-    cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });
-    message.success("Logged Out");
-    navigateTo("/");
-  };
 
   return (
     <div className="header">
@@ -41,7 +35,7 @@ const Header = () => {
           className="header-log-out-btn"
           type="primary"
           danger
-          onClick={removeCookie}
+          onClick={() => removeCookie(navigate)}
           shape={"round"}
           title={"Log Off"}
         >

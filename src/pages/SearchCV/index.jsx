@@ -1,65 +1,83 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import {
-  Table,
-  message,
-  Pagination,
-  Button,
-  Select,
-  Input,
-  DatePicker,
-  Popover,
-} from "antd";
+import { Table, message, Pagination, Button, Input, Popover } from "antd";
 import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 import { RiMessage3Fill } from "react-icons/ri";
-import { GiCancel } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
-import {
-  martialStatusSelectOption,
-  ageSelectOptions,
-  genderSelectOptions,
-} from "./constants.ts";
 import maleUserImage from "../../images/male-user.png";
 import femaleUserImage from "../../images/female-user.jpg";
-import { removeUnderScore } from "../../utilities";
+import { makeFiltered } from "../../utilities";
 import { FaSearch } from "react-icons/fa";
 import { m } from "framer-motion";
-import { item } from "../CVProfile/constants";
+import { useQuery } from "react-query";
 import "./searchcv.css";
+import Filter from "./Filter";
 
 const SearchCV = () => {
   const navigate = useNavigate();
   const navigateTo = (path) => {
     navigate(path);
   };
-  const { RangePicker } = DatePicker;
+  const history = JSON.parse(localStorage.getItem("filter"));
   const [isLoading, setLoading] = useState(false);
+  const [show, toggleShow] = useState(false);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [jobCategoryResult, setJobCategoryResult] = useState([]);
-  const [nationalityResult, setNationalityResult] = useState([]);
   const [isSearchPop, toggleSearchPop] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
+  console.log(`History - ${history}`);
   const [filterData, setFilterData] = useState({
-    jobTitle: "",
-    name: "",
-    jobCategory: "",
-    maritalStatus: "",
-    age: "",
-    gender: "",
-    nationality: "",
-    searchByFromdate: "",
-    searchByTodate: "",
+    jobTitle: history ? history.jobTitle : "",
+    name: history ? history.name : "",
+    jobCategory: history ? history.jobCategory : "",
+    maritalStatus: history ? history.maritalStatus : "",
+    age: history ? history.age : "",
+    gender: history ? history.gender : "",
+    nationality: history ? history.nationality : "",
+    searchByFromdate: history ? history.searchByFromdate : "",
+    searchByTodate: history ? history.searchByTodate : "",
   });
 
-  const [show, toggleShow] = useState(false);
+  const { data: nationalityResult } = useQuery(
+    ["nationality"],
+    () => axios.get("/api/countget.php?nationality=true"),
+    {
+      refetchOnWindowFocus: false,
+      select: (data) => {
+        const newData = data.data.map((item) => ({
+          label: `${!item.nationality ? "None" : item.nationality} - (${
+            !item.nationality ? "All" : item.cnt
+          })`,
+          value: item.nationality,
+        }));
+        return newData;
+      },
+    }
+  );
+
+  const { data: jobCategoryResult } = useQuery(
+    ["category"],
+    () => axios.get("/api/countget.php?category=true"),
+    {
+      refetchOnWindowFocus: false,
+      select: (data) => {
+        const newData = data.data.map((item) => ({
+          label: `${!item.category ? "None" : item.category} - (${
+            !item.category ? "All" : item.cnt
+          })`,
+          value: `${!item.category ? "" : item.category}`,
+        }));
+        return newData;
+      },
+    }
+  );
 
   const onChange = (page) => {
     setPage(page);
@@ -75,62 +93,6 @@ const SearchCV = () => {
     } else {
       setFilterData({ ...filterData, from: "", to: "" });
     }
-  };
-
-  const getJobCategoryCount = async () => {
-    setLoading(true);
-    await axios({
-      method: "GET",
-      url: `/api/countget.php?category=true`,
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          const result = response.data.map((item) => ({
-            label: `${!item.category ? "None" : item.category} - (${
-              !item.category ? "All" : item.cnt
-            })`,
-            value: `${!item.category ? "" : item.category}`,
-          }));
-          setJobCategoryResult(result);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const getNationalityCount = async () => {
-    setLoading(true);
-    await axios({
-      method: "GET",
-      url: `/api/countget.php?nationality=true`,
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          const result = response.data.map((item) => ({
-            label: `${!item.nationality ? "None" : item.nationality} - (${
-              !item.nationality ? "All" : item.cnt
-            })`,
-            value: item.nationality,
-          }));
-          setNationalityResult(result);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
   };
 
   const getData = async (data) => {
@@ -294,8 +256,6 @@ const SearchCV = () => {
 
   useEffect(() => {
     document.title = "Search CV";
-    getJobCategoryCount();
-    getNationalityCount();
     // eslint-disable-next-line
   }, []);
 
@@ -329,222 +289,6 @@ const SearchCV = () => {
     getData(data);
   };
 
-  const Filter = () => (
-    <m.div
-      className="filter-modal"
-      variants={item}
-      initial="hidden"
-      animate="show"
-    >
-      <div className="medium-text bolder text-black">Filter Options</div>
-      <div className="filter-modal-inner">
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Age</div>
-          <Select
-            className="select-options"
-            value={filterData.age}
-            options={ageSelectOptions}
-            onChange={(value) => setFilterData({ ...filterData, age: value })}
-          />
-        </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Job Category</div>
-          <Select
-            className="select-options"
-            value={filterData.jobCategory}
-            options={jobCategoryResult}
-            onChange={(value) =>
-              setFilterData({ ...filterData, jobCategory: value })
-            }
-          />
-        </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Nationality</div>
-          <Select
-            className="select-options"
-            value={filterData.nationality}
-            options={nationalityResult}
-            onChange={(value) =>
-              setFilterData({ ...filterData, nationality: value })
-            }
-          />
-        </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Gender</div>
-          <Select
-            className="select-options"
-            value={filterData.gender}
-            options={genderSelectOptions}
-            onChange={(value) =>
-              setFilterData({ ...filterData, gender: value })
-            }
-          />
-        </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Maratial Status</div>
-          <Select
-            className="select-options"
-            value={filterData.maritalStatus}
-            options={martialStatusSelectOption}
-            onChange={(value) =>
-              setFilterData({ ...filterData, maritalStatus: value })
-            }
-          />
-        </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Date Selection</div>
-          <RangePicker
-            value={[filterData.searchByFromdate, filterData.searchByTodate]}
-            ranges={{
-              Today: [moment(), moment()],
-              Yesterday: [
-                moment().subtract(1, "day"),
-                moment().subtract(1, "day"),
-              ],
-              "Last 30 Days": [moment().subtract(30, "days"), moment()],
-              "This Month": [moment().startOf("month"), moment()],
-              "Last Month": [
-                moment().subtract(1, "month").startOf("month"),
-                moment().subtract(1, "month").endOf("month"),
-              ],
-            }}
-            onChange={onDateChange}
-          />
-        </div>
-        <div className="each-filter-modal-inner">
-          <div className="bolder text-grey">Job Title</div>
-          <Input
-            value={filterData.jobTitle}
-            onChange={(e) =>
-              setFilterData({ ...filterData, jobTitle: e.target.value })
-            }
-          />
-        </div>
-      </div>
-      <hr
-        style={{
-          height: "1px",
-          width: "100%",
-          borderColor: "white",
-          backgroundColor: "grey",
-        }}
-      />
-      <div className="filter-section-division">
-        <Button
-          className=""
-          type="text"
-          onClick={() => {
-            toggleShow(false);
-            refresh();
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          className="button-primary filter-search-button"
-          type="primary"
-          onClick={() => {
-            setPage(1);
-            refresh();
-            toggleShow(false);
-          }}
-        >
-          Search
-        </Button>
-      </div>
-    </m.div>
-  );
-
-  const makeFiltered = () => (
-    <div className="filtered-list">
-      {Object.keys(filterData).map(
-        (filterValue, index) =>
-          filterData[filterValue] && (
-            <div
-              className="each-filter flex-small-gap medium-text slide-in-left-animation"
-              key={filterValue}
-            >
-              <div>{`${removeUnderScore(filterValue)}: ${
-                filterData[filterValue]
-              }`}</div>
-              {filterValue !== "searchByFromdate" &&
-                filterValue !== "searchByTodate" &&
-                !isLoading && (
-                  <GiCancel
-                    className="pointer medium-text fade-in-animation"
-                    onClick={() => {
-                      setFilterData({ ...filterData, [filterValue]: "" });
-                      const data = {
-                        SearchByFromdate:
-                          (filterData.searchByFromdate &&
-                            moment(filterData.searchByFromdate).format(
-                              "YYYY-MM-DD"
-                            )) ||
-                          "",
-                        SearchByTodate:
-                          (filterData.searchByTodate &&
-                            moment(filterData.searchByTodate).format(
-                              "YYYY-MM-DD"
-                            )) ||
-                          "",
-                        JobTitle: filterData.jobTitle,
-                        Age: filterData.age,
-                        JobCategory: filterData.jobCategory,
-                        Nationality: filterData.nationality,
-                        Gender: filterData.gender,
-                        MaritalStatus: filterData.maritalStatus,
-                        Search: filterData.name,
-                      };
-                      const updateData = {
-                        ...data,
-                        [removeUnderScore(filterValue)]: "",
-                      };
-                      getData(updateData);
-                    }}
-                  />
-                )}
-            </div>
-          )
-      )}
-      {Object.keys(filterData).filter(
-        (filterValue, index) => filterData[filterValue]
-      ).length > 0 && (
-        <div
-          className="bolder small-text pointer link"
-          onClick={() => {
-            setFilterData({
-              jobTitle: "",
-              name: "",
-              jobCategory: "",
-              maritalStatus: "",
-              age: "",
-              gender: "",
-              nationality: "",
-              searchByFromdate: "",
-              searchByTodate: "",
-            });
-
-            const data = {
-              SearchByFromdate: "",
-              SearchByTodate: "",
-              JobTitle: "",
-              Age: "",
-              JobCategory: "",
-              Nationality: "",
-              Gender: "",
-              MaritalStatus: "",
-              Search: "",
-            };
-            getData(data);
-          }}
-          style={{ marginBottom: "10px" }}
-        >
-          Reset All
-        </div>
-      )}
-    </div>
-  );
-
   const searchContainer = () => (
     <div className="flex-small-gap">
       <Input
@@ -554,6 +298,10 @@ const SearchCV = () => {
         onPressEnter={() => {
           setPage(1);
           refresh();
+          localStorage.setItem(
+            "filter",
+            JSON.stringify({ ...filterData, name: filterData.name })
+          );
           toggleSearchPop(false);
         }}
       />
@@ -562,6 +310,10 @@ const SearchCV = () => {
         onClick={() => {
           setPage(1);
           refresh();
+          localStorage.setItem(
+            "filter",
+            JSON.stringify({ ...filterData, name: filterData.name })
+          );
           toggleSearchPop(false);
         }}
       >
@@ -616,13 +368,24 @@ const SearchCV = () => {
           }
         />
         <div className="table">
-          {show && Filter()}
+          {show && (
+            <Filter
+              filterData={filterData}
+              setFilterData={setFilterData}
+              jobCategoryResult={jobCategoryResult}
+              nationalityResult={nationalityResult}
+              onDateChange={onDateChange}
+              toggleShow={toggleShow}
+              refresh={refresh}
+              setPage={setPage}
+            />
+          )}
           {Object.keys(filterData).filter(
-            (filterValue, index) => filterData[filterValue]
+            (filterValue, _index) => filterData[filterValue]
           ).length > 0 &&
             !show &&
             !isSearchPop &&
-            makeFiltered()}
+            makeFiltered(filterData, setFilterData, isLoading, getData)}
           <Table
             dataSource={data.data}
             columns={columns}

@@ -25,7 +25,6 @@ const UserForm = ({
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
-  
 
   const onClose = () => {
     setModal(false);
@@ -104,7 +103,7 @@ const UserForm = ({
     >
       <Form
         layout="vertical"
-        className={"zoom-in-animation"}
+        className={"flex-small-gap1-column zoom-in-animation"}
         onFinish={handleUpdateUser}
         form={form}
         scrollToFirstError={true}

@@ -1,15 +1,17 @@
 import "./app.css";
 import Routing from "./routes";
-import { HelmetProvider } from "react-helmet-async";
+import {QueryClientProvider, QueryClient} from "react-query";
 
-function App() {
+const queryClient = new QueryClient();
+
+const App = () => {
   return (
     <div className="App">
-      <HelmetProvider>
         <header className="App-header">
-          <Routing/>
+          <QueryClientProvider client={queryClient}>
+            <Routing/>
+          </QueryClientProvider>
         </header>
-      </HelmetProvider>
     </div>
   );
 }

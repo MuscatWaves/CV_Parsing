@@ -2,6 +2,7 @@ import moment from "moment";
 import { categorySelection } from "../pages/CVProfile/constants";
 import Cookies from "universal-cookie";
 import { message } from "antd";
+import { GiCancel } from "react-icons/gi";
 
 export const removeUnderScore = (str) => {
   var i,
@@ -86,8 +87,104 @@ export const checkWhichFile = (cv) => {
 };
 
 export const removeCookie = (navigate) => {
+  localStorage.removeItem("filter");
   const cookies = new Cookies();
   cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });
   message.success("Logged Out");
   navigate("/");
 };
+
+export const makeFiltered = (filterData, setFilterData, isLoading, getData) => (
+  <div className="filtered-list">
+    {Object.keys(filterData).map(
+      (filterValue, index) =>
+        filterData[filterValue] && (
+          <div
+            className="each-filter flex-small-gap medium-text slide-in-left-animation"
+            key={filterValue}
+          >
+            <div>{`${removeUnderScore(filterValue)} : ${removeUnderScore(
+              filterData[filterValue]
+            )}`}</div>
+            {filterValue !== "searchByFromdate" &&
+              filterValue !== "searchByTodate" &&
+              !isLoading && (
+                <GiCancel
+                  className="pointer medium-text fade-in-animation"
+                  onClick={() => {
+                    setFilterData({ ...filterData, [filterValue]: "" });
+                    const data = {
+                      SearchByFromdate:
+                        (filterData.searchByFromdate &&
+                          moment(filterData.searchByFromdate).format(
+                            "YYYY-MM-DD"
+                          )) ||
+                        "",
+                      SearchByTodate:
+                        (filterData.searchByTodate &&
+                          moment(filterData.searchByTodate).format(
+                            "YYYY-MM-DD"
+                          )) ||
+                        "",
+                      JobTitle: filterData.jobTitle,
+                      Age: filterData.age,
+                      JobCategory: filterData.jobCategory,
+                      Nationality: filterData.nationality,
+                      Gender: filterData.gender,
+                      MaritalStatus: filterData.maritalStatus,
+                      Search: filterData.name,
+                    };
+                    const updateData = {
+                      ...data,
+                      [removeUnderScore(filterValue)]: "",
+                    };
+                    getData(updateData);
+                    localStorage.setItem(
+                      "filter",
+                      JSON.stringify({ ...filterData, [filterValue]: "" })
+                    );
+                  }}
+                />
+              )}
+          </div>
+        )
+    )}
+    {Object.keys(filterData).filter(
+      (filterValue, index) => filterData[filterValue]
+    ).length > 0 && (
+      <div
+        className="bolder small-text pointer link"
+        onClick={() => {
+          const newData = {
+            jobTitle: "",
+            name: "",
+            jobCategory: "",
+            maritalStatus: "",
+            age: "",
+            gender: "",
+            nationality: "",
+            searchByFromdate: "",
+            searchByTodate: "",
+          };
+          setFilterData(newData);
+          const data = {
+            SearchByFromdate: "",
+            SearchByTodate: "",
+            JobTitle: "",
+            Age: "",
+            JobCategory: "",
+            Nationality: "",
+            Gender: "",
+            MaritalStatus: "",
+            Search: "",
+          };
+          getData(data);
+          localStorage.setItem("filter", JSON.stringify({ ...newData }));
+        }}
+        style={{ marginBottom: "10px" }}
+      >
+        Reset All
+      </div>
+    )}
+  </div>
+);

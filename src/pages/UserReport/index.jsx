@@ -1,51 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/Header";
 import axios from "axios";
-import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
-import { Table, message } from "antd";
+import { Table } from "antd";
 import { m } from "framer-motion";
+import { useQuery } from "react-query";
 
 const UserReport = () => {
-  const cookies = new Cookies();
-  const token = cookies.get("token");
-  const [isLoading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-
-  const getAllUserReportList = async () => {
-    setLoading(true);
-    await axios({
-      method: "GET",
-      url: `/api/userlist.php`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        row: 0,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setLoading(false);
-          setData(response.data);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
+  const { data = [], isFetching } = useQuery(["usermanage"], () =>
+    axios.get("/api/userlist.php")
+  );
 
   useEffect(() => {
     document.title = "User Report";
-    getAllUserReportList();
     // eslint-disable-next-line
   }, []);
 
@@ -96,9 +63,9 @@ const UserReport = () => {
       />
       <div className="table">
         <Table
-          dataSource={data.data}
+          dataSource={data.data?.data}
           columns={columns}
-          loading={isLoading}
+          loading={isFetching}
           pagination={false}
           rowKey={"id"}
         />
@@ -109,3 +76,6 @@ const UserReport = () => {
 };
 
 export default UserReport;
+
+//  Before - 117
+//  After -

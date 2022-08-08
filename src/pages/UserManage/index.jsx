@@ -1,58 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, message } from "antd";
+import { Table, Button } from "antd";
 import { FaCheck } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import axios from "axios";
-import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
 import moment from "moment";
 import UserForm from "./UserForm";
+import { useQuery } from "react-query";
 import { m } from "framer-motion";
 
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
   const [editData, setEditData] = useState(null);
-  const [isLoading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const cookies = new Cookies();
-  const token = cookies.get("token");
-
-  const getAllUserManageList = async () => {
-    setLoading(true);
-    await axios({
-      method: "GET",
-      url: `/api/userlist.php`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        row: 0,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setLoading(false);
-          setData(response.data);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
+  const {
+    data = [],
+    isFetching,
+    refetch,
+  } = useQuery(["usermanage"], () => axios.get("/api/userlist.php"));
 
   useEffect(() => {
     document.title = "User Manage";
-    getAllUserManageList();
     // eslint-disable-next-line
   }, []);
 
@@ -145,7 +114,7 @@ const UserManage = () => {
           setModal={toggleModal}
           editData={editData}
           setEditData={setEditData}
-          getData={getAllUserManageList}
+          getData={refetch}
         />
       )}
       <Navigation
@@ -167,9 +136,9 @@ const UserManage = () => {
       />
       <div className="table">
         <Table
-          dataSource={data.data}
+          dataSource={data.data?.data}
           columns={columns}
-          loading={isLoading}
+          loading={isFetching}
           pagination={false}
           rowKey={"id"}
         />

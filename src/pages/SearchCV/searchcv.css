@@ -20,6 +20,7 @@
   display: flex;
   align-items: center;
   padding: 1.1rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .filter-icon {
@@ -98,10 +99,11 @@
 .each-filter {
   padding: 0.2rem 0.4rem;
   font-weight: 700;
-  border-radius: 10px;
+  border-radius: 20px;
   font-size: 0.9rem;
   color: #f69f00;
-  background-color: #ffc14f46;
+  background-color: #ffc14f1e;
   width: fit-content;
   margin-bottom: 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
