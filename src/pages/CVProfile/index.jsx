@@ -8,6 +8,10 @@ import {
   checkCategory,
   groupBy,
   checkWhichFile,
+  checkImageIcon,
+  TriggerCvDownload,
+  skills,
+  string,
 } from "../../utilities";
 import {
   DownOutlined,
@@ -39,7 +43,6 @@ import {
 import { SiGmail } from "react-icons/si";
 import { FcShare } from "react-icons/fc";
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
@@ -47,15 +50,21 @@ import { categorySelection, container, item } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
-import maleUserImage from "../../images/male-user.png";
-import femaleUserImage from "../../images/female-user.jpg";
 import ojimage from "../../images/oj-small.png";
-import FormData from "form-data";
-import jsPDF from "jspdf";
-import * as htmlToImage from "html-to-image";
 import UpdateWork from "./UpdateWork";
 import UpdateEducation from "./UpdateEducation";
 import { AnimatePresence, m } from "framer-motion";
+import {
+  lastSeen,
+  getUserData,
+  getUserDataPublic,
+  getAllUserManageList,
+  deleteData,
+  handleUploadModal,
+  deleteEducationData,
+  deleteWorkExpData,
+  deleteFullCV,
+} from "./endpoints";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -119,337 +128,22 @@ const CVprofile = () => {
     document.title = `${userData.user.name} - ${userData.user.job}`;
   };
 
-  const lastSeen = async () => {
-    var bodyFormDataLastSeen = new FormData();
-    bodyFormDataLastSeen.append("lastseen", true);
-    bodyFormDataLastSeen.append("id", user.id);
-    bodyFormDataLastSeen.append("candidate", userData.user.id);
-
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataLastSeen,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const getUserData = async () => {
-    await axios({
-      method: "GET",
-      url: `/api/user.php?id=${dataParams.id}`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setUserData({
-            user: response.data.data.user[0],
-            attachments: response.data.data.attachments,
-            experience: response.data.data.experience,
-            educations: response.data.data.educations,
-          });
-          setLoading("loaded");
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-            setLoading("loaded");
-          } else {
-            message.error("Something Went Wrong!", "error");
-            setLoading("loaded");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const getUserDataPublic = async () => {
-    await axios({
-      method: "GET",
-      url: `/api/publicuser.php?id=${dataParams.id}`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setUserData({
-            user: response.data.data.user[0],
-            attachments: response.data.data.attachments,
-            experience: response.data.data.experience,
-            educations: response.data.data.educations,
-          });
-          setLoading("loaded");
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-            setLoading("loaded");
-          } else {
-            message.error("Something Went Wrong!", "error");
-            setLoading("loaded");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const deleteData = async () => {
-    var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deleteAttachment", true);
-    bodyFormDataDelete.append("id", deletionData.id);
-    setTableLoading(true);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataDelete,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The attachment has been sucessfully deleted");
-          toggleDeleteModal(false);
-          setDeletionData("");
-          getUserData();
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-    setTableLoading(false);
-  };
-
-  const deleteEducationData = async () => {
-    var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deleteEducation", true);
-    bodyFormDataDelete.append("id", deleteEduData.id);
-    setDeleteEduLoading(true);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataDelete,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The education has been sucessfully deleted");
-          setDeleteEduLoading(false);
-          setDeleteEduModal(false);
-          setDeleteEduData("");
-          setLoading(true);
-          getUserData();
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const deleteWorkExpData = async () => {
-    var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deleteExperience", true);
-    bodyFormDataDelete.append("id", deleteWeData.id);
-    setDeleteWeLoading(true);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataDelete,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The Work experience has been sucessfully deleted");
-          setDeleteWeLoading(false);
-          setDeleteWeData("");
-          setDeleteWeModal(false);
-          setLoading(true);
-          getUserData();
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const deleteFullCV = async () => {
-    var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deletecv", true);
-    bodyFormDataDelete.append("id", userData.user.id);
-    setDeleteCVLoading(true);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataDelete,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The CV has been sucessfully deleted");
-          setDeleteCVLoading(false);
-          setDeleteCVModal(false);
-          navigateTo("/searchCV");
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const getAllUserManageList = async () => {
-    await axios({
-      method: "GET",
-      url: `/api/userlist.php`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        row: 0,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setUserList(response.data.data);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-  const handleUploadModal = async (values) => {
-    var bodyFormDataUpload = new FormData();
-    fileList.forEach((file) => {
-      bodyFormDataUpload.append("files[]", file);
-    });
-    const attach = values["attachments"];
-    for (let key in attach) {
-      let secondattach = attach[key];
-      for (let key1 in secondattach) {
-        bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
-      }
-    }
-    setTableLoading(true);
-    bodyFormDataUpload.append("attachments", true);
-    bodyFormDataUpload.append("candidate", userData.user.id);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataUpload,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The attachment has been uploaded sucessfully");
-          getUserData();
-          form.resetFields();
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-            setLoading("loaded");
-          } else {
-            message.error("Something Went Wrong!", "error");
-            setLoading("loaded");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-
-    toggleUploadModal(false);
-    setTableLoading(false);
-  };
-
   useEffect(() => {
-    dataParams.type === "app" ? getUserData() : getUserDataPublic();
-    dataParams.type === "app" && getAllUserManageList();
+    dataParams.type === "app"
+      ? getUserData(dataParams, setUserData, setLoading)
+      : getUserDataPublic(dataParams, setUserData, setLoading);
+    dataParams.type === "app" && getAllUserManageList(setUserList);
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    dataParams.type === "app" && lastSeen(); // eslint-disable-next-line
+    dataParams.type === "app" && lastSeen(user, userData); // eslint-disable-next-line
   }, [isLoading]);
 
   const columns = [
     {
       title: "Sr no",
-      render: (text, record, index) => <div>{index + 1}</div>,
+      render: (_text, _record, index) => <div>{index + 1}</div>,
     },
     {
       title: "File",
@@ -606,20 +300,6 @@ const CVprofile = () => {
     weight: `${userData.user.weight} kg`,
   };
 
-  const string = (str) =>
-    isLoading === "loaded" &&
-    str
-      .split(/\r\n|\n/)
-      .map((line, i) =>
-        line === "" ? <br key={i} /> : <div key={i}>{line}</div>
-      );
-
-  const skills =
-    (isLoading === "loaded" &&
-      userData.user.skills !== "" &&
-      userData.user.skills.split(/, |,|\r\n/)) ||
-    "";
-
   const handleCancel = () => {
     toggleDeleteModal(false);
     toggleUploadModal(false);
@@ -639,7 +319,19 @@ const CVprofile = () => {
       <Form
         size="large"
         layout="vertical"
-        onFinish={handleUploadModal}
+        onFinish={(values) =>
+          handleUploadModal(
+            values,
+            fileList,
+            setTableLoading,
+            userData,
+            dataParams,
+            setUserData,
+            setLoading,
+            toggleUploadModal,
+            form
+          )
+        }
         form={form}
         scrollToFirstError={true}
       >
@@ -709,52 +401,6 @@ const CVprofile = () => {
       </Form>
     </Modal>
   );
-
-  const checkImageIcon = (gender) =>
-    gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
-
-  const TriggerCvDownload = () => {
-    setPdfDownloadLoading(true);
-    message.info("Your pdf is being processed");
-    var printMe = CvDownload.current;
-    var HTML_Width = printMe.clientWidth;
-    var HTML_Height = printMe.clientHeight;
-    var top_left_margin = 15;
-    var PDF_Width = HTML_Width + top_left_margin * 2;
-    var PDF_Height = PDF_Width * 1.5 + top_left_margin * 2;
-    var canvas_image_width = HTML_Width;
-    var canvas_image_height = HTML_Height;
-    var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
-
-    htmlToImage.toPng(printMe).then(function (dataUrl) {
-      var imgData = dataUrl;
-      var pdf = new jsPDF("p", "pt", [PDF_Width, PDF_Height]);
-      pdf.addImage(
-        imgData,
-        "PNG",
-        top_left_margin,
-        top_left_margin,
-        canvas_image_width,
-        canvas_image_height
-      );
-
-      for (var i = 1; i <= totalPDFPages; i++) {
-        pdf.addPage(PDF_Width, PDF_Height);
-        pdf.addImage(
-          imgData,
-          "PNG",
-          top_left_margin,
-          -(PDF_Height * i) + top_left_margin * 4,
-          canvas_image_width,
-          canvas_image_height
-        );
-      }
-
-      pdf.save(userData.user.name + ".pdf");
-      setPdfDownloadLoading(false);
-      message.success("Your pdf download has been successful");
-    });
-  };
 
   const makeEducationSection = () => (
     <div className="flex-gap-column">
@@ -838,7 +484,7 @@ const CVprofile = () => {
             className="bold text-grey medium-text small-margin-top"
             style={{ textAlign: "justify" }}
           >
-            {work.description && string(work.description)}
+            {work.description && string(work.description, isLoading)}
           </div>
         </div>
       ))}
@@ -876,7 +522,17 @@ const CVprofile = () => {
       <Modal
         title="Delete Confirmation"
         visible={deleteModal}
-        onOk={deleteData}
+        onOk={() =>
+          deleteData({
+            deletionData,
+            setTableLoading,
+            toggleDeleteModal,
+            setDeletionData,
+            dataParams,
+            setUserData,
+            setLoading,
+          })
+        }
         onCancel={handleCancel}
         okText={"Delete"}
         okType={"danger"}
@@ -893,17 +549,27 @@ const CVprofile = () => {
           setData={setUpdateWeData}
           visible={isUpdateWeModal}
           toggleVisible={setUpdateWeModal}
-          getUserData={
-            dataParams.type === "app" ? getUserData : getUserDataPublic
-          }
+          getUserData={getUserData}
           setPageLoading={setLoading}
           userId={userData.user.id}
+          setUserData={setUserData}
+          dataParams={dataParams}
         />
       )}
       <Modal
         title="Delete Work Experience Confirmation"
         visible={isDeleteWeModal}
-        onOk={deleteWorkExpData}
+        onOk={() =>
+          deleteWorkExpData(
+            deleteWeData,
+            setDeleteWeLoading,
+            setDeleteWeData,
+            setDeleteWeModal,
+            setLoading,
+            dataParams,
+            setUserData
+          )
+        }
         onCancel={() => {
           setDeleteWeData("");
           setDeleteWeModal(false);
@@ -923,17 +589,27 @@ const CVprofile = () => {
           setData={setUpdateEduData}
           visible={isUpdateEduModal}
           toggleVisible={setUpdateEduModal}
-          getUserData={
-            dataParams.type === "app" ? getUserData : getUserDataPublic
-          }
+          getUserData={getUserData}
           setPageLoading={setLoading}
           userId={userData.user.id}
+          dataParams={dataParams}
+          setUserData={setUserData}
         />
       )}
       <Modal
         title="Delete Education Confirmation"
         visible={isDeleteEduModal}
-        onOk={deleteEducationData}
+        onOk={() =>
+          deleteEducationData(
+            deleteEduData,
+            setDeleteEduLoading,
+            setDeleteEduModal,
+            setLoading,
+            dataParams,
+            setUserData,
+            setDeleteEduData
+          )
+        }
         onCancel={() => {
           setDeleteEduData("");
           setDeleteEduModal(false);
@@ -950,7 +626,14 @@ const CVprofile = () => {
       <Modal
         title="Delete CV Confirmation"
         visible={deleteCVModal}
-        onOk={deleteFullCV}
+        onOk={() =>
+          deleteFullCV(
+            userData,
+            setDeleteCVLoading,
+            setDeleteCVModal,
+            navigateTo
+          )
+        }
         onCancel={() => {
           setDeleteCVModal(false);
         }}
@@ -1092,8 +775,8 @@ const CVprofile = () => {
                     Soft Skills
                   </div>
                   <div className="cvprofile-skills-chain">
-                    {(skills !== "" &&
-                      skills.map(
+                    {(skills(userData, isLoading) !== "" &&
+                      skills(userData, isLoading).map(
                         (skill, i) =>
                           skill !== "" && (
                             <div className="cvprofile-each-skill bold" key={i}>
@@ -1114,7 +797,7 @@ const CVprofile = () => {
                         Education
                       </div>
                       <div className="cvprofile-skills-chain medium-text text-grey">
-                        {string(userData.user.education)}
+                        {string(userData.user.education, isLoading)}
                       </div>
                     </>
                   ) : (
@@ -1149,7 +832,7 @@ const CVprofile = () => {
                         Work Experience
                       </div>
                       <div className="each-experience medium-text text-grey">
-                        {string(userData.user.company)}
+                        {string(userData.user.company, isLoading)}
                       </div>
                     </>
                   ) : (
@@ -1270,7 +953,13 @@ const CVprofile = () => {
               <div className="download-pdf-cv-profile">
                 <Button
                   type="primary"
-                  onClick={TriggerCvDownload}
+                  onClick={() =>
+                    TriggerCvDownload({
+                      setPdfDownloadLoading,
+                      CvDownload,
+                      userData,
+                    })
+                  }
                   loading={isPdfDownloadLoading}
                 >
                   Download PDF

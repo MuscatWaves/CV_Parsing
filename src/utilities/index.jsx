@@ -3,6 +3,10 @@ import { categorySelection } from "../pages/CVProfile/constants";
 import Cookies from "universal-cookie";
 import { message } from "antd";
 import { GiCancel } from "react-icons/gi";
+import maleUserImage from "../images/male-user.png";
+import femaleUserImage from "../images/female-user.jpg";
+import jsPDF from "jspdf";
+import * as htmlToImage from "html-to-image";
 
 export const removeUnderScore = (str) => {
   var i,
@@ -88,6 +92,7 @@ export const checkWhichFile = (cv) => {
 
 export const removeCookie = (navigate) => {
   localStorage.removeItem("filter");
+  localStorage.removeItem("page");
   const cookies = new Cookies();
   cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });
   message.success("Logged Out");
@@ -188,3 +193,67 @@ export const makeFiltered = (filterData, setFilterData, isLoading, getData) => (
     )}
   </div>
 );
+
+export const checkImageIcon = (gender) =>
+  gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
+
+export const TriggerCvDownload = ({
+  setPdfDownloadLoading,
+  CvDownload,
+  userData,
+}) => {
+  setPdfDownloadLoading(true);
+  message.info("Your pdf is being processed");
+  var printMe = CvDownload.current;
+  var HTML_Width = printMe.clientWidth;
+  var HTML_Height = printMe.clientHeight;
+  var top_left_margin = 15;
+  var PDF_Width = HTML_Width + top_left_margin * 2;
+  var PDF_Height = PDF_Width * 1.5 + top_left_margin * 2;
+  var canvas_image_width = HTML_Width;
+  var canvas_image_height = HTML_Height;
+  var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+
+  htmlToImage.toPng(printMe).then(function (dataUrl) {
+    var imgData = dataUrl;
+    var pdf = new jsPDF("p", "pt", [PDF_Width, PDF_Height]);
+    pdf.addImage(
+      imgData,
+      "PNG",
+      top_left_margin,
+      top_left_margin,
+      canvas_image_width,
+      canvas_image_height
+    );
+
+    for (var i = 1; i <= totalPDFPages; i++) {
+      pdf.addPage(PDF_Width, PDF_Height);
+      pdf.addImage(
+        imgData,
+        "PNG",
+        top_left_margin,
+        -(PDF_Height * i) + top_left_margin * 4,
+        canvas_image_width,
+        canvas_image_height
+      );
+    }
+
+    pdf.save(userData.user.name + ".pdf");
+    setPdfDownloadLoading(false);
+    message.success("Your pdf download has been successful");
+  });
+};
+
+export const string = (str, isLoading) =>
+  isLoading === "loaded" &&
+  str
+    .split(/\r\n|\n/)
+    .map((line, i) =>
+      line === "" ? <br key={i} /> : <div key={i}>{line}</div>
+    );
+
+export const skills = (userData, isLoading) =>
+  (isLoading === "loaded" &&
+    userData.user.skills !== "" &&
+    userData.user.skills.split(/\r\n/)) ||
+  "";

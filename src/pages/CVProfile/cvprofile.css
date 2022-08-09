@@ -87,6 +87,9 @@
   border-radius: 20px;
   color: #f69f00;
   background-color: #ffc14f46;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .experiences-list {

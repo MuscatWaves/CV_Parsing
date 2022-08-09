@@ -24,15 +24,15 @@ const SearchCV = () => {
     navigate(path);
   };
   const history = JSON.parse(localStorage.getItem("filter"));
+  const pageHistory = JSON.parse(localStorage.getItem("page"));
   const [isLoading, setLoading] = useState(false);
   const [show, toggleShow] = useState(false);
   const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(pageHistory || 1);
   const [total, setTotal] = useState(0);
   const [isSearchPop, toggleSearchPop] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
-  console.log(`History - ${history}`);
   const [filterData, setFilterData] = useState({
     jobTitle: history ? history.jobTitle : "",
     name: history ? history.name : "",
@@ -80,6 +80,7 @@ const SearchCV = () => {
   );
 
   const onChange = (page) => {
+    localStorage.setItem("page", JSON.stringify(page));
     setPage(page);
   };
 
@@ -298,6 +299,7 @@ const SearchCV = () => {
         onPressEnter={() => {
           setPage(1);
           refresh();
+          localStorage.setItem("page", JSON.stringify(1));
           localStorage.setItem(
             "filter",
             JSON.stringify({ ...filterData, name: filterData.name })
@@ -310,6 +312,7 @@ const SearchCV = () => {
         onClick={() => {
           setPage(1);
           refresh();
+          localStorage.setItem("page", JSON.stringify(1));
           localStorage.setItem(
             "filter",
             JSON.stringify({ ...filterData, name: filterData.name })

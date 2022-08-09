@@ -139,6 +139,7 @@ const Filter = ({
             setPage(1);
             refresh();
             toggleShow(false);
+            localStorage.setItem("page", JSON.stringify(1));
             localStorage.setItem("filter", JSON.stringify(filterData));
           }}
         >

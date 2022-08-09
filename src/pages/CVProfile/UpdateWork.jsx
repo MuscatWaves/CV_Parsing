@@ -12,6 +12,8 @@ const UpdateWork = ({
   getUserData,
   setPageLoading,
   userId,
+  setUserData,
+  dataParams,
 }) => {
   const [form] = Form.useForm();
   const [isLoading, setLoading] = useState(false);
@@ -70,7 +72,7 @@ const UpdateWork = ({
           setData({});
           form.resetFields();
           setPageLoading("loading");
-          getUserData();
+          getUserData(dataParams, setUserData, setLoading);
           setLoading(false);
         } else {
           if (response.status === 201) {
