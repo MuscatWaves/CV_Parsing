@@ -111,21 +111,19 @@ const RejectedCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/rejectcv.php`,
+      url: `/api/cv/reject`,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
       params: {
-        row: page * 10 - 10,
+        row: page,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
           setLoading(false);
           setData(response.data);
-          setTotal(response.data.TotalDisplayRecords);
+          setTotal(response.data.TotalDisplay[0].total);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -242,7 +240,7 @@ const RejectedCV = () => {
           <Pagination
             current={page}
             onChange={onChange}
-            total={data.TotalDisplayRecords}
+            total={total}
             showSizeChanger={false}
           />
         </div>

@@ -132,7 +132,7 @@ const CVprofile = () => {
     dataParams.type === "app"
       ? getUserData(dataParams, setUserData, setLoading)
       : getUserDataPublic(dataParams, setUserData, setLoading);
-    // dataParams.type === "app" && getAllUserManageList(setUserList);
+    dataParams.type === "app" && getAllUserManageList(setUserList);
     // eslint-disable-next-line
   }, []);
 

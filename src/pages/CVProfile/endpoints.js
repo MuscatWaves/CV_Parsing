@@ -196,17 +196,14 @@ export const deleteData = async ({deletionData, setTableLoading, toggleDeleteMod
 
 export const deleteEducationData = async (deleteEduData, setDeleteEduLoading, setDeleteEduModal, setLoading, dataParams, setUserData, setDeleteEduData) => {
     var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deleteEducation", true);
     bodyFormDataDelete.append("id", deleteEduData.id);
     setDeleteEduLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: "DELETE",
+      url: `/api/education`,
       data: bodyFormDataDelete,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
@@ -272,17 +269,14 @@ export const deleteWorkExpData = async (deleteWeData, setDeleteWeLoading, setDel
 
 export const deleteFullCV = async (userData, setDeleteCVLoading, setDeleteCVModal, navigateTo) => {
     var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deletecv", true);
     bodyFormDataDelete.append("id", userData.user.id);
     setDeleteCVLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: "DELETE",
+      url: `/api/experience`,
       data: bodyFormDataDelete,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
@@ -309,15 +303,10 @@ export const deleteFullCV = async (userData, setDeleteCVLoading, setDeleteCVModa
 export const getAllUserManageList = async (setUserList) => {
     await axios({
       method: "GET",
-      url: `/api/userlist.php`,
+      url: `/api/user`,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        row: 0,
-      },
+        Authorization: token,
+      }
     })
       .then(function (response) {
         if (response.status === 200) {
