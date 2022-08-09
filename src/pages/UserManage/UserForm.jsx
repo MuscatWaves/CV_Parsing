@@ -5,7 +5,7 @@ import {
   Drawer,
   Input,
   Switch,
-  Checkbox,
+  // Checkbox,
   message,
   Popconfirm,
 } from "antd";
@@ -21,48 +21,61 @@ const UserForm = ({
   getData,
 }) => {
   const [form] = Form.useForm();
-  const [newPassword, setNewPassword] = useState(false);
+  // const [newPassword, setNewPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
+  console.log(editData);
 
   const onClose = () => {
     setModal(false);
     setEditData(null);
   };
-  const onPasswordNeed = (e) => {
-    setNewPassword(e.target.checked);
-  };
+  // const onPasswordNeed = (e) => {
+  //   setNewPassword(e.target.checked);
+  // };
 
-  const handleUpdateUser = async (values, status = editData.status) => {
+  const handleUpdateUser = async (values, status = editData?.status) => {
     var bodyFormDataUpdate = new FormData();
-    editData
-      ? bodyFormDataUpdate.append("update_account", true)
-      : bodyFormDataUpdate.append("create_user_account", true);
     editData && bodyFormDataUpdate.append("id", editData.id);
     bodyFormDataUpdate.append("name", values.name);
-    newPassword && bodyFormDataUpdate.append("password", values.password);
+    // newPassword && bodyFormDataUpdate.append("password", values.password);
     !editData && bodyFormDataUpdate.append("password", values.password);
-    !editData && bodyFormDataUpdate.append("email", values.email);
-    bodyFormDataUpdate.append("uploadcv", values.uv_access === true ? 0 : 1);
-    bodyFormDataUpdate.append("searchcv", values.sc_access === true ? 0 : 1);
-    bodyFormDataUpdate.append("rejectcv", values.rc_access === true ? 0 : 1);
-    bodyFormDataUpdate.append("buildcv", values.bc_access === true ? 0 : 1);
+    bodyFormDataUpdate.append("email", values.email);
+    bodyFormDataUpdate.append(
+      "uploadcv_access",
+      values.uploadcv_access === true ? 0 : 1
+    );
+    bodyFormDataUpdate.append(
+      "searchcv_access",
+      values.searchcv_access === true ? 0 : 1
+    );
+    bodyFormDataUpdate.append(
+      "rejectedcv_access",
+      values.rejectedcv_access === true ? 0 : 1
+    );
+    bodyFormDataUpdate.append(
+      "buildcv_access",
+      values.buildcv_access === true ? 0 : 1
+    );
+    bodyFormDataUpdate.append(
+      "userreport_access",
+      values.userreport_access === true ? 0 : 1
+    );
     editData && bodyFormDataUpdate.append("status", status);
     setLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: editData ? "PUT" : "POST",
+      url: `/api/user`,
       data: bodyFormDataUpdate,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
-          message.success("User has been updated sucessfully");
+          console.log(response.data.message);
+          message.success(response.data.message);
           setLoading(false);
           onClose();
           getData();
@@ -85,10 +98,13 @@ const UserForm = ({
     const data = {
       name: editData?.name,
       email: editData?.email,
-      uv_access: editData?.uploadcv_access === 0 ? true : false || false,
-      sc_access: editData?.searchcv_access === 0 ? true : false || false,
-      rc_access: editData?.rejectedcv_access === 0 ? true : false || false,
-      bc_access: editData?.buildcv_access === 0 ? true : false || false,
+      uploadcv_access: editData?.uploadcv_access === 0 ? true : false || false,
+      searchcv_access: editData?.searchcv_access === 0 ? true : false || false,
+      rejectedcv_access:
+        editData?.rejectedcv_access === 0 ? true : false || false,
+      buildcv_access: editData?.buildcv_access === 0 ? true : false || false,
+      userreport_access:
+        editData?.userreport_access === 0 ? true : false || false,
     };
     const state = editData.status === 0 ? 1 : 0;
     handleUpdateUser(data, state);
@@ -111,10 +127,16 @@ const UserForm = ({
           name: editData?.name,
           email: editData?.email,
           password: "",
-          uv_access: editData?.uploadcv_access === 0 ? true : false || false,
-          sc_access: editData?.searchcv_access === 0 ? true : false || false,
-          rc_access: editData?.rejectedcv_access === 0 ? true : false || false,
-          bc_access: editData?.buildcv_access === 0 ? true : false || false,
+          uploadcv_access:
+            editData?.uploadcv_access === 0 ? true : false || false,
+          searchcv_access:
+            editData?.searchcv_access === 0 ? true : false || false,
+          rejectedcv_access:
+            editData?.rejectedcv_access === 0 ? true : false || false,
+          buildcv_access:
+            editData?.buildcv_access === 0 ? true : false || false,
+          userreport_access:
+            editData?.userreport_access === 0 ? true : false || false,
         }}
       >
         <Form.Item
@@ -141,14 +163,14 @@ const UserForm = ({
         >
           <Input placeholder={"Enter email of the user"} disabled={editData} />
         </Form.Item>
-        {editData && (
+        {/* {editData && (
           <div className="small-padding-bottom">
             <Checkbox onChange={onPasswordNeed}>
               Need to Update Password
             </Checkbox>
           </div>
-        )}
-        {newPassword && (
+        )} */}
+        {/* {newPassword && (
           <Form.Item
             name="password"
             className="zoom-in-animation"
@@ -162,7 +184,7 @@ const UserForm = ({
           >
             <Password placeholder={"Enter name of the user"} />
           </Form.Item>
-        )}
+        )} */}
         {!editData && (
           <Form.Item
             name="password"
@@ -181,67 +203,74 @@ const UserForm = ({
         <p className="bolder text-black">Permissions</p>
         <div className="grid-2">
           <Form.Item
-            name={"uv_access"}
+            name={"uploadcv_access"}
             label={"Upload CV access"}
             valuePropName={"checked"}
           >
             <Switch />
           </Form.Item>
           <Form.Item
-            name={"sc_access"}
+            name={"searchcv_access"}
             label={"Search CV access"}
             valuePropName={"checked"}
           >
             <Switch />
           </Form.Item>
           <Form.Item
-            name={"rc_access"}
+            name={"rejectedcv_access"}
             label={"Rejected CV access"}
             valuePropName={"checked"}
           >
             <Switch />
           </Form.Item>
           <Form.Item
-            name={"bc_access"}
+            name={"buildcv_access"}
             label={"Build CV access"}
             valuePropName={"checked"}
           >
             <Switch />
           </Form.Item>
-          {editData && (
-            <Popconfirm
-              title={
-                <div>
-                  <div>
-                    {editData.status === 0
-                      ? "Deactivating this account would no longer allow user to log-in"
-                      : "Activating this account would allow user to log-in"}
-                  </div>
-                  <div>
-                    {editData.status === 0
-                      ? "Are you sure to deactivate this account?"
-                      : "Are you sure to activate this account?"}
-                  </div>
-                </div>
-              }
-              onConfirm={confirm}
-              okText={editData.status === 0 ? "Deactivate" : "Activate"}
-              okType={editData.status === 0 ? "danger" : "primary"}
-            >
-              <div
-                className={
-                  editData.status === 0
-                    ? "text-red bolder pointer button-zoom"
-                    : "text-green bolder pointer button-zoom"
-                }
-              >
-                {editData.status === 0
-                  ? "Deactivate this account"
-                  : "Activate this account"}
-              </div>
-            </Popconfirm>
-          )}
+          <Form.Item
+            name={"userreport_access"}
+            label={"User Report access"}
+            valuePropName={"checked"}
+          >
+            <Switch />
+          </Form.Item>
         </div>
+        {editData && (
+          <Popconfirm
+            title={
+              <div>
+                <div>
+                  {editData.status === 0
+                    ? "Deactivating this account would no longer allow user to log-in"
+                    : "Activating this account would allow user to log-in"}
+                </div>
+                <div>
+                  {editData.status === 0
+                    ? "Are you sure to deactivate this account?"
+                    : "Are you sure to activate this account?"}
+                </div>
+              </div>
+            }
+            onConfirm={confirm}
+            okText={editData.status === 0 ? "Deactivate" : "Activate"}
+            okType={editData.status === 0 ? "danger" : "primary"}
+          >
+            <div
+              className={
+                editData.status === 0
+                  ? "text-red bolder pointer button-zoom"
+                  : "text-green bolder pointer button-zoom"
+              }
+            >
+              {editData.status === 0
+                ? "Deactivate this account"
+                : "Activate this account"}
+            </div>
+          </Popconfirm>
+        )}
         <div className="flex-at-end medium-margin-top">
           <Button className="" type="text" onClick={onClose}>
             Cancel

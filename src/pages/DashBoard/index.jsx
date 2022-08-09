@@ -20,15 +20,19 @@ const DashBoard = () => {
     navigate(path);
   };
 
+  console.log(token);
+
   useEffect(() => {
     document.title = "Dashboard";
     if (token) {
       try {
         var user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
-        setLoggedIn(user);
+        setLoggedIn(user.data[0]);
       } catch (err) {}
     }
   }, [token]);
+
+  console.log(isLoggedIn);
 
   const checkNumberOfCards = () =>
     cards(isLoggedIn).filter((card) => card?.permission).length;

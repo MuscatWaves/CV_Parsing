@@ -33,7 +33,7 @@ const Login = () => {
     bodyFormData.append("login", "login");
     await axios({
       method: "POST",
-      url: `/api/login.php`,
+      url: `/api/login`,
       data: bodyFormData,
       headers: {
         Accept: "application/json",
@@ -42,8 +42,8 @@ const Login = () => {
     })
       .then(function (response) {
         if (response.status === 200 && response.data.token) {
-          message.success("Login Successfull");
-          cookies.set("token", response.data.token.token, {
+          message.success(response.data.ok);
+          cookies.set("token", response.data.token, {
             path: "/",
             maxAge: 60 * 60 * 24 * 365,
           });
@@ -54,14 +54,14 @@ const Login = () => {
             message.error(response.data.error);
             setLoading(false);
           } else {
-            message.error("Something Went Wrong!");
+            message.error(`Ouch, Something went terribly wrong`);
             setLoading(false);
           }
         }
       })
       .catch(function (response) {
         setLoading(false);
-        message.error("Something Went Wrong!");
+        message.error(response.response.data.error);
       });
   };
 

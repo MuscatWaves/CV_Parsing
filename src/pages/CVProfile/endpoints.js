@@ -5,24 +5,20 @@ import {
   } from "antd";
 
 const cookies = new Cookies();
-  const token = cookies.get("token");
+const token = cookies.get("token");
 
 // Last Seen Users
 
 export const lastSeen = async (user, userData) => {
     var bodyFormDataLastSeen = new FormData();
-    bodyFormDataLastSeen.append("lastseen", true);
-    bodyFormDataLastSeen.append("id", user.id);
-    bodyFormDataLastSeen.append("candidate", userData.user.id);
+    bodyFormDataLastSeen.append("cv", userData.user.id);
 
     await axios({
       method: "POST",
-      url: `/api/react-post.php`,
+      url: `/api/lastseen`,
       data: bodyFormDataLastSeen,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
@@ -43,22 +39,21 @@ export const lastSeen = async (user, userData) => {
 //  Get User Data - App View 
 
   export const getUserData = async (dataParams, setUserData, setLoading) => {
+    setLoading("loading")
     await axios({
       method: "GET",
-      url: `/api/user.php?id=${dataParams.id}`,
+      url: `/api/cv/${dataParams.id}`,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
           setUserData({
-            user: response.data.data.user[0],
-            attachments: response.data.data.attachments,
-            experience: response.data.data.experience,
-            educations: response.data.data.educations,
+            user: response.data.user[0],
+            attachments: response.data.attachment,
+            experience: response.data.experience,
+            educations: response.data.education,
           });
           setLoading("loaded");
         } else {

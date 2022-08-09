@@ -43,39 +43,41 @@ const SearchCV = () => {
     searchByTodate: history ? history.searchByTodate : "",
   });
 
-  const { data: nationalityResult } = useQuery(
-    ["nationality"],
-    () => axios.get("/api/countget.php?nationality=true"),
-    {
-      refetchOnWindowFocus: false,
-      select: (data) => {
-        const newData = data.data.map((item) => ({
-          label: `${!item.nationality ? "None" : item.nationality} - (${
-            !item.nationality ? "All" : item.cnt
-          })`,
-          value: item.nationality,
-        }));
-        return newData;
-      },
-    }
-  );
+  // const { data: nationalityResult } = useQuery(
+  //   ["nationality"],
+  //   () => axios.get("/api/countget?nationality=true"),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     select: (data) => {
+  //       const newData = data.data.map((item) => ({
+  //         label: `${!item.nationality ? "None" : item.nationality} - (${
+  //           !item.nationality ? "All" : item.cnt
+  //         })`,
+  //         value: item.nationality,
+  //       }));
+  //       return newData;
+  //     },
+  //   }
+  // );
 
-  const { data: jobCategoryResult } = useQuery(
-    ["category"],
-    () => axios.get("/api/countget.php?category=true"),
-    {
-      refetchOnWindowFocus: false,
-      select: (data) => {
-        const newData = data.data.map((item) => ({
-          label: `${!item.category ? "None" : item.category} - (${
-            !item.category ? "All" : item.cnt
-          })`,
-          value: `${!item.category ? "" : item.category}`,
-        }));
-        return newData;
-      },
-    }
-  );
+  // const { data: jobCategoryResult } = useQuery(
+  //   ["category"],
+  //   () => axios.get("/api/countget?category=true"),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     select: (data) => {
+  //       const newData = data.data.map((item) => ({
+  //         label: `${!item.category ? "None" : item.category} - (${
+  //           !item.category ? "All" : item.cnt
+  //         })`,
+  //         value: `${!item.category ? "" : item.category}`,
+  //       }));
+  //       return newData;
+  //     },
+  //   }
+  // );
+  const jobCategoryResult = [];
+  const nationalityResult = [];
 
   const onChange = (page) => {
     localStorage.setItem("page", JSON.stringify(page));
@@ -98,29 +100,28 @@ const SearchCV = () => {
     setLoading(true);
     let config = {
       headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
       },
       params: {
-        row: page * 10 - 10,
-        MaritalStatus: data.MaritalStatus,
-        searchByFromdate: data.SearchByFromdate,
-        searchByTodate: data.SearchByTodate,
-        JobTitle: data.JobTitle,
-        Age: data.Age,
+        page: page,
+        search: data.Search,
         JobCategory: data.JobCategory,
+        Age: data.Age,
+        JobTitle: data.JobTitle,
         Nationality: data.Nationality,
         Gender: data.Gender,
-        Search: data.Search,
+        MaritalStatus: data.MaritalStatus,
+        // searchByFromdate: data.SearchByFromdate,
+        // searchByTodate: data.SearchByTodate,
       },
     };
     try {
-      const Data = await axios.get(`/api/searchcv.php`, config);
+      const Data = await axios.get(`/api/cv`, config);
       if (Data.status === 200) {
+        console.log(Data.data);
         setLoading(false);
         setData(Data.data);
-        setTotal(Data.data.TotalDisplayRecords);
+        setTotal(Data.data.TotalDisplay[0].total);
       } else {
         if (Data.status === 201) {
           message.error(Data.data.error, "error");
@@ -404,7 +405,7 @@ const SearchCV = () => {
             <Pagination
               current={page}
               onChange={onChange}
-              total={data.TotalDisplayRecords}
+              total={total}
               showSizeChanger={false}
             />
           </div>

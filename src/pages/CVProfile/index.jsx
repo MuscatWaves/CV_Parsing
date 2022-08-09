@@ -77,7 +77,7 @@ const CVprofile = () => {
     educations: [],
     experience: [],
   });
-  const [isLoading, setLoading] = useState("");
+  const [isLoading, setLoading] = useState("none");
   const [tableLoading, setTableLoading] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [userList, setUserList] = useState([]);
@@ -132,12 +132,14 @@ const CVprofile = () => {
     dataParams.type === "app"
       ? getUserData(dataParams, setUserData, setLoading)
       : getUserDataPublic(dataParams, setUserData, setLoading);
-    dataParams.type === "app" && getAllUserManageList(setUserList);
+    // dataParams.type === "app" && getAllUserManageList(setUserList);
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    dataParams.type === "app" && lastSeen(user, userData); // eslint-disable-next-line
+    dataParams.type === "app" &&
+      isLoading === "loaded" &&
+      lastSeen(user, userData); // eslint-disable-next-line
   }, [isLoading]);
 
   const columns = [
