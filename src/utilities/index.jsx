@@ -114,9 +114,12 @@ export const makeFiltered = (
             className="each-filter flex-small-gap medium-text slide-in-left-animation"
             key={filterValue}
           >
-            <div>{`${removeUnderScore(filterValue)} : ${removeUnderScore(
+            <div>{`${removeUnderScore(filterValue)} : ${
+              (filterValue !== "searchByFromdate" &&
+                filterValue !== "searchByTodate" &&
+                removeUnderScore(filterData[filterValue])) ||
               filterData[filterValue]
-            )}`}</div>
+            }`}</div>
             {filterValue !== "searchByFromdate" &&
               filterValue !== "searchByTodate" &&
               !isLoading && (
