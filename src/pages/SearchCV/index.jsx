@@ -9,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
-import maleUserImage from "../../images/male-user.png";
-import femaleUserImage from "../../images/female-user.jpg";
-import { makeFiltered } from "../../utilities";
+import { makeFiltered, checkImageIcon } from "../../utilities";
 import { FaSearch } from "react-icons/fa";
 import { m } from "framer-motion";
 import { useQuery } from "react-query";
@@ -96,7 +94,7 @@ const SearchCV = () => {
     }
   };
 
-  const getData = async (data) => {
+  const getData = async (data, page) => {
     setLoading(true);
     let config = {
       headers: {
@@ -134,9 +132,6 @@ const SearchCV = () => {
       message.error("Something Went Wrong!", "error");
     }
   };
-
-  const checkImageIcon = (gender) =>
-    gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
 
   const columns = [
     {
@@ -287,7 +282,7 @@ const SearchCV = () => {
       MaritalStatus: filterData.maritalStatus,
       Search: filterData.name,
     };
-    getData(data);
+    getData(data, page);
   };
 
   const searchContainer = () => (
@@ -388,7 +383,13 @@ const SearchCV = () => {
           ).length > 0 &&
             !show &&
             !isSearchPop &&
-            makeFiltered(filterData, setFilterData, isLoading, getData)}
+            makeFiltered(
+              filterData,
+              setFilterData,
+              isLoading,
+              getData,
+              setPage
+            )}
           <Table
             dataSource={data.data}
             columns={columns}

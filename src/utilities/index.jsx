@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import { message } from "antd";
 import { GiCancel } from "react-icons/gi";
 import maleUserImage from "../images/male-user.png";
-import femaleUserImage from "../images/female-user.jpg";
+import femaleUserImage from "../images/female-user.png";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 
@@ -99,7 +99,13 @@ export const removeCookie = (navigate) => {
   navigate("/");
 };
 
-export const makeFiltered = (filterData, setFilterData, isLoading, getData) => (
+export const makeFiltered = (
+  filterData,
+  setFilterData,
+  isLoading,
+  getData,
+  setPage
+) => (
   <div className="filtered-list">
     {Object.keys(filterData).map(
       (filterValue, index) =>
@@ -143,11 +149,13 @@ export const makeFiltered = (filterData, setFilterData, isLoading, getData) => (
                       ...data,
                       [removeUnderScore(filterValue)]: "",
                     };
-                    getData(updateData);
+                    setPage(1);
+                    localStorage.setItem("page", JSON.stringify(1));
                     localStorage.setItem(
                       "filter",
                       JSON.stringify({ ...filterData, [filterValue]: "" })
                     );
+                    getData(updateData, 1);
                   }}
                 />
               )}
@@ -183,8 +191,10 @@ export const makeFiltered = (filterData, setFilterData, isLoading, getData) => (
             MaritalStatus: "",
             Search: "",
           };
-          getData(data);
+          setPage(1);
+          localStorage.setItem("page", JSON.stringify(1));
           localStorage.setItem("filter", JSON.stringify({ ...newData }));
+          getData(data, 1);
         }}
         style={{ marginBottom: "10px" }}
       >
