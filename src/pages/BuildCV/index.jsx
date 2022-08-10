@@ -33,20 +33,19 @@ const BuildCV = () => {
     setUserDataLoading("loading");
     await axios({
       method: "GET",
-      url: `/api/user.php?id=${dataParams.id}`,
+      url: `/api/cv/${dataParams.id}`,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
+          console.log(response.data);
           setUserData({
-            user: response.data.data.user[0],
-            attachments: response.data.data.attachments,
+            user: response.data.user[0],
+            attachments: response.data.attachments,
           });
-          selectDate(moment(response.data.data.user[0].DOB));
+          selectDate(moment(response.data.user[0].DOB));
           setUserDataLoading("loaded");
         } else {
           if (response.status === 201) {
@@ -198,7 +197,7 @@ const BuildCV = () => {
       });
 
       var config = {
-        method: "post",
+        method: dataParams.id ? "put" : "post",
         url: "/api/cv",
         headers: {
           Authorization: token,
