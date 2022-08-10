@@ -61,7 +61,9 @@ const Login = () => {
       })
       .catch(function (response) {
         setLoading(false);
-        message.error(response.response.data.error);
+        message.error(
+          response.response.data.error || "Something went terribly wrong"
+        );
       });
   };
 

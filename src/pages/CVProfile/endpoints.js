@@ -109,67 +109,19 @@ export const getUserDataPublic = async (dataParams, setUserData, setLoading) => 
 
 // Attachments Section
 
-export const handleUploadModal = async (values, fileList, setTableLoading, userData, dataParams, setUserData, setLoading, toggleUploadModal, form) => {
-    var bodyFormDataUpload = new FormData();
-    fileList.forEach((file) => {
-      bodyFormDataUpload.append("files[]", file);
-    });
-    const attach = values["attachments"];
-    for (let key in attach) {
-      let secondattach = attach[key];
-      for (let key1 in secondattach) {
-        bodyFormDataUpload.append(`${key1}`, `${secondattach[key1]}`);
-      }
-    }
-    setTableLoading(true);
-    bodyFormDataUpload.append("attachments", true);
-    bodyFormDataUpload.append("candidate", userData.user.id);
-    await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormDataUpload,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          message.success("The attachment has been uploaded sucessfully");
-          getUserData(dataParams, setUserData, setLoading);
-          form.resetFields();
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-            setLoading("loaded");
-          } else {
-            message.error("Something Went Wrong!", "error");
-            setLoading("loaded");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-
-    toggleUploadModal(false);
-    setTableLoading(false);
-  };
-
 export const deleteData = async ({deletionData, setTableLoading, toggleDeleteModal, setDeletionData, dataParams, setUserData, setLoading}) => {
     var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deleteAttachment", true);
     bodyFormDataDelete.append("id", deletionData.id);
+    bodyFormDataDelete.append("name", deletionData.name);
     setTableLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: "DELETE",
+      url: `/api/attachment`,
       data: bodyFormDataDelete,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {

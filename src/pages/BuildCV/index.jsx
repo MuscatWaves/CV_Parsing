@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  Upload,
-  message,
-  Space,
-  notification,
-} from "antd";
+import { Form, Input, Button, Select, message, notification } from "antd";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
 import axios from "axios";
@@ -17,13 +8,7 @@ import Cookies from "universal-cookie";
 import moment from "moment";
 import "./buildcv.css";
 import Loader from "../../components/Loader";
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
 import CustomDatePicker from "../../components/DatePicker";
-import { monthSelectionLabel, makeYear } from "../../utilities";
 import { m } from "framer-motion";
 
 const BuildCV = () => {
@@ -43,19 +28,6 @@ const BuildCV = () => {
   const [userData, setUserData] = useState({});
   const [userDataLoading, setUserDataLoading] = useState("none");
   const [date, selectDate] = useState();
-
-  // const [fileList, setFileList] = useState([]);
-
-  // const beforeUpload = (file) => {
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = () => {
-  //     setFileList((prev) => [...prev, { url: reader.result }]);
-  //   };
-
-  //   // then upload `file` from the argument manually
-  //   return false;
-  // };
 
   const getUserData = async () => {
     setUserDataLoading("loading");
@@ -95,18 +67,18 @@ const BuildCV = () => {
     setJobMenuLoading(true);
     await axios({
       method: "GET",
-      url: `/api/get.php?industry=true`,
+      url: `/api/category`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
-          const result = response.data.map((item) => ({
-            label: item.name,
-            value: item.name,
+          const result = response.data.data.map((item) => ({
+            label: item.category,
+            value: item.category,
           }));
           setJobCategoryResult(result);
           setJobMenuLoading(false);
@@ -127,17 +99,17 @@ const BuildCV = () => {
     setCountryMenuLoading(true);
     await axios({
       method: "GET",
-      url: `/api/get.php?nationality=true`,
+      url: `/api/nationality`,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
           const uniqueIds = [];
-          const resultNationality = response.data
+          const resultNationality = response.data.data
             .map((item) => ({
               label: item.nationality,
               value: item.nationality,
@@ -153,13 +125,7 @@ const BuildCV = () => {
 
               return false;
             });
-          const resultCountry = response.data
-            .map((item) => ({
-              label: item.country,
-              value: item.country,
-            }))
-            .filter((country) => country.label !== "");
-          setCountryResult(resultCountry);
+          setCountryResult(resultNationality);
           setNationalityResult(resultNationality);
           setCountryMenuLoading(false);
         } else {
@@ -194,135 +160,54 @@ const BuildCV = () => {
 
   const handleSubmit = async (values) => {
     if (date?.format("MM/DD/YYYY")) {
-      const profilePicture =
-        values.profile_picture.length !== 0
-          ? values.profile_picture[0].originFileObj
-          : null;
-      const cvFile =
-        values.profile_cv.length !== 0
-          ? values.profile_cv[0].originFileObj
-          : null;
-      var bodyFormDataBuild = new FormData();
-      dataParams.id && bodyFormDataBuild.append("id", dataParams.id);
-      bodyFormDataBuild.append("email", values.email.trim());
-      bodyFormDataBuild.append("name", checkValue(values.name, "str"));
-      bodyFormDataBuild.append("country", checkValue(values.country, "str"));
-      bodyFormDataBuild.append(
-        "nationality",
-        checkValue(values.nationality, "str")
-      );
-      bodyFormDataBuild.append(
-        "mobile",
-        checkValue(Number(values.phone_number), "int")
-      );
-      bodyFormDataBuild.append("gender", checkValue(values.gender, "str"));
-      bodyFormDataBuild.append(
-        "presentaddress",
-        checkValue(values.address, "str")
-      );
-      bodyFormDataBuild.append(
-        "maritalstatus",
-        checkValue(values.martial_status, "str")
-      );
-      bodyFormDataBuild.append("job", checkValue(values.job_title, "str"));
-      bodyFormDataBuild.append("DOB", date.format("MM/DD/YYYY"));
-      bodyFormDataBuild.append(
-        "alt_email",
-        checkValue(values.alt_email, "str")
-      );
-      bodyFormDataBuild.append(
-        "alt_phone",
-        checkValue(values.alt_phone_number, "str")
-      );
-      bodyFormDataBuild.append("language", checkValue(values.languages, "str"));
-
-      bodyFormDataBuild.append(
-        "category",
-        checkValue(values.job_category, "str")
-      );
-
-      bodyFormDataBuild.append(
-        "url",
-        checkValue(values.work_portfolio_photos, "str")
-      );
-      bodyFormDataBuild.append(
-        "wpv",
-        checkValue(values.work_portfolio_videos, "str")
-      );
-      bodyFormDataBuild.append(
-        "interview",
-        checkValue(values.interview_link, "str")
-      );
-      bodyFormDataBuild.append(
-        "passport",
-        checkValue(values.passport_number, "str")
-      );
-      bodyFormDataBuild.append(
-        "civil_id",
-        checkValue(values.civil_id_number, "str")
-      );
-      bodyFormDataBuild.append(
-        "height",
-        checkValue(Number(values.height), "int")
-      );
-      bodyFormDataBuild.append(
-        "weight",
-        checkValue(Number(values.weight), "int")
-      );
-      bodyFormDataBuild.append("skills", checkValue(values.skills, "str"));
-      bodyFormDataBuild.append(
-        "education",
-        checkValue(values.education, "str")
-      );
-      bodyFormDataBuild.append("company", checkValue(values.work_exp, "str"));
-
-      // profilePicture && bodyFormDataBuild.append("image", profilePicture);
-      // cvFile && bodyFormDataBuild.append("cv", cvFile);
-      // !dataParams.id &&
-      //   values.new_education &&
-      //   values.new_education.map((education) => {
-      //     bodyFormDataBuild.append("edu_name[]", education.edu_name);
-      //     bodyFormDataBuild.append("college[]", education.college);
-      //     bodyFormDataBuild.append("edu_loc[]", education.edu_loc);
-      //     bodyFormDataBuild.append(
-      //       "edu_from_year[]",
-      //       education.edu_from_year || ""
-      //     );
-      //     bodyFormDataBuild.append(
-      //       "edu_from_month[]",
-      //       education.edu_from_month || ""
-      //     );
-      //     bodyFormDataBuild.append(
-      //       "edu_to_year[]",
-      //       education.edu_to_year || ""
-      //     );
-      //     bodyFormDataBuild.append(
-      //       "edu_to_month[]",
-      //       education.edu_to_month || ""
-      //     );
-      //     return "";
-      //   });
-      // !dataParams.id &&
-      //   values.new_work_exp &&
-      //   values.new_work_exp.map((work) => {
-      //     bodyFormDataBuild.append("ex_name[]", work.ex_name);
-      //     bodyFormDataBuild.append("desc[]", work.desc || "");
-      //     bodyFormDataBuild.append("desg[]", work.desg);
-      //     bodyFormDataBuild.append("ex_from_year[]", work.ex_from_year || "");
-      //     bodyFormDataBuild.append("ex_from_month[]", work.ex_from_month || "");
-      //     bodyFormDataBuild.append("ex_to_year[]", work.ex_to_year || "");
-      //     bodyFormDataBuild.append("ex_to_month[]", work.ex_to_month || "");
-      //     return "";
-      //   });
       setLoading(true);
-      await axios({
-        method: dataParams.id ? "PUT" : "POST",
-        url: `/api/cv`,
-        data: bodyFormDataBuild,
+      var data = JSON.stringify({
+        ...(dataParams.id && { id: dataParams.id }),
+        email: values.email.trim(),
+        name: checkValue(values.name, "str"),
+        country: checkValue(values.country, "str"),
+        nationality: checkValue(values.nationality, "str"),
+        mobile: checkValue(Number(values.phone_number), "int"),
+        gender: checkValue(values.gender, "str"),
+        presentaddress: checkValue(values.address, "str"),
+        maritalstatus: checkValue(values.martial_status, "str"),
+        image: "",
+        job: checkValue(values.job_title, "str"),
+        language: checkValue(values.languages, "str"),
+        skills: checkValue(values.skills, "str"),
+        education: checkValue(values.education, "str"),
+        company: checkValue(values.work_exp, "str"),
+        cv: "",
+        category: checkValue(values.job_category, "str"),
+        DOB: date.format("YYYY/MM/DD") + " 00:00:00",
+        url: checkValue(values.work_portfolio_photos, "str"),
+        passport: checkValue(values.passport_number, "str"),
+        civil_id: checkValue(values.civil_id_number, "str"),
+        height: checkValue(Number(values.height), "int"),
+        weight: checkValue(Number(values.weight), "int"),
+        passport_doc: null,
+        education_doc: null,
+        experience_doc: null,
+        civil_doc: null,
+        driving_doc: null,
+        interview: checkValue(values.interview_link, "str"),
+        test_doc: null,
+        wpv: checkValue(values.work_portfolio_videos, "str"),
+        alt_email: checkValue(values.alt_email, "str"),
+        alt_phone: checkValue(values.alt_phone_number, "str"),
+      });
+
+      var config = {
+        method: "post",
+        url: "/api/cv",
         headers: {
           Authorization: token,
+          "Content-Type": "application/json",
         },
-      })
+        data: data,
+      };
+
+      axios(config)
         .then(function (response) {
           if (response.status === 200) {
             dataParams.id
@@ -347,13 +232,13 @@ const BuildCV = () => {
               });
               setLoading(false);
             } else {
-              message.error("Something Went Wrong!", "error");
+              message.error("Something Went Wrong!");
               setLoading(false);
             }
           }
         })
         .catch(function (response) {
-          message.error("Something Went Wrong!", "error");
+          message.error("Something Went Wrong!");
           setLoading(false);
         });
     } else {
@@ -369,13 +254,6 @@ const BuildCV = () => {
         behavior: "smooth",
       });
     }
-  };
-
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
   };
 
   return (
@@ -404,22 +282,6 @@ const BuildCV = () => {
             profile_picture: [],
             profile_cv: [],
             ...(dataParams.id && {
-              profile_picture: [
-                {
-                  uid: "-1",
-                  name: userData.user.image,
-                  status: "done",
-                  url: `${window.origin}/files/images/${userData.user.image}`,
-                },
-              ],
-              profile_cv: [
-                {
-                  uid: "-1",
-                  name: userData.user.cv,
-                  status: "done",
-                  url: `/files/cv/${userData.user.cv}`,
-                },
-              ],
               alt_phone_number: userData.user.alt_phone,
               alt_email: userData.user.alt_email,
               name: userData.user.name,
@@ -446,47 +308,6 @@ const BuildCV = () => {
             }),
           }}
         >
-          <Form.Item
-            name="profile_picture"
-            label="Candidate's Picture"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-            extra="Upload the candidate's profile picture"
-          >
-            {/* <ImgCrop grid rotate> */}
-            <Upload
-              name="profile-pic"
-              listType="picture"
-              accept=".jpeg,.png,.jpg"
-              maxCount={1}
-              beforeUpload={() => {
-                /* update state here */
-                return false;
-              }}
-            >
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
-            </Upload>
-            {/* </ImgCrop> */}
-          </Form.Item>
-          <Form.Item
-            name="profile_cv"
-            label="CV/Resume"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-            extra="Upload the candidate's profile picture"
-          >
-            <Upload
-              name="cv profile"
-              listType="picture"
-              accept=".pdf,.docx,.xslx"
-              maxCount={1}
-              beforeUpload={() => {
-                return false;
-              }}
-            >
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
-            </Upload>
-          </Form.Item>
           <Form.Item name="name" label={"Name"}>
             <Input placeholder="Name of the candidate" />
           </Form.Item>
@@ -572,214 +393,6 @@ const BuildCV = () => {
               <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
             </Form.Item>
           )}
-
-          {/* Education Grid */}
-
-          {!dataParams.id && (
-            <Form.Item label="Education" className="two-column">
-              <Form.List name="new_education">
-                {(fields, { add, remove }) => (
-                  <div className="flex-all-across">
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space key={key}>
-                        <Space key={key} className={"education-section-build"}>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "edu_name"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing Education Name",
-                              },
-                            ]}
-                          >
-                            <Input placeholder="Course Name" />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "college"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing College Name",
-                              },
-                            ]}
-                          >
-                            <Input placeholder="College/School Name" />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "edu_loc"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing Location",
-                              },
-                            ]}
-                          >
-                            <Input placeholder="Location" />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "edu_from_month"]}
-                          >
-                            <Select
-                              placeholder="From Month"
-                              options={monthSelectionLabel}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "edu_from_year"]}
-                          >
-                            <Select
-                              placeholder="From Year"
-                              options={makeYear()}
-                              showSearch
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "edu_to_month"]}
-                          >
-                            <Select
-                              placeholder="To month"
-                              options={monthSelectionLabel}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "edu_to_year"]}
-                          >
-                            <Select
-                              placeholder="To Year"
-                              options={makeYear()}
-                              showSearch
-                            />
-                          </Form.Item>
-                        </Space>
-                        <MinusCircleOutlined
-                          style={{ marginBottom: "20px", fontSize: "25px" }}
-                          onClick={() => remove(name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        block
-                        icon={<PlusOutlined />}
-                      >
-                        Add Education
-                      </Button>
-                    </Form.Item>
-                  </div>
-                )}
-              </Form.List>
-            </Form.Item>
-          )}
-
-          {/* Work Experience */}
-
-          {!dataParams.id && (
-            <Form.Item label="Work Experience" className="two-column">
-              <Form.List name="new_work_exp">
-                {(fields, { add, remove }) => (
-                  <div className="flex-all-across">
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space key={key}>
-                        <Space key={key} className={"work-exp-section-build"}>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "ex_name"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing Experience Name",
-                              },
-                            ]}
-                          >
-                            <Input placeholder="Company Name" />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "desg"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing Designation",
-                              },
-                            ]}
-                          >
-                            <Input placeholder="Designation" />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "ex_from_month"]}
-                          >
-                            <Select
-                              placeholder="From month"
-                              options={monthSelectionLabel}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "ex_from_year"]}
-                          >
-                            <Select
-                              placeholder="From year"
-                              options={makeYear()}
-                              showSearch
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "ex_to_month"]}
-                          >
-                            <Select
-                              placeholder="To Month"
-                              options={monthSelectionLabel}
-                            />
-                          </Form.Item>
-                          <Form.Item {...restField} name={[name, "ex_to_year"]}>
-                            <Select
-                              placeholder="To Year"
-                              options={makeYear()}
-                              showSearch
-                            />
-                          </Form.Item>
-                          <Form.Item {...restField} name={[name, "desc"]}>
-                            <Input.TextArea
-                              autoSize={{ minRows: 4, maxRows: 8 }}
-                              placeholder="Description"
-                            />
-                          </Form.Item>
-                        </Space>
-                        <MinusCircleOutlined
-                          style={{ marginBottom: "20px", fontSize: "25px" }}
-                          onClick={() => remove(name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        block
-                        icon={<PlusOutlined />}
-                      >
-                        Add Work Experience
-                      </Button>
-                    </Form.Item>
-                  </div>
-                )}
-              </Form.List>
-            </Form.Item>
-          )}
-
-          {/*  */}
-
           <Form.Item label="Skills" name="skills" className="two-column">
             <Input.TextArea />
           </Form.Item>

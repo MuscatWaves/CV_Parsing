@@ -43,41 +43,39 @@ const SearchCV = () => {
     searchByTodate: history ? history.searchByTodate : "",
   });
 
-  // const { data: nationalityResult } = useQuery(
-  //   ["nationality"],
-  //   () => axios.get("/api/countget?nationality=true"),
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     select: (data) => {
-  //       const newData = data.data.map((item) => ({
-  //         label: `${!item.nationality ? "None" : item.nationality} - (${
-  //           !item.nationality ? "All" : item.cnt
-  //         })`,
-  //         value: item.nationality,
-  //       }));
-  //       return newData;
-  //     },
-  //   }
-  // );
+  const { data: nationalityResult } = useQuery(
+    ["nationality"],
+    () => axios.get("/api/nationality"),
+    {
+      refetchOnWindowFocus: false,
+      select: (data) => {
+        const newData = data.data.data.map((item) => ({
+          label: `${!item.nationality ? "None" : item.nationality} - (${
+            !item.nationality ? "All" : item.cnt
+          })`,
+          value: item.nationality,
+        }));
+        return newData;
+      },
+    }
+  );
 
-  // const { data: jobCategoryResult } = useQuery(
-  //   ["category"],
-  //   () => axios.get("/api/countget?category=true"),
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     select: (data) => {
-  //       const newData = data.data.map((item) => ({
-  //         label: `${!item.category ? "None" : item.category} - (${
-  //           !item.category ? "All" : item.cnt
-  //         })`,
-  //         value: `${!item.category ? "" : item.category}`,
-  //       }));
-  //       return newData;
-  //     },
-  //   }
-  // );
-  const jobCategoryResult = [];
-  const nationalityResult = [];
+  const { data: jobCategoryResult } = useQuery(
+    ["category"],
+    () => axios.get("/api/category"),
+    {
+      refetchOnWindowFocus: false,
+      select: (data) => {
+        const newData = data.data.data.map((item) => ({
+          label: `${!item.category ? "None" : item.category} - (${
+            !item.category ? "All" : item.cnt
+          })`,
+          value: `${!item.category ? "" : item.category}`,
+        }));
+        return newData;
+      },
+    }
+  );
 
   const onChange = (page) => {
     localStorage.setItem("page", JSON.stringify(page));
@@ -118,7 +116,6 @@ const SearchCV = () => {
     try {
       const Data = await axios.get(`/api/cv`, config);
       if (Data.status === 200) {
-        console.log(Data.data);
         setLoading(false);
         setData(Data.data);
         setTotal(Data.data.TotalDisplay[0].total);

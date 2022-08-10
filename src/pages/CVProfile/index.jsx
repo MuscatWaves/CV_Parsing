@@ -13,12 +13,7 @@ import {
   skills,
   string,
 } from "../../utilities";
-import {
-  DownOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { DownOutlined } from "@ant-design/icons";
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import {
@@ -29,9 +24,7 @@ import {
   message,
   Table,
   Modal,
-  Select,
   Form,
-  Upload,
 } from "antd";
 import {
   FaUserCheck,
@@ -46,7 +39,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
-import { categorySelection, container, item } from "./constants.ts";
+import { container, item } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
@@ -60,11 +53,11 @@ import {
   getUserDataPublic,
   getAllUserManageList,
   deleteData,
-  handleUploadModal,
   deleteEducationData,
   deleteWorkExpData,
   deleteFullCV,
 } from "./endpoints";
+import MultipleFileUpload from "../../components/MultipleFileUpload";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -83,7 +76,6 @@ const CVprofile = () => {
   const [userList, setUserList] = useState([]);
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
-  const [fileList, setFileList] = useState([]);
   const CvDownload = useRef();
   const [isPdfDownloadLoading, setPdfDownloadLoading] = useState(false);
 
@@ -114,14 +106,6 @@ const CVprofile = () => {
   const navigate = useNavigate();
   const navigateTo = (path) => {
     navigate(path);
-  };
-
-  const UploadProps = {
-    beforeUpload: (file) => {
-      setFileList([...fileList, file]);
-      return false;
-    },
-    // fileList,
   };
 
   const makeTitle = () => {
@@ -304,105 +288,9 @@ const CVprofile = () => {
 
   const handleCancel = () => {
     toggleDeleteModal(false);
-    toggleUploadModal(false);
     setDeletionData("");
     form.resetFields();
   };
-
-  const uploadModal = () => (
-    <Modal
-      title="Upload Attachments"
-      visible={isUploadModal}
-      onCancel={handleCancel}
-      okText={"Submit"}
-      onOk={form.submit}
-      confirmLoading={tableLoading}
-    >
-      <Form
-        size="large"
-        layout="vertical"
-        onFinish={(values) =>
-          handleUploadModal(
-            values,
-            fileList,
-            setTableLoading,
-            userData,
-            dataParams,
-            setUserData,
-            setLoading,
-            toggleUploadModal,
-            form
-          )
-        }
-        form={form}
-        scrollToFirstError={true}
-      >
-        <Form.List name="attachments">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space
-                  key={key}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, auto)",
-                    marginBottom: 8,
-                  }}
-                  align="baseline"
-                >
-                  <Form.Item
-                    {...restField}
-                    name={[name, "category[]"]}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Missing category",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder={"Select Category"}
-                      options={categorySelection}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    {...restField}
-                    name="file[]"
-                    valuePropName={"file"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Missing Uploaded File",
-                      },
-                    ]}
-                  >
-                    <Upload
-                      {...UploadProps}
-                      maxCount={1}
-                      showUploadList={{ showRemoveIcon: false }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to upload</Button>
-                    </Upload>
-                  </Form.Item>
-                  <MinusCircleOutlined onClick={() => remove(name)} />
-                </Space>
-              ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  Add Attachment
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
-      </Form>
-    </Modal>
-  );
 
   const makeEducationSection = () => (
     <div className="flex-gap-column">
@@ -519,8 +407,15 @@ const CVprofile = () => {
       )}
 
       {/* Attachments Section Modals*/}
-
-      {uploadModal()}
+      <MultipleFileUpload
+        isUploadModal={isUploadModal}
+        toggleUploadModal={toggleUploadModal}
+        userId={dataParams.id}
+        dataParams={dataParams}
+        setUserData={setUserData}
+        setLoading={setLoading}
+        getUserData={getUserData}
+      />
       <Modal
         title="Delete Confirmation"
         visible={deleteModal}
