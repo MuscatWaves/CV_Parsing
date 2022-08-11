@@ -115,60 +115,64 @@ const UserForm = ({
       onClose={onClose}
       visible={isModalOpen}
     >
-      <Form
-        layout="vertical"
-        className={"flex-small-gap1-column zoom-in-animation"}
-        onFinish={handleUpdateUser}
-        form={form}
-        scrollToFirstError={true}
-        initialValues={{
-          name: editData?.name,
-          email: editData?.email,
-          password: "",
-          uploadcv_access:
-            editData?.uploadcv_access === 0 ? true : false || false,
-          searchcv_access:
-            editData?.searchcv_access === 0 ? true : false || false,
-          rejectedcv_access:
-            editData?.rejectedcv_access === 0 ? true : false || false,
-          buildcv_access:
-            editData?.buildcv_access === 0 ? true : false || false,
-          userreport_access:
-            editData?.userreport_access === 0 ? true : false || false,
-        }}
-      >
-        <Form.Item
-          name="name"
-          label={"Name"}
-          rules={[
-            {
-              required: true,
-              message: "No Username provided",
-            },
-          ]}
+      {isModalOpen && (
+        <Form
+          layout="vertical"
+          className={"flex-small-gap1-column"}
+          onFinish={handleUpdateUser}
+          form={form}
+          scrollToFirstError={true}
+          initialValues={{
+            name: editData?.name,
+            email: editData?.email,
+            password: "",
+            uploadcv_access:
+              editData?.uploadcv_access === 0 ? true : false || false,
+            searchcv_access:
+              editData?.searchcv_access === 0 ? true : false || false,
+            rejectedcv_access:
+              editData?.rejectedcv_access === 0 ? true : false || false,
+            buildcv_access:
+              editData?.buildcv_access === 0 ? true : false || false,
+            userreport_access:
+              editData?.userreport_access === 0 ? true : false || false,
+          }}
         >
-          <Input placeholder={"Enter name of the user"} />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label={"Email"}
-          rules={[
-            {
-              required: true,
-              message: "No Email provided",
-            },
-          ]}
-        >
-          <Input placeholder={"Enter email of the user"} disabled={editData} />
-        </Form.Item>
-        {/* {editData && (
+          <Form.Item
+            name="name"
+            label={"Name"}
+            rules={[
+              {
+                required: true,
+                message: "No Username provided",
+              },
+            ]}
+          >
+            <Input placeholder={"Enter name of the user"} />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label={"Email"}
+            rules={[
+              {
+                required: true,
+                message: "No Email provided",
+              },
+            ]}
+          >
+            <Input
+              placeholder={"Enter email of the user"}
+              disabled={editData}
+            />
+          </Form.Item>
+          {/* {editData && (
           <div className="small-padding-bottom">
             <Checkbox onChange={onPasswordNeed}>
               Need to Update Password
             </Checkbox>
           </div>
         )} */}
-        {/* {newPassword && (
+          {/* {newPassword && (
           <Form.Item
             name="password"
             className="zoom-in-animation"
@@ -183,106 +187,107 @@ const UserForm = ({
             <Password placeholder={"Enter name of the user"} />
           </Form.Item>
         )} */}
-        {!editData && (
-          <Form.Item
-            name="password"
-            className="zoom-in-animation"
-            label={"New Password"}
-            rules={[
-              {
-                required: true,
-                message: "No Password provided",
-              },
-            ]}
-          >
-            <Password placeholder={"Enter name of the user"} />
-          </Form.Item>
-        )}
-        <p className="bolder text-black">Permissions</p>
-        <div className="grid-2">
-          <Form.Item
-            name={"uploadcv_access"}
-            label={"Upload CV access"}
-            valuePropName={"checked"}
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item
-            name={"searchcv_access"}
-            label={"Search CV access"}
-            valuePropName={"checked"}
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item
-            name={"rejectedcv_access"}
-            label={"Rejected CV access"}
-            valuePropName={"checked"}
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item
-            name={"buildcv_access"}
-            label={"Build CV access"}
-            valuePropName={"checked"}
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item
-            name={"userreport_access"}
-            label={"User Report access"}
-            valuePropName={"checked"}
-          >
-            <Switch />
-          </Form.Item>
-        </div>
-        {editData && (
-          <Popconfirm
-            title={
-              <div>
-                <div>
-                  {editData.status === 0
-                    ? "Deactivating this account would no longer allow user to log-in"
-                    : "Activating this account would allow user to log-in"}
-                </div>
-                <div>
-                  {editData.status === 0
-                    ? "Are you sure to deactivate this account?"
-                    : "Are you sure to activate this account?"}
-                </div>
-              </div>
-            }
-            onConfirm={confirm}
-            okText={editData.status === 0 ? "Deactivate" : "Activate"}
-            okType={editData.status === 0 ? "danger" : "primary"}
-          >
-            <div
-              className={
-                editData.status === 0
-                  ? "text-red bolder pointer button-zoom"
-                  : "text-green bolder pointer button-zoom"
-              }
+          {!editData && (
+            <Form.Item
+              name="password"
+              className="zoom-in-animation"
+              label={"New Password"}
+              rules={[
+                {
+                  required: true,
+                  message: "No Password provided",
+                },
+              ]}
             >
-              {editData.status === 0
-                ? "Deactivate this account"
-                : "Activate this account"}
-            </div>
-          </Popconfirm>
-        )}
-        <div className="flex-at-end medium-margin-top">
-          <Button className="" type="text" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            className=""
-            type="primary"
-            htmlType="submit"
-            loading={isLoading}
-          >
-            {editData ? "Update Account" : "Create Account"}
-          </Button>
-        </div>
-      </Form>
+              <Password placeholder={"Enter name of the user"} />
+            </Form.Item>
+          )}
+          <p className="bolder text-black">Permissions</p>
+          <div className="grid-2">
+            <Form.Item
+              name={"uploadcv_access"}
+              label={"Upload CV access"}
+              valuePropName={"checked"}
+            >
+              <Switch />
+            </Form.Item>
+            <Form.Item
+              name={"searchcv_access"}
+              label={"Search CV access"}
+              valuePropName={"checked"}
+            >
+              <Switch />
+            </Form.Item>
+            <Form.Item
+              name={"rejectedcv_access"}
+              label={"Rejected CV access"}
+              valuePropName={"checked"}
+            >
+              <Switch />
+            </Form.Item>
+            <Form.Item
+              name={"buildcv_access"}
+              label={"Build CV access"}
+              valuePropName={"checked"}
+            >
+              <Switch />
+            </Form.Item>
+            <Form.Item
+              name={"userreport_access"}
+              label={"User Report access"}
+              valuePropName={"checked"}
+            >
+              <Switch />
+            </Form.Item>
+          </div>
+          {editData && (
+            <Popconfirm
+              title={
+                <div>
+                  <div>
+                    {editData.status === 0
+                      ? "Deactivating this account would no longer allow user to log-in"
+                      : "Activating this account would allow user to log-in"}
+                  </div>
+                  <div>
+                    {editData.status === 0
+                      ? "Are you sure to deactivate this account?"
+                      : "Are you sure to activate this account?"}
+                  </div>
+                </div>
+              }
+              onConfirm={confirm}
+              okText={editData.status === 0 ? "Deactivate" : "Activate"}
+              okType={editData.status === 0 ? "danger" : "primary"}
+            >
+              <div
+                className={
+                  editData.status === 0
+                    ? "text-red bolder pointer button-zoom"
+                    : "text-green bolder pointer button-zoom"
+                }
+              >
+                {editData.status === 0
+                  ? "Deactivate this account"
+                  : "Activate this account"}
+              </div>
+            </Popconfirm>
+          )}
+          <div className="flex-at-end medium-margin-top">
+            <Button className="" type="text" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              className=""
+              type="primary"
+              htmlType="submit"
+              loading={isLoading}
+            >
+              {editData ? "Update Account" : "Create Account"}
+            </Button>
+          </div>
+        </Form>
+      )}
     </Drawer>
   );
 };

@@ -183,7 +183,7 @@ const CVprofile = () => {
     },
   ];
 
-  const menu = (
+  const menu = dataParams.type === "app" && (
     <Menu
       items={[
         {
@@ -475,6 +475,7 @@ const CVprofile = () => {
         getUserData={getUserData}
         cvPicType={cvPicType}
         userData={userData}
+        showPdf={showPdf}
       />
 
       <Modal
@@ -847,7 +848,14 @@ const CVprofile = () => {
               {dataParams.type === "app" && (
                 <m.div className="grid-gather" variants={item}>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "80px",
+                      }}
+                    >
                       <Button
                         type="primary"
                         onClick={() =>
