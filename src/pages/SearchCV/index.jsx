@@ -123,11 +123,12 @@ const SearchCV = () => {
         if (Data.status === 201) {
           message.error(Data.data.error, "error");
         } else {
-          message.error("Something Went Wrong!", "error");
+          message.error("Something Went Wrong!");
         }
       }
     } catch (err) {
-      message.error("Something Went Wrong!", "error");
+      console.log(err);
+      message.error("Something Went Wrong!");
     }
   };
 

@@ -42,10 +42,7 @@ export const lastSeen = async (user, userData) => {
     setLoading("loading")
     await axios({
       method: "GET",
-      url: `/api/cv/${dataParams.id}`,
-      headers: {
-        Authorization: token,
-      },
+      url: `/api/cv/${dataParams.id}`
     })
       .then(function (response) {
         if (response.status === 200) {
@@ -54,42 +51,6 @@ export const lastSeen = async (user, userData) => {
             attachments: response.data.attachment,
             experience: response.data.experience,
             educations: response.data.education,
-          });
-          setLoading("loaded");
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-            setLoading("loaded");
-          } else {
-            message.error("Something Went Wrong!", "error");
-            setLoading("loaded");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
-
-//   Get User Data Public
-
-export const getUserDataPublic = async (dataParams, setUserData, setLoading) => {
-    await axios({
-      method: "GET",
-      url: `/api/publicuser.php?id=${dataParams.id}`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setUserData({
-            user: response.data.data.user[0],
-            attachments: response.data.data.attachments,
-            experience: response.data.data.experience,
-            educations: response.data.data.educations,
           });
           setLoading("loaded");
         } else {

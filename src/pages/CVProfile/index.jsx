@@ -50,7 +50,6 @@ import { AnimatePresence, m } from "framer-motion";
 import {
   lastSeen,
   getUserData,
-  getUserDataPublic,
   getAllUserManageList,
   deleteData,
   deleteEducationData,
@@ -70,6 +69,7 @@ const CVprofile = () => {
     educations: [],
     experience: [],
   });
+
   const [isLoading, setLoading] = useState("none");
   const [tableLoading, setTableLoading] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
@@ -113,10 +113,8 @@ const CVprofile = () => {
   };
 
   useEffect(() => {
-    dataParams.type === "app"
-      ? getUserData(dataParams, setUserData, setLoading)
-      : getUserDataPublic(dataParams, setUserData, setLoading);
     dataParams.type === "app" && getAllUserManageList(setUserList);
+    getUserData(dataParams, setUserData, setLoading);
     // eslint-disable-next-line
   }, []);
 

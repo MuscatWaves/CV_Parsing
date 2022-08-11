@@ -116,7 +116,7 @@ const RejectedCV = () => {
         Authorization: token,
       },
       params: {
-        row: page,
+        page: page,
       },
     })
       .then(function (response) {
