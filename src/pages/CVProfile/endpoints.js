@@ -130,13 +130,16 @@ export const deleteEducationData = async (deleteEduData, setDeleteEduLoading, se
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
+            setDeleteEduLoading(false);
           } else {
             message.error("Something Went Wrong!", "error");
+            setDeleteEduLoading(false);
           }
         }
       })
       .catch(function (response) {
         message.error("Something Went Wrong!", "error");
+        setDeleteEduLoading(false);
       });
   };
 
@@ -144,17 +147,17 @@ export const deleteEducationData = async (deleteEduData, setDeleteEduLoading, se
 
 export const deleteWorkExpData = async (deleteWeData, setDeleteWeLoading, setDeleteWeData, setDeleteWeModal, setLoading, dataParams, setUserData) => {
     var bodyFormDataDelete = new FormData();
-    bodyFormDataDelete.append("deleteExperience", true);
     bodyFormDataDelete.append("id", deleteWeData.id);
+    bodyFormDataDelete.append("userId", deleteWeData.id);
     setDeleteWeLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: "DELETE",
+      url: `/api/experience`,
       data: bodyFormDataDelete,
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
@@ -168,13 +171,16 @@ export const deleteWorkExpData = async (deleteWeData, setDeleteWeLoading, setDel
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
+            setDeleteWeLoading(false);
           } else {
             message.error("Something Went Wrong!", "error");
+            setDeleteWeLoading(false);
           }
         }
       })
       .catch(function (response) {
         message.error("Something Went Wrong!", "error");
+        setDeleteWeLoading(false);
       });
   };
 
