@@ -127,7 +127,6 @@ const SearchCV = () => {
         }
       }
     } catch (err) {
-      console.log(err);
       message.error("Something Went Wrong!");
     }
   };

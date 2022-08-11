@@ -6,7 +6,6 @@ import {
 
 const cookies = new Cookies();
 const token = cookies.get("token");
-console.log(token)
 
 // Last Seen Users
 

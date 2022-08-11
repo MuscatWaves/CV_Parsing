@@ -25,7 +25,6 @@ const UserForm = ({
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
-  console.log(editData);
 
   const onClose = () => {
     setModal(false);
@@ -74,7 +73,6 @@ const UserForm = ({
     })
       .then(function (response) {
         if (response.status === 200) {
-          console.log(response.data.message);
           message.success(response.data.message);
           setLoading(false);
           onClose();

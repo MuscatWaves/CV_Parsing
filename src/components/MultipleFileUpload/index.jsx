@@ -89,6 +89,11 @@ const MultipleFileUpload = ({
               placeholder={"Select Category"}
               options={categorySelection}
               onChange={(value) => setCategory(value)}
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "160px",
+              }}
             />
             <Upload
               name="cv profile"

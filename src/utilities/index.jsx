@@ -272,7 +272,6 @@ export const skills = (userData, isLoading) =>
   "";
 
 export const updateStatus = (id, type, list, setList) => {
-  console.log(id, list);
   const newArray = list.map((each) => {
     if (each.id === id) {
       if (type === "upload") {

@@ -57,6 +57,7 @@ import {
   deleteFullCV,
 } from "./endpoints";
 import MultipleFileUpload from "../../components/MultipleFileUpload";
+import FileUpload from "../../components/FileUpload";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -100,6 +101,11 @@ const CVprofile = () => {
   const [deleteCVModal, setDeleteCVModal] = useState(false);
   const [deleteCVLoading, setDeleteCVLoading] = useState(false);
 
+  //  Upload CV or pic
+
+  const [isCvPicModal, toggleCvPicModal] = useState(false);
+  const [cvPicType, setCvPicType] = useState(false);
+
   const user =
     (dataParams.type === "app" &&
       token &&
@@ -115,7 +121,9 @@ const CVprofile = () => {
   };
 
   useEffect(() => {
-    dataParams.type === "app" && user && getAllUserManageList(setUserList, token);
+    dataParams.type === "app" &&
+      user &&
+      getAllUserManageList(setUserList, token);
     user && getUserData(dataParams, setUserData, setLoading);
     dataParams.type !== "app" &&
       getUserData(dataParams, setUserData, setLoading);
@@ -253,9 +261,27 @@ const CVprofile = () => {
           icon: <FaUserEdit />,
           onClick: () => navigateTo(`/cv/update/${userData.user.id}`),
         },
-        user.type === "1" && {
-          label: "Delete CV",
+        {
+          label: "Edit profile picture",
           key: "5",
+          icon: <FaUserEdit />,
+          onClick: () => {
+            setCvPicType("dp");
+            toggleCvPicModal(true);
+          },
+        },
+        {
+          label: "Edit Original CV",
+          key: "6",
+          icon: <FaUserEdit />,
+          onClick: () => {
+            setCvPicType("cv");
+            toggleCvPicModal(true);
+          },
+        },
+        user.data[0].type === 1 && {
+          label: "Delete CV",
+          key: "7",
           icon: <FaUserEdit />,
           onClick: () => {
             setDeleteCVModal(true);
@@ -418,6 +444,19 @@ const CVprofile = () => {
         setLoading={setLoading}
         getUserData={getUserData}
       />
+
+      <FileUpload
+        isUploadModal={isCvPicModal}
+        toggleUploadModal={toggleCvPicModal}
+        userId={dataParams.id}
+        dataParams={dataParams}
+        setUserData={setUserData}
+        setLoading={setLoading}
+        getUserData={getUserData}
+        cvPicType={cvPicType}
+        userData={userData}
+      />
+
       <Modal
         title="Delete Confirmation"
         visible={deleteModal}
@@ -789,14 +828,14 @@ const CVprofile = () => {
                 <m.div className="grid-gather" variants={item}>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
                     <object
-                      data={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                      data={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${userData.user.cv}#view=fitH`}
                       type="application/pdf"
                       width="100%"
                       height="800px"
                     >
                       <iframe
                         title={"PDF file for Candidate Resume"}
-                        src={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
+                        src={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${userData.user.cv}#view=fitH`}
                       ></iframe>
                     </object>
                   )}
@@ -804,7 +843,7 @@ const CVprofile = () => {
                     checkWhichFile(userData.user.cv) === "doc") && (
                     <iframe
                       title={"DOC file for Candidate Resume"}
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}`}
                       width="100%"
                       height="800px"
                       frameborder="0"
