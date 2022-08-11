@@ -58,6 +58,7 @@ import {
 } from "./endpoints";
 import MultipleFileUpload from "../../components/MultipleFileUpload";
 import FileUpload from "../../components/FileUpload";
+import axios from "axios";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -408,6 +409,25 @@ const CVprofile = () => {
       ))}
     </div>
   );
+
+  const showPdf = (url) => {
+    axios(`${url}/pdf`, {
+      method: "GET",
+      responseType: "blob", //Force to receive data in a Blob Format
+    })
+      .then((response) => {
+        //Create a Blob from the PDF Stream
+        const file = new Blob([response.data], { type: "application/pdf" });
+        //Build a URL from the file
+        const fileURL = URL.createObjectURL(file);
+        //Open the URL on new Window
+        window.open(fileURL);
+        return fileURL;
+      })
+      .catch((error) => {
+        message.error(error);
+      });
+  };
 
   return (
     <m.div
@@ -827,17 +847,18 @@ const CVprofile = () => {
               {dataParams.type === "app" && (
                 <m.div className="grid-gather" variants={item}>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
-                    <object
-                      data={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${userData.user.cv}#view=fitH`}
-                      type="application/pdf"
-                      width="100%"
-                      height="800px"
-                    >
-                      <iframe
-                        title={"PDF file for Candidate Resume"}
-                        src={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${userData.user.cv}#view=fitH`}
-                      ></iframe>
-                    </object>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <Button
+                        type="primary"
+                        onClick={() =>
+                          showPdf(
+                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`
+                          )
+                        }
+                      >
+                        View Original PDF
+                      </Button>
+                    </div>
                   )}
                   {(checkWhichFile(userData.user.cv) === "docx" ||
                     checkWhichFile(userData.user.cv) === "doc") && (

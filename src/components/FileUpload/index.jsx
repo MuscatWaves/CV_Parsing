@@ -134,14 +134,14 @@ const FileUpload = ({
                 <div>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
                     <object
-                      data={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${userData.user.cv}#view=fitH`}
+                      data={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`}
                       type="application/pdf"
                       width="100%"
                       height="800px"
                     >
                       <iframe
                         title={"PDF file for Candidate Resume"}
-                        src={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${userData.user.cv}#view=fitH`}
+                        src={`https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`}
                       ></iframe>
                     </object>
                   )}
