@@ -14,6 +14,7 @@ const UserReport = lazy(() => import("../pages/UserReport"));
 const RejectedCV = lazy(() => import("../pages/RejectedCV"));
 const UploadCV = lazy(() => import("../pages/UploadCV"));
 const PageNotFound = lazy(() => import("../components/NoPageFound"));
+const NotAuthorize = lazy(() => import("../components/NotAuthorize"));
 
 const Routing = () => {
   return (
@@ -38,6 +39,7 @@ const Routing = () => {
                 <Route path="/userReport" element={<UserReport />}></Route>
                 <Route path="/rejectedcv" element={<RejectedCV />}></Route>
                 <Route path="/uploadcv" element={<UploadCV />}></Route>
+                <Route path="/notAuthorized" element={<NotAuthorize />}></Route>
                 <Route path="*" element={<PageNotFound />}></Route>
               </Routes>
             </LazyMotion>

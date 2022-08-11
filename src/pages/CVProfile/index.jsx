@@ -101,8 +101,10 @@ const CVprofile = () => {
   const [deleteCVLoading, setDeleteCVLoading] = useState(false);
 
   const user =
-    dataParams.type === "app" &&
-    jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+    (dataParams.type === "app" &&
+      token &&
+      jwt.verify(token, process.env.REACT_APP_JWT_KEY)) ||
+    "";
   const navigate = useNavigate();
   const navigateTo = (path) => {
     navigate(path);
@@ -113,15 +115,17 @@ const CVprofile = () => {
   };
 
   useEffect(() => {
-    dataParams.type === "app" && getAllUserManageList(setUserList);
-    getUserData(dataParams, setUserData, setLoading);
+    dataParams.type === "app" && user && getAllUserManageList(setUserList, token);
+    user && getUserData(dataParams, setUserData, setLoading);
+    dataParams.type !== "app" &&
+      getUserData(dataParams, setUserData, setLoading);
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     dataParams.type === "app" &&
       isLoading === "loaded" &&
-      lastSeen(user, userData); // eslint-disable-next-line
+      lastSeen(user, userData, token); // eslint-disable-next-line
   }, [isLoading]);
 
   const columns = [

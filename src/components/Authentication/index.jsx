@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { message } from "antd";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 
@@ -14,8 +13,7 @@ const Authentication = () => {
 
   useEffect(() => {
     if (!token) {
-      navigateTo("/");
-      message.error("You need to login first!");
+      navigateTo("/notAuthorized");
     }
   });
 

@@ -6,10 +6,11 @@ import {
 
 const cookies = new Cookies();
 const token = cookies.get("token");
+console.log(token)
 
 // Last Seen Users
 
-export const lastSeen = async (user, userData) => {
+export const lastSeen = async (user, userData, token) => {
     var bodyFormDataLastSeen = new FormData();
     bodyFormDataLastSeen.append("cv", userData.user.id);
 
@@ -213,7 +214,7 @@ export const deleteFullCV = async (userData, setDeleteCVLoading, setDeleteCVModa
 
 //    Get All User List
 
-export const getAllUserManageList = async (setUserList) => {
+export const getAllUserManageList = async (setUserList, token) => {
     await axios({
       method: "GET",
       url: `/api/user`,

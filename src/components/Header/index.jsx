@@ -17,7 +17,8 @@ const Header = () => {
   const navigateTo = (path) => {
     navigate(path);
   };
-  const user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+  const user =
+    (token && jwt.verify(token, process.env.REACT_APP_JWT_KEY)) || "";
 
   return (
     <div className="header">
@@ -30,7 +31,9 @@ const Header = () => {
       <Authentication />
       <div className="flex-small-gap">
         <FiUser className="large-text text-light-grey" />
-        <div className="text-light-grey bolder">{user.name}</div>
+        <div className="text-light-grey bolder">
+          {user?.data ? user.data[0].name : ""}
+        </div>
         <Button
           className="header-log-out-btn"
           type="primary"

@@ -23,6 +23,7 @@ const MultipleFileUpload = ({
   const [currentActive, setCurrentActive] = useState(null);
   const handleCancel = () => {
     toggleUploadModal(false);
+    setCurrentActive(null);
     setList([]);
     getUserData(dataParams, setUserData, setLoading);
   };
@@ -30,7 +31,8 @@ const MultipleFileUpload = ({
   const token = cookies.get("token");
 
   useEffect(() => {
-    currentActive && addAttachment(currentActive); // eslint-disable-next-line
+    currentActive && addAttachment(currentActive);
+    // eslint-disable-next-line
   }, [currentActive]);
 
   const addAttachment = async (data) => {
@@ -157,6 +159,10 @@ const MultipleFileUpload = ({
                     icon={<UploadOutlined />}
                     onClick={() => {
                       !currentActive && setCurrentActive(eachListItem);
+                      currentActive &&
+                        message.error(
+                          "Please wait until the active uploading of the other file"
+                        );
                     }}
                     loading={eachListItem.upload}
                   />
