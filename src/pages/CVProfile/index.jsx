@@ -12,6 +12,7 @@ import {
   TriggerCvDownload,
   skills,
   string,
+  showPdf,
 } from "../../utilities";
 import { DownOutlined } from "@ant-design/icons";
 import { GrAttachment } from "react-icons/gr";
@@ -52,8 +53,6 @@ import {
   deleteFullCV,
 } from "./endpoints";
 import MultipleFileUpload from "../../components/MultipleFileUpload";
-import FileUpload from "../../components/FileUpload";
-import axios from "axios";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -75,6 +74,7 @@ const CVprofile = () => {
   const [isUploadModal, toggleUploadModal] = useState(false);
   const CvDownload = useRef();
   const [isPdfDownloadLoading, setPdfDownloadLoading] = useState(false);
+  const [cvViewLoad, setCvViewLoad] = useState(false);
 
   //Delete CV
 
@@ -82,9 +82,6 @@ const CVprofile = () => {
   const [deleteCVLoading, setDeleteCVLoading] = useState(false);
 
   //  Upload CV or pic
-
-  const [isCvPicModal, toggleCvPicModal] = useState(false);
-  const [cvPicType, setCvPicType] = useState(false);
 
   const user =
     (dataParams.type === "app" &&
@@ -241,24 +238,6 @@ const CVprofile = () => {
           icon: <FaUserEdit />,
           onClick: () => navigateTo(`/cv/update/${userData.user.id}`),
         },
-        {
-          label: "Edit profile picture",
-          key: "5",
-          icon: <FaUserEdit />,
-          onClick: () => {
-            setCvPicType("dp");
-            toggleCvPicModal(true);
-          },
-        },
-        {
-          label: "Edit Original CV",
-          key: "6",
-          icon: <FaUserEdit />,
-          onClick: () => {
-            setCvPicType("cv");
-            toggleCvPicModal(true);
-          },
-        },
         user.data[0].type === 1 && {
           label: "Delete CV",
           key: "7",
@@ -349,25 +328,6 @@ const CVprofile = () => {
     </div>
   );
 
-  const showPdf = (url) => {
-    axios(`${url}/pdf`, {
-      method: "GET",
-      responseType: "blob", //Force to receive data in a Blob Format
-    })
-      .then((response) => {
-        //Create a Blob from the PDF Stream
-        const file = new Blob([response.data], { type: "application/pdf" });
-        //Build a URL from the file
-        const fileURL = URL.createObjectURL(file);
-        //Open the URL on new Window
-        window.open(fileURL);
-        return fileURL;
-      })
-      .catch((error) => {
-        message.error(error);
-      });
-  };
-
   return (
     <m.div
       className={
@@ -402,19 +362,6 @@ const CVprofile = () => {
         setUserData={setUserData}
         setLoading={setLoading}
         getUserData={getUserData}
-      />
-
-      <FileUpload
-        isUploadModal={isCvPicModal}
-        toggleUploadModal={toggleCvPicModal}
-        userId={dataParams.id}
-        dataParams={dataParams}
-        setUserData={setUserData}
-        setLoading={setLoading}
-        getUserData={getUserData}
-        cvPicType={cvPicType}
-        userData={userData}
-        showPdf={showPdf}
       />
 
       <Modal
@@ -701,9 +648,11 @@ const CVprofile = () => {
                         type="primary"
                         onClick={() =>
                           showPdf(
-                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`
+                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`,
+                            setCvViewLoad
                           )
                         }
+                        loading={cvViewLoad}
                       >
                         View Original PDF
                       </Button>

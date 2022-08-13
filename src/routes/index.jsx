@@ -17,6 +17,7 @@ const PageNotFound = lazy(() => import("../components/NoPageFound"));
 const NotAuthorize = lazy(() => import("../components/NotAuthorize"));
 const BuildEducation = lazy(() => import("../pages/BuildCV/BuildEducation"));
 const BuildExperience = lazy(() => import("../pages/BuildCV/BuildExperience"));
+const UpdateCvPic = lazy(() => import("../pages/BuildCV/UpdateCVPic"));
 
 const Routing = () => {
   return (
@@ -49,6 +50,10 @@ const Routing = () => {
                 <Route
                   path="/cv/update/buildEx/:id"
                   element={<BuildExperience />}
+                ></Route>
+                <Route
+                  path="/cv/update/buildCvPic/:id"
+                  element={<UpdateCvPic />}
                 ></Route>
                 <Route path="*" element={<PageNotFound />}></Route>
               </Routes>

@@ -122,9 +122,9 @@ const FileUpload = ({
                   <img
                     className={"cvprofile-picture"}
                     src={
-                      userData.user.image
-                        ? `/files/images/${userData.user.image}`
-                        : checkImageIcon(userData.user.gender)
+                      userData.image
+                        ? `/files/images/${userData.image}`
+                        : checkImageIcon(userData.gender)
                     }
                     alt="user"
                     width={"170px"}
@@ -133,7 +133,7 @@ const FileUpload = ({
                 </div>
               ) : (
                 <div>
-                  {checkWhichFile(userData.user.cv) === "pdf" && (
+                  {checkWhichFile(userData.cv) === "pdf" && (
                     <div
                       style={{
                         display: "flex",
@@ -144,7 +144,7 @@ const FileUpload = ({
                         type="primary"
                         onClick={() =>
                           showPdf(
-                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`
+                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}#view=fitH`
                           )
                         }
                       >
@@ -152,11 +152,11 @@ const FileUpload = ({
                       </Button>
                     </div>
                   )}
-                  {(checkWhichFile(userData.user.cv) === "docx" ||
-                    checkWhichFile(userData.user.cv) === "doc") && (
+                  {(checkWhichFile(userData.cv) === "docx" ||
+                    checkWhichFile(userData.cv) === "doc") && (
                     <iframe
                       title={"DOC file for Candidate Resume"}
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}`}
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}`}
                       width="100%"
                       height="800px"
                       frameborder="0"

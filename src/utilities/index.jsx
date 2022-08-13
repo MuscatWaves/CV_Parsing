@@ -7,6 +7,7 @@ import maleUserImage from "../images/male-user.png";
 import femaleUserImage from "../images/female-user.png";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
+import axios from "axios";
 
 export const removeUnderScore = (str) => {
   var i,
@@ -287,4 +288,25 @@ export const updateStatus = (id, type, list, setList) => {
     return each;
   });
   setList(newArray);
+};
+
+export const showPdf = (url, setLoading) => {
+  setLoading(true);
+  axios(`${url}/pdf`, {
+    method: "GET",
+    responseType: "blob", //Force to receive data in a Blob Format
+  })
+    .then((response) => {
+      //Create a Blob from the PDF Stream
+      const file = new Blob([response.data], { type: "application/pdf" });
+      //Build a URL from the file
+      const fileURL = URL.createObjectURL(file);
+      //Open the URL on new Window
+      window.open(fileURL);
+      setLoading(false);
+    })
+    .catch((error) => {
+      message.error(error);
+      setLoading(false);
+    });
 };

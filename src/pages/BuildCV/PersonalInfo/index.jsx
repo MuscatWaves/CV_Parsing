@@ -36,6 +36,7 @@ const BuildCV = () => {
   const [isLoading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
   const [userDataLoading, setUserDataLoading] = useState("none");
+  const [currentStep, setCurrentStep] = useState(0);
   const [date, selectDate] = useState();
 
   const getUserData = async () => {
@@ -163,13 +164,6 @@ const BuildCV = () => {
     // eslint-disable-next-line
   }, []);
 
-  const test = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   const handleSubmit = async (values) => {
     if (date?.format("MM/DD/YYYY")) {
       setLoading(true);
@@ -227,8 +221,10 @@ const BuildCV = () => {
               : message.success("The profile has been created successfully");
             setLoading(false);
             dataParams.id
-              ? // ? navigateTo(`/searchcv/profile/app/${dataParams.id}`)
-                test()
+              ? window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                })
               : navigateTo(`/searchcv`);
           } else {
             if (response.status === 201) {
@@ -269,6 +265,19 @@ const BuildCV = () => {
     }
   };
 
+  const changeStep = (value) => {
+    setCurrentStep(value);
+    if (value === 1) {
+      navigate(`/cv/update/buildEdu/${dataParams.id}`);
+    }
+    if (value === 2) {
+      navigate(`/cv/update/buildEx/${dataParams.id}`);
+    }
+    if (value === 3) {
+      navigate(`/cv/update/buildCvPic/${dataParams.id}`);
+    }
+  };
+
   return (
     <m.div
       className="cv-body"
@@ -285,7 +294,7 @@ const BuildCV = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={0}>
+          <Steps progressDot current={currentStep} onChange={changeStep}>
             <Step
               title={
                 <div className="bolder text-black">Personal Information</div>
@@ -299,12 +308,14 @@ const BuildCV = () => {
             <Step
               title="Education"
               description="Education details of the candidate"
+              disabled={!dataParams.id}
             />
             <Step
               title="Experience"
               description="Work Experience of the candidate"
+              disabled={!dataParams.id}
             />
-            <Step title="Upload CV & Picture" />
+            <Step title="Upload CV & Picture" disabled={!dataParams.id} />
           </Steps>
         </div>
       </div>

@@ -21,9 +21,6 @@ const BuildEducation = () => {
   const token = cookies.get("token");
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
-  const navigateTo = (path) => {
-    navigate(path);
-  };
 
   //   States
 
@@ -32,6 +29,7 @@ const BuildEducation = () => {
   const [isDeleteWeModal, setDeleteWeModal] = useState(false);
   const [deleteWeData, setDeleteWeData] = useState("");
   const [isDeleteWeLoading, setDeleteWeLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(2);
 
   const deleteWorkExpData = async () => {
     var bodyFormDataDelete = new FormData();
@@ -103,6 +101,19 @@ const BuildEducation = () => {
     getUserData(); // eslint-disable-next-line
   }, []);
 
+  const changeStep = (value) => {
+    setCurrentStep(value);
+    if (value === 0) {
+      navigate(`/cv/update/${dataParams.id}`);
+    }
+    if (value === 1) {
+      navigate(`/cv/update/buildEdu/${dataParams.id}`);
+    }
+    if (value === 3) {
+      navigate(`/cv/update/buildCvPic/${dataParams.id}`);
+    }
+  };
+
   return (
     <m.div
       initial={{ opacity: 0 }}
@@ -145,7 +156,7 @@ const BuildEducation = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={1}>
+          <Steps progressDot current={currentStep} onChange={changeStep}>
             <Step
               title={
                 <div className="bolder text-black">Personal Information</div>
@@ -165,8 +176,12 @@ const BuildEducation = () => {
               }
             />
             <Step
-              title="Experience"
-              description="Work Experience of the candidate"
+              title={<div className="bolder text-black">Experience</div>}
+              description={
+                <div className="text-light-grey">
+                  Work Experience of the candidate
+                </div>
+              }
             />
             <Step title="Upload CV & Picture" />
           </Steps>

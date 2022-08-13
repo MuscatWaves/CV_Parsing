@@ -14,7 +14,7 @@
 
 .buildCvForm {
   display: grid;
-  grid-template-columns: repeat(2, 500px);
+  grid-template-columns: repeat(2, 30vw);
   justify-content: center;
   align-items: center;
   padding: 4rem 2rem;
@@ -22,6 +22,7 @@
   animation: slide-in-top 0.8s;
   background-color: rgba(255, 255, 255, 0.411);
   box-shadow: var(--shadow-1), var(--shadow-2);
+  width: fit-content;
   border-radius: 20px;
 }
 

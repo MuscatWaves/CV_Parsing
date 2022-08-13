@@ -21,9 +21,7 @@ const BuildEducation = () => {
   const token = cookies.get("token");
   const [userData, setUserData] = useState({});
   const navigate = useNavigate();
-  const navigateTo = (path) => {
-    navigate(path);
-  };
+  const [currentStep, setCurrentStep] = useState(1);
 
   //   States
 
@@ -96,6 +94,19 @@ const BuildEducation = () => {
       });
   };
 
+  const changeStep = (value) => {
+    setCurrentStep(value);
+    if (value === 0) {
+      navigate(`/cv/update/${dataParams.id}`);
+    }
+    if (value === 2) {
+      navigate(`/cv/update/buildEx/${dataParams.id}`);
+    }
+    if (value === 3) {
+      navigate(`/cv/update/buildCvPic/${dataParams.id}`);
+    }
+  };
+
   useEffect(() => {
     getUserData(); // eslint-disable-next-line
   }, []);
@@ -142,7 +153,7 @@ const BuildEducation = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={1}>
+          <Steps progressDot current={currentStep} onChange={changeStep}>
             <Step
               title={
                 <div className="bolder text-black">Personal Information</div>
