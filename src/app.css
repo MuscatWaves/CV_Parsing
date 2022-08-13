@@ -301,6 +301,50 @@ p {
   margin-bottom: 10px;
 }
 
+.steps-holder {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  width: 80vw;
+}
+
+.steps-holder-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.hover-blue {
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.hover-blue:hover {
+  transform: scale(1.05);
+  color: #51a6f5;
+}
+
+.hover-red {
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.hover-red:hover {
+  transform: scale(1.05);
+  color: #ff4c41;
+}
+
+.copyright-1 {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  padding: 1rem;
+  font-weight: 700;
+  color: #000;
+  margin: 2rem 0;
+}
+
 /* Custom Animations */
 
 @keyframes fade-in {

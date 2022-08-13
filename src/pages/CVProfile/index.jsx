@@ -14,7 +14,6 @@ import {
   string,
 } from "../../utilities";
 import { DownOutlined } from "@ant-design/icons";
-import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import {
   Button,
@@ -44,16 +43,12 @@ import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
 import ojimage from "../../images/oj-small.png";
-import UpdateWork from "./UpdateWork";
-import UpdateEducation from "./UpdateEducation";
 import { AnimatePresence, m } from "framer-motion";
 import {
   lastSeen,
   getUserData,
   getAllUserManageList,
   deleteData,
-  deleteEducationData,
-  deleteWorkExpData,
   deleteFullCV,
 } from "./endpoints";
 import MultipleFileUpload from "../../components/MultipleFileUpload";
@@ -80,22 +75,6 @@ const CVprofile = () => {
   const [isUploadModal, toggleUploadModal] = useState(false);
   const CvDownload = useRef();
   const [isPdfDownloadLoading, setPdfDownloadLoading] = useState(false);
-
-  // Update Work Experience
-
-  const [isUpdateWeModal, setUpdateWeModal] = useState(false);
-  const [updateWeData, setUpdateWeData] = useState({});
-  const [isDeleteWeModal, setDeleteWeModal] = useState(false);
-  const [deleteWeData, setDeleteWeData] = useState("");
-  const [isDeleteWeLoading, setDeleteWeLoading] = useState(false);
-
-  // Update Education
-
-  const [isUpdateEduModal, setUpdateEduModal] = useState(false);
-  const [updateEduData, setUpdateEduData] = useState({});
-  const [isDeleteEduModal, setDeleteEduModal] = useState(false);
-  const [deleteEduData, setDeleteEduData] = useState("");
-  const [isDeleteEduLoading, setDeleteEduLoading] = useState(false);
 
   //Delete CV
 
@@ -329,26 +308,6 @@ const CVprofile = () => {
             <div className="medium-text bolder text-orange">
               {education.name}
             </div>
-            {dataParams.type === "app" && (
-              <div className="flex-small-gap">
-                <AiFillEdit
-                  className="hover-blue"
-                  style={{ fontSize: "22px" }}
-                  onClick={() => {
-                    setUpdateEduData(education);
-                    setUpdateEduModal(true);
-                  }}
-                />
-                <AiFillDelete
-                  className="hover-red"
-                  style={{ fontSize: "22px" }}
-                  onClick={() => {
-                    setDeleteEduData(education);
-                    setDeleteEduModal(true);
-                  }}
-                />
-              </div>
-            )}
           </div>
           <div className="medium-text bolder">{education.college}</div>
           <div className="text-light-grey bold">{`${
@@ -370,26 +329,6 @@ const CVprofile = () => {
         <div key={work.id}>
           <div className="flex-between" style={{ padding: 0 }}>
             <div className="medium-2-text bolder text-orange">{work.name}</div>
-            {dataParams.type === "app" && (
-              <div className="flex-small-gap">
-                <AiFillEdit
-                  style={{ fontSize: "22px" }}
-                  onClick={() => {
-                    setUpdateWeData(work);
-                    setUpdateWeModal(true);
-                  }}
-                  className="hover-blue"
-                />
-                <AiFillDelete
-                  style={{ fontSize: "22px" }}
-                  className="hover-red"
-                  onClick={() => {
-                    setDeleteWeData(work);
-                    setDeleteWeModal(true);
-                  }}
-                />
-              </div>
-            )}
           </div>
           <div className="medium-text bolder">{work.designation}</div>
           <div className="text-light-grey bold">{`${
@@ -498,86 +437,6 @@ const CVprofile = () => {
         confirmLoading={tableLoading}
       >
         <p>{`Are you sure you want to delete "${deletionData.name}" from attachments?`}</p>
-      </Modal>
-
-      {/* Work Experience */}
-
-      {isUpdateWeModal && (
-        <UpdateWork
-          data={updateWeData}
-          setData={setUpdateWeData}
-          visible={isUpdateWeModal}
-          toggleVisible={setUpdateWeModal}
-          getUserData={getUserData}
-          setPageLoading={setLoading}
-          userId={userData.user.id}
-          setUserData={setUserData}
-          dataParams={dataParams}
-        />
-      )}
-      <Modal
-        title="Delete Work Experience Confirmation"
-        visible={isDeleteWeModal}
-        onOk={() =>
-          deleteWorkExpData(
-            deleteWeData,
-            setDeleteWeLoading,
-            setDeleteWeData,
-            setDeleteWeModal,
-            setLoading,
-            dataParams,
-            setUserData
-          )
-        }
-        onCancel={() => {
-          setDeleteWeData("");
-          setDeleteWeModal(false);
-        }}
-        okText={"Delete"}
-        okType={"danger"}
-        confirmLoading={isDeleteWeLoading}
-      >
-        <p>{`Are you sure you want to delete "${deleteWeData.name}" from Experience?`}</p>
-      </Modal>
-
-      {/* Education */}
-
-      {isUpdateEduModal && (
-        <UpdateEducation
-          data={updateEduData}
-          setData={setUpdateEduData}
-          visible={isUpdateEduModal}
-          toggleVisible={setUpdateEduModal}
-          getUserData={getUserData}
-          setPageLoading={setLoading}
-          userId={userData.user.id}
-          dataParams={dataParams}
-          setUserData={setUserData}
-        />
-      )}
-      <Modal
-        title="Delete Education Confirmation"
-        visible={isDeleteEduModal}
-        onOk={() =>
-          deleteEducationData(
-            deleteEduData,
-            setDeleteEduLoading,
-            setDeleteEduModal,
-            setLoading,
-            dataParams,
-            setUserData,
-            setDeleteEduData
-          )
-        }
-        onCancel={() => {
-          setDeleteEduData("");
-          setDeleteEduModal(false);
-        }}
-        okText={"Delete"}
-        okType={"danger"}
-        confirmLoading={isDeleteEduLoading}
-      >
-        <p>{`Are you sure you want to delete "${deleteEduData.name}" from Education?`}</p>
       </Modal>
 
       {/* Delete CV */}
@@ -768,15 +627,6 @@ const CVprofile = () => {
                         >
                           Education
                         </div>
-                        {dataParams.type === "app" && (
-                          <AiOutlinePlus
-                            className="plus-button-cv-profile"
-                            onClick={() => {
-                              setUpdateEduData({});
-                              setUpdateEduModal(true);
-                            }}
-                          />
-                        )}
                       </div>
                       {makeEducationSection()}
                     </>
@@ -803,15 +653,6 @@ const CVprofile = () => {
                         <div className="bolder large-text text-black">
                           Work Experience
                         </div>
-                        {dataParams.type === "app" && (
-                          <AiOutlinePlus
-                            className="plus-button-cv-profile"
-                            onClick={() => {
-                              setUpdateWeData({});
-                              setUpdateWeModal(true);
-                            }}
-                          />
-                        )}
                       </div>
                       {makeExperienceSection()}
                     </>

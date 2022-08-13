@@ -1,0 +1,30 @@
+.buildCvExForm--wrapper-whole-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 60vh;
+}
+
+.buildCvExForm--body {
+  width: 60vw;
+  animation: slide-in-top 0.8s;
+  background-color: rgba(255, 255, 255, 0.411);
+  box-shadow: var(--shadow-1), var(--shadow-2);
+  padding: 1rem;
+  border-radius: 20px;
+}
+
+.buildex-body {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+}
+
+.buildex-bodu-button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}

@@ -6,7 +6,7 @@ import ScrollToTop from "./ScrollToTop";
 
 const Login = lazy(() => import("../pages/Login"));
 const DashBoard = lazy(() => import("../pages/DashBoard"));
-const BuildCV = lazy(() => import("../pages/BuildCV"));
+const BuildCV = lazy(() => import("../pages/BuildCV/PersonalInfo"));
 const SearchCV = lazy(() => import("../pages/SearchCV"));
 const CVprofile = lazy(() => import("../pages/CVProfile"));
 const UserManage = lazy(() => import("../pages/UserManage"));
@@ -15,6 +15,8 @@ const RejectedCV = lazy(() => import("../pages/RejectedCV"));
 const UploadCV = lazy(() => import("../pages/UploadCV"));
 const PageNotFound = lazy(() => import("../components/NoPageFound"));
 const NotAuthorize = lazy(() => import("../components/NotAuthorize"));
+const BuildEducation = lazy(() => import("../pages/BuildCV/BuildEducation"));
+const BuildExperience = lazy(() => import("../pages/BuildCV/BuildExperience"));
 
 const Routing = () => {
   return (
@@ -40,6 +42,14 @@ const Routing = () => {
                 <Route path="/rejectedcv" element={<RejectedCV />}></Route>
                 <Route path="/uploadcv" element={<UploadCV />}></Route>
                 <Route path="/notAuthorized" element={<NotAuthorize />}></Route>
+                <Route
+                  path="/cv/update/buildEdu/:id"
+                  element={<BuildEducation />}
+                ></Route>
+                <Route
+                  path="/cv/update/buildEx/:id"
+                  element={<BuildExperience />}
+                ></Route>
                 <Route path="*" element={<PageNotFound />}></Route>
               </Routes>
             </LazyMotion>
