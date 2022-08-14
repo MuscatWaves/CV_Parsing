@@ -305,7 +305,6 @@ export const showPdf = (url, setLoading) => {
     .then((response) => {
       //Create a Blob from the PDF Stream
       const file = new Blob([response.data], { type: "application/pdf" });
-      console.log(response, file);
       //Build a URL from the file
       const fileURL = URL.createObjectURL(file);
       //Open the URL on new Window
@@ -316,4 +315,12 @@ export const showPdf = (url, setLoading) => {
       message.error(error);
       setLoading && setLoading(false);
     });
+};
+
+export const showImage = (data) => {
+  var image = new Image();
+  image.src = data;
+
+  var w = window.open("");
+  w.document.write(image.outerHTML);
 };

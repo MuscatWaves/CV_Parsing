@@ -76,7 +76,6 @@ const UpdateWork = ({
         }
       })
       .catch(function (response) {
-        console.log(response);
         message.error(response.data.error);
         setLoading(false);
       });

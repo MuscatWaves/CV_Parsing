@@ -114,7 +114,7 @@ export const deleteFullCV = async (userData, setDeleteCVLoading, setDeleteCVModa
     setDeleteCVLoading(true);
     await axios({
       method: "DELETE",
-      url: `/api/experience`,
+      url: `/api/cv`,
       data: bodyFormDataDelete,
       headers: {
         Authorization: token,

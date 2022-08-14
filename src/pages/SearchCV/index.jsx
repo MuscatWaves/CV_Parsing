@@ -117,8 +117,8 @@ const SearchCV = () => {
         Nationality: data.Nationality,
         Gender: data.Gender,
         MaritalStatus: data.MaritalStatus,
-        // searchByFromdate: data.SearchByFromdate,
-        // searchByTodate: data.SearchByTodate,
+        FromDate: data.SearchByFromdate,
+        ToDate: data.SearchByTodate,
       },
     };
     try {
@@ -202,7 +202,7 @@ const SearchCV = () => {
     { title: "Job", dataIndex: "job", width: "250px" },
     {
       title: "Education",
-      dataIndex: "education",
+      dataIndex: "educationname",
       ellipsis: true,
     },
     {

@@ -13,6 +13,7 @@ import {
   skills,
   string,
   showPdf,
+  showImage,
 } from "../../utilities";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { GrAttachment } from "react-icons/gr";
@@ -121,9 +122,24 @@ const CVprofile = () => {
     {
       title: "File",
       render: (record) => (
-        <a href={`/files/docs/${record.name}`} target="_blank" rel="noreferrer">
+        <div
+          className="link pointer"
+          onClick={() => {
+            const type = checkWhichFile(record.name);
+            if (["pdf"].includes(type)) {
+              showPdf(
+                `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${record.name}`
+              );
+            }
+            if (["jpeg", "jpg", "png", "PNG"].includes(type)) {
+              showImage(
+                `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${record.name}`
+              );
+            }
+          }}
+        >
           {record.name}
-        </a>
+        </div>
       ),
     },
     {
@@ -235,6 +251,7 @@ const CVprofile = () => {
         user.data[0].type === 1 && {
           label: "Delete CV",
           key: "7",
+          danger: true,
           icon: <FaUserEdit />,
           onClick: () => {
             setDeleteCVModal(true);
@@ -702,18 +719,30 @@ const CVprofile = () => {
                           {groupBy(userData.attachments, "category")[
                             section
                           ].map((attachment, index) => (
-                            <a
-                              href={`/files/docs/${attachment.name}`}
+                            <div
                               key={attachment.id}
-                              className={"flex-small-gap link"}
-                              target={"_blank"}
-                              rel="noreferrer"
+                              className={"flex-small-gap link pointer"}
+                              onClick={() => {
+                                const type = checkWhichFile(attachment.name);
+                                if (["pdf"].includes(type)) {
+                                  showPdf(
+                                    `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${attachment.name}`
+                                  );
+                                }
+                                if (
+                                  ["jpeg", "jpg", "png", "PNG"].includes(type)
+                                ) {
+                                  showImage(
+                                    `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${attachment.name}`
+                                  );
+                                }
+                              }}
                             >
                               <GrAttachment />
                               <div>{`${checkCategory(section)} - ${
                                 index + 1
                               }`}</div>
-                            </a>
+                            </div>
                           ))}
                         </div>
                       </div>

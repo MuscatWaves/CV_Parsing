@@ -225,7 +225,7 @@ const BuildCV = () => {
                   top: 0,
                   behavior: "smooth",
                 })
-              : navigateTo(`/searchcv`);
+              : navigateTo(`/cv/update/buildEdu/${response.data.id}`);
           } else {
             if (response.status === 201) {
               notification.error({
