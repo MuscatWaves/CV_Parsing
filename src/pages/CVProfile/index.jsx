@@ -14,17 +14,17 @@ import {
   string,
   showPdf,
 } from "../../utilities";
-import { DownOutlined } from "@ant-design/icons";
+import { HiDotsHorizontal } from "react-icons/hi";
 import { GrAttachment } from "react-icons/gr";
 import {
   Button,
   Dropdown,
-  Space,
   Menu,
   message,
   Table,
   Modal,
   Form,
+  Tooltip,
 } from "antd";
 import {
   FaUserCheck,
@@ -232,12 +232,6 @@ const CVprofile = () => {
           ],
           icon: <FcShare />,
         },
-        {
-          label: "Edit",
-          key: "4",
-          icon: <FaUserEdit />,
-          onClick: () => navigateTo(`/cv/update/${userData.user.id}`),
-        },
         user.data[0].type === 1 && {
           label: "Delete CV",
           key: "7",
@@ -432,17 +426,38 @@ const CVprofile = () => {
               initial="hidden"
             >
               <m.div className="cvprofile-header-first-part" variants={item}>
-                <img
-                  className={"cvprofile-picture"}
-                  src={
-                    userData.user.image
-                      ? `/files/images/${userData.user.image}`
-                      : checkImageIcon(userData.user.gender)
+                <Tooltip
+                  title={
+                    dataParams.type === "app"
+                      ? "Click to copy the Oman Jobs profile"
+                      : ""
                   }
-                  alt="user"
-                  width={"170px"}
-                  height={"170px"}
-                />
+                >
+                  <img
+                    className={"cvprofile-picture"}
+                    src={
+                      userData.user.image
+                        ? `/files/images/${userData.user.image}`
+                        : checkImageIcon(userData.user.gender)
+                    }
+                    alt="user"
+                    width={"170px"}
+                    height={"170px"}
+                    onClick={() => {
+                      const name = `${userData.user.name} ${userData.user.job}`
+                        .replace(/\s+/g, "-")
+                        .replace(/\./g, "");
+                      dataParams.type === "app" &&
+                        message.success("Link copied to your clipboard");
+                      return (
+                        dataParams.type === "app" &&
+                        navigator.clipboard.writeText(
+                          `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+                        )
+                      );
+                    }}
+                  />
+                </Tooltip>
                 <div className="text-orange bolder large-text">
                   {userData.user.name}
                 </div>
@@ -528,8 +543,9 @@ const CVprofile = () => {
                 {dataParams.type === "app" && (
                   <Dropdown.Button
                     className="custom-profile-button"
-                    onClick={() => null}
+                    onClick={() => navigateTo(`/cv/update/${userData.user.id}`)}
                     overlay={menu}
+                    icon={<HiDotsHorizontal style={{ fontSize: "24px" }} />}
                   >
                     Edit Profile
                   </Dropdown.Button>

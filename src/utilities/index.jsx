@@ -297,22 +297,23 @@ export const updateStatus = (id, type, list, setList) => {
 };
 
 export const showPdf = (url, setLoading) => {
-  setLoading(true);
-  axios(`${url}/pdf`, {
+  setLoading && setLoading(true);
+  axios(`${url}`, {
     method: "GET",
     responseType: "blob", //Force to receive data in a Blob Format
   })
     .then((response) => {
       //Create a Blob from the PDF Stream
       const file = new Blob([response.data], { type: "application/pdf" });
+      console.log(response, file);
       //Build a URL from the file
       const fileURL = URL.createObjectURL(file);
       //Open the URL on new Window
       window.open(fileURL);
-      setLoading(false);
+      setLoading && setLoading(false);
     })
     .catch((error) => {
       message.error(error);
-      setLoading(false);
+      setLoading && setLoading(false);
     });
 };

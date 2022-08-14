@@ -247,7 +247,21 @@ const BuildCV = () => {
           }
         })
         .catch(function (response) {
-          message.error("Something Went Wrong!");
+          notification.error({
+            message: (
+              <div className="bold text-red">
+                {"Unable to create this profile"}
+              </div>
+            ),
+            description: (
+              <div className="bolder">{response.response.data.error}</div>
+            ),
+            duration: 6,
+          });
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
           setLoading(false);
         });
     } else {
