@@ -257,13 +257,19 @@ export const TriggerCvDownload = ({
   });
 };
 
-export const string = (str, isLoading) =>
-  isLoading === "loaded" &&
-  str
-    .split(/\r\n|\n/)
-    .map((line, i) =>
-      line === "" ? <br key={i} /> : <div key={i}>{line}</div>
-    );
+export const string = (str, isLoading) => {
+  if (typeof str !== "string") {
+    return "";
+  }
+  return (
+    isLoading === "loaded" &&
+    str
+      .split(/\r\n|\n/)
+      .map((line, i) =>
+        line === "" ? <br key={i} /> : <div key={i}>{line}</div>
+      )
+  );
+};
 
 export const skills = (userData, isLoading) =>
   (isLoading === "loaded" &&
