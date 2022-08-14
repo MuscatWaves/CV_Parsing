@@ -526,14 +526,13 @@ const CVprofile = () => {
               </m.div>
               <m.div className="experiences-list" variants={item}>
                 {dataParams.type === "app" && (
-                  <Dropdown overlay={menu}>
-                    <Button className="button-primary">
-                      <Space>
-                        More Options
-                        <DownOutlined />
-                      </Space>
-                    </Button>
-                  </Dropdown>
+                  <Dropdown.Button
+                    className="custom-profile-button"
+                    onClick={() => null}
+                    overlay={menu}
+                  >
+                    Edit Profile
+                  </Dropdown.Button>
                 )}
                 <m.div className="cvprofile-skills" variants={item}>
                   <div className="bolder large-text text-black">

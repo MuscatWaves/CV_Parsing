@@ -345,6 +345,15 @@ p {
   margin: 2rem 0;
 }
 
+.filter-modal-button {
+  margin-top: 0px !important;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 1.1rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
 /* Custom Animations */
 
 @keyframes fade-in {

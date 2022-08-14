@@ -201,6 +201,24 @@
   animation: glow 1s infinite alternate;
 }
 
+.custom-profile-button > button {
+  background-color: #f07d00;
+  border: none;
+  color: #fff;
+  border: 1px solid #f07d00;
+  margin: 0.5rem;
+}
+
+.custom-profile-button > button:nth-child(1) {
+  width: 80%;
+  border-radius: 20px !important;
+}
+
+.custom-profile-button > button:nth-child(2) {
+  width: 20%;
+  border-radius: 20px !important;
+}
+
 @media screen and (max-width: 1200px) {
   .cvprofile-body {
     display: flex;
