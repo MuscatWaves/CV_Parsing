@@ -176,7 +176,21 @@ const BuildEducation = () => {
               title="Experience"
               description="Work Experience of the candidate"
             />
-            <Step title="Upload CV & Picture" />
+            <Step
+              title="Upload CV & Picture"
+              description={
+                <Button
+                  type="primary"
+                  ghost
+                  onClick={() => {
+                    navigate(`/searchcv/profile/app/${dataParams.id}`);
+                  }}
+                  disabled
+                >
+                  Complete Setup
+                </Button>
+              }
+            />
           </Steps>
         </div>
       </div>

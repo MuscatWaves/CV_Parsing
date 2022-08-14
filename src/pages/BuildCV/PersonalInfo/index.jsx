@@ -329,7 +329,22 @@ const BuildCV = () => {
               description="Work Experience of the candidate"
               disabled={!dataParams.id}
             />
-            <Step title="Upload CV & Picture" disabled={!dataParams.id} />
+            <Step
+              title="Upload CV & Picture"
+              disabled={!dataParams.id}
+              description={
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    navigate(`/searchcv/profile/app/${dataParams.id}`);
+                  }}
+                  ghost
+                  disabled
+                >
+                  Complete Setup
+                </Button>
+              }
+            />
           </Steps>
         </div>
       </div>
@@ -469,15 +484,10 @@ const BuildCV = () => {
                 </Form.Item>
               )}
               <Form.Item label="Skills" name="skills" className="two-column">
-                <Input.TextArea />
+                <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
               </Form.Item>
-              <Form.Item
-                label="Address"
-                name="address"
-                className="two-column"
-                autoSize={{ minRows: 3, maxRows: 6 }}
-              >
-                <Input.TextArea />
+              <Form.Item label="Address" name="address" className="two-column">
+                <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
               </Form.Item>
               <Form.Item
                 className="two-column"

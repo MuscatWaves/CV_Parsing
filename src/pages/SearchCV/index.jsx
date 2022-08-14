@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { Table, message, Pagination, Button, Input, Popover } from "antd";
+import {
+  Table,
+  message,
+  Pagination,
+  Button,
+  Input,
+  Popover,
+  Tooltip,
+} from "antd";
 import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 import { RiMessage3Fill } from "react-icons/ri";
@@ -121,13 +129,16 @@ const SearchCV = () => {
         setTotal(Data.data.TotalDisplay[0].total);
       } else {
         if (Data.status === 201) {
-          message.error(Data.data.error, "error");
+          message.error(Data.data.error);
+          setLoading(false);
         } else {
-          message.error("Something Went Wrong!");
+          message.error("Ouch, Something Went Terribly Wrong!");
+          setLoading(false);
         }
       }
     } catch (err) {
-      message.error("Something Went Wrong!");
+      message.error(err.response.data.error);
+      setLoading(false);
     }
   };
 
@@ -136,16 +147,31 @@ const SearchCV = () => {
       title: "Image",
       width: "120px",
       render: (record) => (
-        <img
-          src={
-            record.image
-              ? `/files/images/${record.image}`
-              : checkImageIcon(record.gender)
-          }
-          alt={"User"}
-          width={90}
-          className="image-user"
-        />
+        <Tooltip
+          title="Click to copy the Oman Jobs profile"
+          placement="right"
+          mouseEnterDelay={1}
+        >
+          <img
+            className="image-user"
+            src={
+              record.image
+                ? `/files/images/${record.image}`
+                : checkImageIcon(record.gender)
+            }
+            alt="user"
+            width={90}
+            onClick={() => {
+              const name = `${record.name} ${record.job}`
+                .replace(/\s+/g, "-")
+                .replace(/\./g, "");
+              message.success("Link copied to your clipboard");
+              navigator.clipboard.writeText(
+                `https://share.omanjobs.om/cv/${record.id}/${name}`
+              );
+            }}
+          />
+        </Tooltip>
       ),
     },
     {

@@ -183,7 +183,21 @@ const BuildEducation = () => {
                 </div>
               }
             />
-            <Step title="Upload CV & Picture" />
+            <Step
+              title="Upload CV & Picture"
+              description={
+                <Button
+                  type="primary"
+                  ghost
+                  onClick={() => {
+                    navigate(`/searchcv/profile/app/${dataParams.id}`);
+                  }}
+                  disabled
+                >
+                  Complete Setup
+                </Button>
+              }
+            />
           </Steps>
         </div>
       </div>

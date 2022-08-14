@@ -128,6 +128,17 @@ const UpdateCvPic = () => {
               title={
                 <div className="bolder text-black">Upload CV & Picture</div>
               }
+              description={
+                <Button
+                  type="primary"
+                  ghost
+                  onClick={() => {
+                    navigate(`/searchcv/profile/app/${dataParams.id}`);
+                  }}
+                >
+                  Complete Setup
+                </Button>
+              }
             />
           </Steps>
         </div>
