@@ -5,7 +5,7 @@ import {
   Drawer,
   Input,
   Switch,
-  // Checkbox,
+  Checkbox,
   message,
   Popconfirm,
 } from "antd";
@@ -21,7 +21,7 @@ const UserForm = ({
   getData,
 }) => {
   const [form] = Form.useForm();
-  // const [newPassword, setNewPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const cookies = new Cookies();
   const token = cookies.get("token");
@@ -30,15 +30,15 @@ const UserForm = ({
     setModal(false);
     setEditData(null);
   };
-  // const onPasswordNeed = (e) => {
-  //   setNewPassword(e.target.checked);
-  // };
+  const onPasswordNeed = (e) => {
+    setNewPassword(e.target.checked);
+  };
 
   const handleUpdateUser = async (values, status = editData?.status) => {
     var bodyFormDataUpdate = new FormData();
     editData && bodyFormDataUpdate.append("id", editData.id);
     bodyFormDataUpdate.append("name", values.name);
-    // newPassword && bodyFormDataUpdate.append("password", values.password);
+    newPassword && bodyFormDataUpdate.append("password", values.password);
     !editData && bodyFormDataUpdate.append("password", values.password);
     bodyFormDataUpdate.append("email", values.email);
     bodyFormDataUpdate.append(
@@ -165,28 +165,28 @@ const UserForm = ({
               disabled={editData}
             />
           </Form.Item>
-          {/* {editData && (
-          <div className="small-padding-bottom">
-            <Checkbox onChange={onPasswordNeed}>
-              Need to Update Password
-            </Checkbox>
-          </div>
-        )} */}
-          {/* {newPassword && (
-          <Form.Item
-            name="password"
-            className="zoom-in-animation"
-            label={"New Password"}
-            rules={[
-              {
-                required: true,
-                message: "No Password provided",
-              },
-            ]}
-          >
-            <Password placeholder={"Enter name of the user"} />
-          </Form.Item>
-        )} */}
+          {editData && (
+            <div className="small-padding-bottom">
+              <Checkbox onChange={onPasswordNeed}>
+                Need to Update Password
+              </Checkbox>
+            </div>
+          )}
+          {newPassword && (
+            <Form.Item
+              name="password"
+              className="zoom-in-animation"
+              label={"New Password"}
+              rules={[
+                {
+                  required: true,
+                  message: "No Password provided",
+                },
+              ]}
+            >
+              <Password placeholder={"Enter name of the user"} />
+            </Form.Item>
+          )}
           {!editData && (
             <Form.Item
               name="password"
