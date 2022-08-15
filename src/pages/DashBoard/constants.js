@@ -12,7 +12,7 @@ export const cards = (isLoggedIn) => [
       icon: TbFileUpload,
       title: "Upload CV",
       description: "To upload bulk CV's for parsing",
-      permission: isLoggedIn.ucaccess === "0" ? true : false,
+      permission: isLoggedIn.uploadcv_access === 0 ? true : false,
       path: "/uploadcv",
     },
     {
@@ -21,7 +21,7 @@ export const cards = (isLoggedIn) => [
       icon: FiUserX,
       title: "Rejected CV",
       description: "Here are the list of the Rejected CV by API.",
-      permission: isLoggedIn.rcaccess === "0" ? true : false,
+      permission: isLoggedIn.rejectedcv_access === 0 ? true : false,
       path: "/rejectedcv",
     },
     {
@@ -30,7 +30,7 @@ export const cards = (isLoggedIn) => [
       icon: RiUserSearchLine,
       title: "Search CV",
       description: "Here, You can view all the CV with profile details.",
-      permission: isLoggedIn.scaccess === "0" ? true : false,
+      permission: isLoggedIn.searchcv_access === 0 ? true : false,
       path: "/searchcv",
     },
     {
@@ -39,7 +39,7 @@ export const cards = (isLoggedIn) => [
       icon: RiFileUserLine,
       title: "Build CV",
       description: "Here you can Create CV for Jobseeker or Modify the CV.",
-      permission: isLoggedIn.bcaccess === "0" ? true : false,
+      permission: isLoggedIn.buildcv_access === 0 ? true : false,
       path: "/cv/create",
     },
     {
@@ -49,7 +49,7 @@ export const cards = (isLoggedIn) => [
       title: "Add/Manage User",
       description:
         "Here you can add/manage account to provide the access to this dashboard.",
-      permission: isLoggedIn.type === "1" ? true : false,
+      permission: isLoggedIn.type === 1 ? true : false,
       path: "/userManage",
     },
     {
@@ -59,7 +59,7 @@ export const cards = (isLoggedIn) => [
       title: "User Report",
       description:
         "Here you can View the User Report. How many CV uploaded by user.",
-      permission: isLoggedIn.type === "1" ? true : false,
+      permission: isLoggedIn.userreport_access === 0 ? true : false,
       path: "/userReport",
     },
   ];

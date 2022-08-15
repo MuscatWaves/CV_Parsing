@@ -14,15 +14,6 @@
   margin-bottom: 1rem;
 }
 
-.filter-modal-button {
-  margin-top: 0px !important;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  padding: 1.1rem;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
 .filter-icon {
   font-size: 20px;
   padding-right: 5px;
@@ -39,7 +30,7 @@
 }
 
 .filter-search-button {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }
 
 .filter-section-division {

@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import { Table, message, Pagination, Button, Input, Popover } from "antd";
+import {
+  Table,
+  message,
+  Pagination,
+  Button,
+  Input,
+  Popover,
+  Tooltip,
+} from "antd";
 import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 import { RiMessage3Fill } from "react-icons/ri";
@@ -45,11 +53,11 @@ const SearchCV = () => {
 
   const { data: nationalityResult } = useQuery(
     ["nationality"],
-    () => axios.get("/api/countget.php?nationality=true"),
+    () => axios.get("/api/nationality"),
     {
       refetchOnWindowFocus: false,
       select: (data) => {
-        const newData = data.data.map((item) => ({
+        const newData = data.data.data.map((item) => ({
           label: `${!item.nationality ? "None" : item.nationality} - (${
             !item.nationality ? "All" : item.cnt
           })`,
@@ -62,11 +70,11 @@ const SearchCV = () => {
 
   const { data: jobCategoryResult } = useQuery(
     ["category"],
-    () => axios.get("/api/countget.php?category=true"),
+    () => axios.get("/api/category"),
     {
       refetchOnWindowFocus: false,
       select: (data) => {
-        const newData = data.data.map((item) => ({
+        const newData = data.data.data.map((item) => ({
           label: `${!item.category ? "None" : item.category} - (${
             !item.category ? "All" : item.cnt
           })`,
@@ -98,38 +106,39 @@ const SearchCV = () => {
     setLoading(true);
     let config = {
       headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Access-Control-Allow-Origin": "*",
+        Authorization: token,
       },
       params: {
-        row: page * 10 - 10,
-        MaritalStatus: data.MaritalStatus,
-        searchByFromdate: data.SearchByFromdate,
-        searchByTodate: data.SearchByTodate,
-        JobTitle: data.JobTitle,
-        Age: data.Age,
+        page: page,
+        search: data.Search,
         JobCategory: data.JobCategory,
+        Age: data.Age,
+        JobTitle: data.JobTitle,
         Nationality: data.Nationality,
         Gender: data.Gender,
-        Search: data.Search,
+        MaritalStatus: data.MaritalStatus,
+        FromDate: data.SearchByFromdate,
+        ToDate: data.SearchByTodate,
       },
     };
     try {
-      const Data = await axios.get(`/api/searchcv.php`, config);
+      const Data = await axios.get(`/api/cv`, config);
       if (Data.status === 200) {
         setLoading(false);
         setData(Data.data);
-        setTotal(Data.data.TotalDisplayRecords);
+        setTotal(Data.data.TotalDisplay[0].total);
       } else {
         if (Data.status === 201) {
-          message.error(Data.data.error, "error");
+          message.error(Data.data.error);
+          setLoading(false);
         } else {
-          message.error("Something Went Wrong!", "error");
+          message.error("Ouch, Something Went Terribly Wrong!");
+          setLoading(false);
         }
       }
     } catch (err) {
-      message.error("Something Went Wrong!", "error");
+      message.error(err.response.data.error);
+      setLoading(false);
     }
   };
 
@@ -138,16 +147,31 @@ const SearchCV = () => {
       title: "Image",
       width: "120px",
       render: (record) => (
-        <img
-          src={
-            record.image
-              ? `/files/images/${record.image}`
-              : checkImageIcon(record.gender)
-          }
-          alt={"User"}
-          width={90}
-          className="image-user"
-        />
+        <Tooltip
+          title="Click to copy the Oman Jobs profile"
+          placement="right"
+          mouseEnterDelay={1}
+        >
+          <img
+            className="image-user"
+            src={
+              record.image
+                ? `/files/images/${record.image}`
+                : checkImageIcon(record.gender)
+            }
+            alt="user"
+            width={90}
+            onClick={() => {
+              const name = `${record.name} ${record.job}`
+                .replace(/\s+/g, "-")
+                .replace(/\./g, "");
+              message.success("Link copied to your clipboard");
+              navigator.clipboard.writeText(
+                `https://share.omanjobs.om/cv/${record.id}/${name}`
+              );
+            }}
+          />
+        </Tooltip>
       ),
     },
     {
@@ -178,7 +202,7 @@ const SearchCV = () => {
     { title: "Job", dataIndex: "job", width: "250px" },
     {
       title: "Education",
-      dataIndex: "education",
+      dataIndex: "educationname",
       ellipsis: true,
     },
     {
@@ -404,7 +428,7 @@ const SearchCV = () => {
             <Pagination
               current={page}
               onChange={onChange}
-              total={data.TotalDisplayRecords}
+              total={total}
               showSizeChanger={false}
             />
           </div>

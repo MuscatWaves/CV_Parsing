@@ -59,7 +59,7 @@ const CustomDatePicker = ({ date, selectDate }) => {
             options={month && year && makeDays()}
             onChange={(value) => {
               setDay(value);
-              selectDate(moment(`${year}-${month}-${value}`));
+              selectDate(moment(`${year}-${month}-${value}`, "YYYY/MM/DD"));
             }}
             placeholder={"Day"}
             disabled={!(month && year)}

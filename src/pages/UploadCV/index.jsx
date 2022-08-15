@@ -4,13 +4,14 @@ import Cookies from "universal-cookie";
 import Header from "../../components/Header";
 import jwt from "jsonwebtoken";
 import Navigation from "../../components/Navigation";
-import { message, Select } from "antd";
+import { Select } from "antd";
 import { removeUnderScore } from "../../utilities";
-import "./uploadcv.css";
 import Loader from "../../components/Loader";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
+import { useQuery } from "react-query";
 import FormData from "form-data";
+import "./uploadcv.css";
 
 const UploadCV = () => {
   const cookies = new Cookies();
@@ -19,86 +20,44 @@ const UploadCV = () => {
   const [data, setData] = useState({});
   const mainUser = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
   const [selectedCategory, setSelectedCategory] = useState("Accounting");
-  const [jobCategoryResult, setJobCategoryResult] = useState([]);
-  const [jobMenuLoading, setJobMenuLoading] = useState(false);
   const [files, setFiles] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState({});
 
-  const getJobCategoryCount = async () => {
-    setJobMenuLoading(true);
-    await axios({
-      method: "GET",
-      url: `/api/get.php?industry=true`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          const result = response.data.map((item) => ({
-            label: item.name,
-            value: item.name,
-          }));
-          setJobCategoryResult(result);
-          setJobMenuLoading(false);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
+  const onSuccess = (data) => {
+    const ourUser = data.data.data.filter(
+      (user) => user.id === Number(mainUser.data[0].id)
+    );
+    setData(ourUser[0]);
+    setLoading("loaded");
   };
 
-  const getAllUser = async () => {
-    setLoading("loading");
-    await axios({
-      method: "GET",
-      url: `/api/userlist.php`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+  const { data: jobCategoryResult, isFetching } = useQuery(
+    ["category"],
+    () => axios.get("/api/category"),
+    {
+      refetchOnWindowFocus: false,
+      select: (data) => {
+        const newData = data.data.data.map((item) => ({
+          label: `${!item.category ? "None" : item.category} - (${
+            !item.category ? "All" : item.cnt
+          })`,
+          value: `${!item.category ? "" : item.category}`,
+        }));
+        return newData;
       },
-      params: {
-        row: 0,
-      },
-    })
-      .then(function (response) {
-        if (response.status === 200) {
-          setLoading("loaded");
-          const ourUser = response.data.data.filter(
-            (user) => user.id === Number(mainUser.id)
-          );
-          setData(ourUser[0]);
-        } else {
-          if (response.status === 201) {
-            message.error(response.data.error, "error");
-          } else {
-            message.error("Something Went Wrong!", "error");
-          }
-        }
-      })
-      .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
-      });
-  };
+    }
+  );
 
-  useEffect(() => {
-    getAllUser();
-    getJobCategoryCount();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    document.title = "Upload CV";
-  }, []);
+  useQuery(
+    ["usermanage"],
+    () =>
+      axios.get("/api/user", {
+        headers: {
+          Authorization: token,
+        },
+      }),
+    { refetchOnWindowFocus: false, onSuccess }
+  );
 
   useEffect(() => {
     if (token) {
@@ -149,7 +108,7 @@ const UploadCV = () => {
                 <Select
                   placeholder={"Select the Job category"}
                   options={jobCategoryResult}
-                  loading={jobMenuLoading}
+                  loading={isFetching}
                   value={selectedCategory}
                   onChange={(value) => setSelectedCategory(value)}
                 />

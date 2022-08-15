@@ -6,6 +6,7 @@ import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import Header from "../../components/Header";
 import axios from "axios";
 import Navigation from "../../components/Navigation";
+import Cookies from "universal-cookie";
 import moment from "moment";
 import UserForm from "./UserForm";
 import { useQuery } from "react-query";
@@ -14,11 +15,22 @@ import { m } from "framer-motion";
 const UserManage = () => {
   const [isModalOpen, toggleModal] = useState(false);
   const [editData, setEditData] = useState(null);
+  const cookies = new Cookies();
+  const token = cookies.get("token");
   const {
     data = [],
     isFetching,
     refetch,
-  } = useQuery(["usermanage"], () => axios.get("/api/userlist.php"));
+  } = useQuery(
+    ["usermanage"],
+    () =>
+      axios.get("/api/user", {
+        headers: {
+          Authorization: token,
+        },
+      }),
+    { refetchOnWindowFocus: false }
+  );
 
   useEffect(() => {
     document.title = "User Manage";
@@ -79,6 +91,11 @@ const UserManage = () => {
         {
           title: "Build CV",
           render: (record) => renderCheckMark(record.buildcv_access),
+          align: "center",
+        },
+        {
+          title: "User Reports",
+          render: (record) => renderCheckMark(record.userreport_access),
           align: "center",
         },
       ],

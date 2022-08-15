@@ -24,8 +24,8 @@ const DashBoard = () => {
     document.title = "Dashboard";
     if (token) {
       try {
-        var user = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
-        setLoggedIn(user);
+        var user = token && jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+        setLoggedIn(user.data[0]);
       } catch (err) {}
     }
   }, [token]);

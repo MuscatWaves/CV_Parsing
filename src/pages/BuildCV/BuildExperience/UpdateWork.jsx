@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Modal, Input, Select, message } from "antd";
-import { monthSelectionLabel, makeYear } from "../../utilities";
+import { monthSelectionLabel, makeYear } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -29,61 +29,55 @@ const UpdateWork = ({
   const handleUploadModal = async (values) => {
     var bodyFormDataUpdate = new FormData();
     if (!data.id) {
-      bodyFormDataUpdate.append("add_experience", true);
-      bodyFormDataUpdate.append("id", userId);
-      bodyFormDataUpdate.append("ex_name[]", values.ex_name || "");
-      bodyFormDataUpdate.append("desc[]", values.desc || "");
-      bodyFormDataUpdate.append("desg[]", values.desg || "");
-      bodyFormDataUpdate.append("ex_from_year[]", values.ex_from_year || "");
-      bodyFormDataUpdate.append("ex_from_month[]", values.ex_from_month || "");
-      bodyFormDataUpdate.append("ex_to_year[]", values.ex_to_year || "");
-      bodyFormDataUpdate.append("ex_to_month[]", values.ex_to_month || "");
+      bodyFormDataUpdate.append("userid", userId);
+      bodyFormDataUpdate.append("name", values.ex_name || "");
+      bodyFormDataUpdate.append("description", values.desc || "");
+      bodyFormDataUpdate.append("designation", values.desg || "");
+      bodyFormDataUpdate.append("from_year", values.ex_from_year || "");
+      bodyFormDataUpdate.append("from_month", values.ex_from_month || "");
+      bodyFormDataUpdate.append("to_year", values.ex_to_year || "");
+      bodyFormDataUpdate.append("to_month", values.ex_to_month || "");
     } else {
-      bodyFormDataUpdate.append("update_experience", true);
       bodyFormDataUpdate.append("id", data.id);
-      bodyFormDataUpdate.append("ex_name", values.ex_name || "");
-      bodyFormDataUpdate.append("desc", values.desc || "");
-      bodyFormDataUpdate.append("desg", values.desg || "");
-      bodyFormDataUpdate.append("ex_from_year", values.ex_from_year || "");
-      bodyFormDataUpdate.append("ex_from_month", values.ex_from_month || "");
-      bodyFormDataUpdate.append("ex_to_year", values.ex_to_year || "");
-      bodyFormDataUpdate.append("ex_to_month", values.ex_to_month || "");
+      bodyFormDataUpdate.append("userid", userId);
+      bodyFormDataUpdate.append("name", values.ex_name || "");
+      bodyFormDataUpdate.append("description", values.desc || "");
+      bodyFormDataUpdate.append("designation", values.desg || "");
+      bodyFormDataUpdate.append("from_year", values.ex_from_year || "");
+      bodyFormDataUpdate.append("from_month", values.ex_from_month || "");
+      bodyFormDataUpdate.append("to_year", values.ex_to_year || "");
+      bodyFormDataUpdate.append("to_month", values.ex_to_month || "");
     }
 
     setLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: !data.id ? "POST" : "PUT",
+      url: `/api/experience`,
       data: bodyFormDataUpdate,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
-          !data.id
-            ? message.success("The Work Experience has been sucessfully added")
-            : message.success(
-                "The Work Experience has been sucessfully updated"
-              );
+          message.success(response.data.message);
           toggleVisible(false);
+          getUserData();
           setData({});
           form.resetFields();
-          setPageLoading("loading");
-          getUserData(dataParams, setUserData, setLoading);
-          setLoading(false);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
+            setLoading(false);
           } else {
             message.error("Something Went Wrong!", "error");
+            setLoading(false);
           }
         }
       })
       .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
+        message.error(response.data.error);
+        setLoading(false);
       });
   };
 

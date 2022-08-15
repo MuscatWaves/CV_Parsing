@@ -169,26 +169,6 @@
   margin: 1.5rem;
 }
 
-.hover-blue {
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.hover-blue:hover {
-  transform: scale(1.05);
-  color: #51a6f5;
-}
-
-.hover-red {
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.hover-red:hover {
-  transform: scale(1.05);
-  color: #ff4c41;
-}
-
 .plus-button-cv-profile {
   font-size: 32px;
   color: #f07d00;
@@ -219,6 +199,24 @@
   background-color: #d5d5d542;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   animation: glow 1s infinite alternate;
+}
+
+.custom-profile-button > button {
+  background-color: #f07d00;
+  border: none;
+  color: #fff;
+  border: 1px solid #f07d00;
+  margin: 0.5rem;
+}
+
+.custom-profile-button > button:nth-child(1) {
+  width: 80%;
+  border-radius: 20px !important;
+}
+
+.custom-profile-button > button:nth-child(2) {
+  width: 20%;
+  border-radius: 20px !important;
 }
 
 @media screen and (max-width: 1200px) {

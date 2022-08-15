@@ -12,26 +12,20 @@ import {
   TriggerCvDownload,
   skills,
   string,
+  showPdf,
+  showImage,
 } from "../../utilities";
-import {
-  DownOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
+import { HiDotsHorizontal } from "react-icons/hi";
 import { GrAttachment } from "react-icons/gr";
 import {
   Button,
   Dropdown,
-  Space,
   Menu,
   message,
   Table,
   Modal,
-  Select,
   Form,
-  Upload,
+  Tooltip,
 } from "antd";
 import {
   FaUserCheck,
@@ -46,25 +40,20 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../components/Loader";
-import { categorySelection, container, item } from "./constants.ts";
+import { container, item } from "./constants.ts";
 import jwt from "jsonwebtoken";
 import "./cvprofile.css";
 import { useNavigate } from "react-router-dom";
 import ojimage from "../../images/oj-small.png";
-import UpdateWork from "./UpdateWork";
-import UpdateEducation from "./UpdateEducation";
 import { AnimatePresence, m } from "framer-motion";
 import {
   lastSeen,
   getUserData,
-  getUserDataPublic,
   getAllUserManageList,
   deleteData,
-  handleUploadModal,
-  deleteEducationData,
-  deleteWorkExpData,
   deleteFullCV,
 } from "./endpoints";
+import MultipleFileUpload from "../../components/MultipleFileUpload";
 
 const CVprofile = () => {
   const dataParams = useParams();
@@ -77,51 +66,32 @@ const CVprofile = () => {
     educations: [],
     experience: [],
   });
-  const [isLoading, setLoading] = useState("");
+
+  const [isLoading, setLoading] = useState("none");
   const [tableLoading, setTableLoading] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
   const [userList, setUserList] = useState([]);
   const [deletionData, setDeletionData] = useState("");
   const [isUploadModal, toggleUploadModal] = useState(false);
-  const [fileList, setFileList] = useState([]);
   const CvDownload = useRef();
   const [isPdfDownloadLoading, setPdfDownloadLoading] = useState(false);
-
-  // Update Work Experience
-
-  const [isUpdateWeModal, setUpdateWeModal] = useState(false);
-  const [updateWeData, setUpdateWeData] = useState({});
-  const [isDeleteWeModal, setDeleteWeModal] = useState(false);
-  const [deleteWeData, setDeleteWeData] = useState("");
-  const [isDeleteWeLoading, setDeleteWeLoading] = useState(false);
-
-  // Update Education
-
-  const [isUpdateEduModal, setUpdateEduModal] = useState(false);
-  const [updateEduData, setUpdateEduData] = useState({});
-  const [isDeleteEduModal, setDeleteEduModal] = useState(false);
-  const [deleteEduData, setDeleteEduData] = useState("");
-  const [isDeleteEduLoading, setDeleteEduLoading] = useState(false);
+  const [cvViewLoad, setCvViewLoad] = useState(false);
 
   //Delete CV
 
   const [deleteCVModal, setDeleteCVModal] = useState(false);
   const [deleteCVLoading, setDeleteCVLoading] = useState(false);
 
+  //  Upload CV or pic
+
   const user =
-    dataParams.type === "app" &&
-    jwt.verify(token, process.env.REACT_APP_JWT_KEY);
+    (dataParams.type === "app" &&
+      token &&
+      jwt.verify(token, process.env.REACT_APP_JWT_KEY)) ||
+    "";
   const navigate = useNavigate();
   const navigateTo = (path) => {
     navigate(path);
-  };
-
-  const UploadProps = {
-    beforeUpload: (file) => {
-      setFileList([...fileList, file]);
-      return false;
-    },
-    // fileList,
   };
 
   const makeTitle = () => {
@@ -129,15 +99,19 @@ const CVprofile = () => {
   };
 
   useEffect(() => {
-    dataParams.type === "app"
-      ? getUserData(dataParams, setUserData, setLoading)
-      : getUserDataPublic(dataParams, setUserData, setLoading);
-    dataParams.type === "app" && getAllUserManageList(setUserList);
+    dataParams.type === "app" &&
+      user &&
+      getAllUserManageList(setUserList, token);
+    user && getUserData(dataParams, setUserData, setLoading);
+    dataParams.type !== "app" &&
+      getUserData(dataParams, setUserData, setLoading);
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    dataParams.type === "app" && lastSeen(user, userData); // eslint-disable-next-line
+    dataParams.type === "app" &&
+      isLoading === "loaded" &&
+      lastSeen(user, userData, token); // eslint-disable-next-line
   }, [isLoading]);
 
   const columns = [
@@ -148,9 +122,24 @@ const CVprofile = () => {
     {
       title: "File",
       render: (record) => (
-        <a href={`/files/docs/${record.name}`} target="_blank" rel="noreferrer">
+        <div
+          className="link pointer"
+          onClick={() => {
+            const type = checkWhichFile(record.name);
+            if (["pdf"].includes(type)) {
+              showPdf(
+                `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${record.name}`
+              );
+            }
+            if (["jpeg", "jpg", "png", "PNG"].includes(type)) {
+              showImage(
+                `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${record.name}`
+              );
+            }
+          }}
+        >
           {record.name}
-        </a>
+        </div>
       ),
     },
     {
@@ -186,7 +175,7 @@ const CVprofile = () => {
     },
   ];
 
-  const menu = (
+  const menu = dataParams.type === "app" && (
     <Menu
       items={[
         {
@@ -259,15 +248,10 @@ const CVprofile = () => {
           ],
           icon: <FcShare />,
         },
-        {
-          label: "Edit",
-          key: "4",
-          icon: <FaUserEdit />,
-          onClick: () => navigateTo(`/cv/update/${userData.user.id}`),
-        },
-        user.type === "1" && {
+        user.data[0].type === 1 && {
           label: "Delete CV",
-          key: "5",
+          key: "7",
+          danger: true,
           icon: <FaUserEdit />,
           onClick: () => {
             setDeleteCVModal(true);
@@ -302,105 +286,9 @@ const CVprofile = () => {
 
   const handleCancel = () => {
     toggleDeleteModal(false);
-    toggleUploadModal(false);
     setDeletionData("");
     form.resetFields();
   };
-
-  const uploadModal = () => (
-    <Modal
-      title="Upload Attachments"
-      visible={isUploadModal}
-      onCancel={handleCancel}
-      okText={"Submit"}
-      onOk={form.submit}
-      confirmLoading={tableLoading}
-    >
-      <Form
-        size="large"
-        layout="vertical"
-        onFinish={(values) =>
-          handleUploadModal(
-            values,
-            fileList,
-            setTableLoading,
-            userData,
-            dataParams,
-            setUserData,
-            setLoading,
-            toggleUploadModal,
-            form
-          )
-        }
-        form={form}
-        scrollToFirstError={true}
-      >
-        <Form.List name="attachments">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space
-                  key={key}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, auto)",
-                    marginBottom: 8,
-                  }}
-                  align="baseline"
-                >
-                  <Form.Item
-                    {...restField}
-                    name={[name, "category[]"]}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Missing category",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder={"Select Category"}
-                      options={categorySelection}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    {...restField}
-                    name="file[]"
-                    valuePropName={"file"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Missing Uploaded File",
-                      },
-                    ]}
-                  >
-                    <Upload
-                      {...UploadProps}
-                      maxCount={1}
-                      showUploadList={{ showRemoveIcon: false }}
-                    >
-                      <Button icon={<UploadOutlined />}>Click to upload</Button>
-                    </Upload>
-                  </Form.Item>
-                  <MinusCircleOutlined onClick={() => remove(name)} />
-                </Space>
-              ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  Add Attachment
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
-      </Form>
-    </Modal>
-  );
 
   const makeEducationSection = () => (
     <div className="flex-gap-column">
@@ -410,26 +298,6 @@ const CVprofile = () => {
             <div className="medium-text bolder text-orange">
               {education.name}
             </div>
-            {dataParams.type === "app" && (
-              <div className="flex-small-gap">
-                <AiFillEdit
-                  className="hover-blue"
-                  style={{ fontSize: "22px" }}
-                  onClick={() => {
-                    setUpdateEduData(education);
-                    setUpdateEduModal(true);
-                  }}
-                />
-                <AiFillDelete
-                  className="hover-red"
-                  style={{ fontSize: "22px" }}
-                  onClick={() => {
-                    setDeleteEduData(education);
-                    setDeleteEduModal(true);
-                  }}
-                />
-              </div>
-            )}
           </div>
           <div className="medium-text bolder">{education.college}</div>
           <div className="text-light-grey bold">{`${
@@ -451,26 +319,6 @@ const CVprofile = () => {
         <div key={work.id}>
           <div className="flex-between" style={{ padding: 0 }}>
             <div className="medium-2-text bolder text-orange">{work.name}</div>
-            {dataParams.type === "app" && (
-              <div className="flex-small-gap">
-                <AiFillEdit
-                  style={{ fontSize: "22px" }}
-                  onClick={() => {
-                    setUpdateWeData(work);
-                    setUpdateWeModal(true);
-                  }}
-                  className="hover-blue"
-                />
-                <AiFillDelete
-                  style={{ fontSize: "22px" }}
-                  className="hover-red"
-                  onClick={() => {
-                    setDeleteWeData(work);
-                    setDeleteWeModal(true);
-                  }}
-                />
-              </div>
-            )}
           </div>
           <div className="medium-text bolder">{work.designation}</div>
           <div className="text-light-grey bold">{`${
@@ -517,8 +365,16 @@ const CVprofile = () => {
       )}
 
       {/* Attachments Section Modals*/}
+      <MultipleFileUpload
+        isUploadModal={isUploadModal}
+        toggleUploadModal={toggleUploadModal}
+        userId={dataParams.id}
+        dataParams={dataParams}
+        setUserData={setUserData}
+        setLoading={setLoading}
+        getUserData={getUserData}
+      />
 
-      {uploadModal()}
       <Modal
         title="Delete Confirmation"
         visible={deleteModal}
@@ -539,86 +395,6 @@ const CVprofile = () => {
         confirmLoading={tableLoading}
       >
         <p>{`Are you sure you want to delete "${deletionData.name}" from attachments?`}</p>
-      </Modal>
-
-      {/* Work Experience */}
-
-      {isUpdateWeModal && (
-        <UpdateWork
-          data={updateWeData}
-          setData={setUpdateWeData}
-          visible={isUpdateWeModal}
-          toggleVisible={setUpdateWeModal}
-          getUserData={getUserData}
-          setPageLoading={setLoading}
-          userId={userData.user.id}
-          setUserData={setUserData}
-          dataParams={dataParams}
-        />
-      )}
-      <Modal
-        title="Delete Work Experience Confirmation"
-        visible={isDeleteWeModal}
-        onOk={() =>
-          deleteWorkExpData(
-            deleteWeData,
-            setDeleteWeLoading,
-            setDeleteWeData,
-            setDeleteWeModal,
-            setLoading,
-            dataParams,
-            setUserData
-          )
-        }
-        onCancel={() => {
-          setDeleteWeData("");
-          setDeleteWeModal(false);
-        }}
-        okText={"Delete"}
-        okType={"danger"}
-        confirmLoading={isDeleteWeLoading}
-      >
-        <p>{`Are you sure you want to delete "${deleteWeData.name}" from Experience?`}</p>
-      </Modal>
-
-      {/* Education */}
-
-      {isUpdateEduModal && (
-        <UpdateEducation
-          data={updateEduData}
-          setData={setUpdateEduData}
-          visible={isUpdateEduModal}
-          toggleVisible={setUpdateEduModal}
-          getUserData={getUserData}
-          setPageLoading={setLoading}
-          userId={userData.user.id}
-          dataParams={dataParams}
-          setUserData={setUserData}
-        />
-      )}
-      <Modal
-        title="Delete Education Confirmation"
-        visible={isDeleteEduModal}
-        onOk={() =>
-          deleteEducationData(
-            deleteEduData,
-            setDeleteEduLoading,
-            setDeleteEduModal,
-            setLoading,
-            dataParams,
-            setUserData,
-            setDeleteEduData
-          )
-        }
-        onCancel={() => {
-          setDeleteEduData("");
-          setDeleteEduModal(false);
-        }}
-        okText={"Delete"}
-        okType={"danger"}
-        confirmLoading={isDeleteEduLoading}
-      >
-        <p>{`Are you sure you want to delete "${deleteEduData.name}" from Education?`}</p>
       </Modal>
 
       {/* Delete CV */}
@@ -667,17 +443,38 @@ const CVprofile = () => {
               initial="hidden"
             >
               <m.div className="cvprofile-header-first-part" variants={item}>
-                <img
-                  className={"cvprofile-picture"}
-                  src={
-                    userData.user.image
-                      ? `/files/images/${userData.user.image}`
-                      : checkImageIcon(userData.user.gender)
+                <Tooltip
+                  title={
+                    dataParams.type === "app"
+                      ? "Click to copy the Oman Jobs profile"
+                      : ""
                   }
-                  alt="user"
-                  width={"170px"}
-                  height={"170px"}
-                />
+                >
+                  <img
+                    className={"cvprofile-picture"}
+                    src={
+                      userData.user.image
+                        ? `/files/images/${userData.user.image}`
+                        : checkImageIcon(userData.user.gender)
+                    }
+                    alt="user"
+                    width={"170px"}
+                    height={"170px"}
+                    onClick={() => {
+                      const name = `${userData.user.name} ${userData.user.job}`
+                        .replace(/\s+/g, "-")
+                        .replace(/\./g, "");
+                      dataParams.type === "app" &&
+                        message.success("Link copied to your clipboard");
+                      return (
+                        dataParams.type === "app" &&
+                        navigator.clipboard.writeText(
+                          `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+                        )
+                      );
+                    }}
+                  />
+                </Tooltip>
                 <div className="text-orange bolder large-text">
                   {userData.user.name}
                 </div>
@@ -761,14 +558,14 @@ const CVprofile = () => {
               </m.div>
               <m.div className="experiences-list" variants={item}>
                 {dataParams.type === "app" && (
-                  <Dropdown overlay={menu}>
-                    <Button className="button-primary">
-                      <Space>
-                        More Options
-                        <DownOutlined />
-                      </Space>
-                    </Button>
-                  </Dropdown>
+                  <Dropdown.Button
+                    className="custom-profile-button"
+                    onClick={() => navigateTo(`/cv/update/${userData.user.id}`)}
+                    overlay={menu}
+                    icon={<HiDotsHorizontal style={{ fontSize: "24px" }} />}
+                  >
+                    Edit Profile
+                  </Dropdown.Button>
                 )}
                 <m.div className="cvprofile-skills" variants={item}>
                   <div className="bolder large-text text-black">
@@ -809,15 +606,6 @@ const CVprofile = () => {
                         >
                           Education
                         </div>
-                        {dataParams.type === "app" && (
-                          <AiOutlinePlus
-                            className="plus-button-cv-profile"
-                            onClick={() => {
-                              setUpdateEduData({});
-                              setUpdateEduModal(true);
-                            }}
-                          />
-                        )}
                       </div>
                       {makeEducationSection()}
                     </>
@@ -844,15 +632,6 @@ const CVprofile = () => {
                         <div className="bolder large-text text-black">
                           Work Experience
                         </div>
-                        {dataParams.type === "app" && (
-                          <AiOutlinePlus
-                            className="plus-button-cv-profile"
-                            onClick={() => {
-                              setUpdateWeData({});
-                              setUpdateWeModal(true);
-                            }}
-                          />
-                        )}
                       </div>
                       {makeExperienceSection()}
                     </>
@@ -889,23 +668,33 @@ const CVprofile = () => {
               {dataParams.type === "app" && (
                 <m.div className="grid-gather" variants={item}>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
-                    <object
-                      data={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                      type="application/pdf"
-                      width="100%"
-                      height="800px"
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "80px",
+                      }}
                     >
-                      <iframe
-                        title={"PDF file for Candidate Resume"}
-                        src={`https://api.omanjobs.om/files/cv/${userData.user.cv}#view=fitH`}
-                      ></iframe>
-                    </object>
+                      <Button
+                        type="primary"
+                        onClick={() =>
+                          showPdf(
+                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}#view=fitH`,
+                            setCvViewLoad
+                          )
+                        }
+                        loading={cvViewLoad}
+                      >
+                        View Original PDF
+                      </Button>
+                    </div>
                   )}
                   {(checkWhichFile(userData.user.cv) === "docx" ||
                     checkWhichFile(userData.user.cv) === "doc") && (
                     <iframe
                       title={"DOC file for Candidate Resume"}
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://api.omanjobs.om/files/cv/${userData.user.cv}`}
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.user.cv}`}
                       width="100%"
                       height="800px"
                       frameborder="0"
@@ -930,18 +719,30 @@ const CVprofile = () => {
                           {groupBy(userData.attachments, "category")[
                             section
                           ].map((attachment, index) => (
-                            <a
-                              href={`/files/docs/${attachment.name}`}
+                            <div
                               key={attachment.id}
-                              className={"flex-small-gap link"}
-                              target={"_blank"}
-                              rel="noreferrer"
+                              className={"flex-small-gap link pointer"}
+                              onClick={() => {
+                                const type = checkWhichFile(attachment.name);
+                                if (["pdf"].includes(type)) {
+                                  showPdf(
+                                    `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${attachment.name}`
+                                  );
+                                }
+                                if (
+                                  ["jpeg", "jpg", "png", "PNG"].includes(type)
+                                ) {
+                                  showImage(
+                                    `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/docs/${attachment.name}`
+                                  );
+                                }
+                              }}
                             >
                               <GrAttachment />
                               <div>{`${checkCategory(section)} - ${
                                 index + 1
                               }`}</div>
-                            </a>
+                            </div>
                           ))}
                         </div>
                       </div>

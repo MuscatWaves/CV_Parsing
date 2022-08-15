@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Modal, Input, Select, message } from "antd";
-import { monthSelectionLabel, makeYear } from "../../utilities";
+import { monthSelectionLabel, makeYear } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -29,38 +29,32 @@ const UpdateEducation = ({
   const handleUploadModal = async (values) => {
     var bodyFormDataUpdate = new FormData();
     if (!data.id) {
-      bodyFormDataUpdate.append("add_education", true);
-      bodyFormDataUpdate.append("id", userId);
-      bodyFormDataUpdate.append("edu_name[]", values.edu_name);
-      bodyFormDataUpdate.append("college[]", values.college);
-      bodyFormDataUpdate.append("edu_loc[]", values.edu_loc);
-      bodyFormDataUpdate.append("edu_from_year[]", values.edu_from_year || "");
-      bodyFormDataUpdate.append(
-        "edu_from_month[]",
-        values.edu_from_month || ""
-      );
-      bodyFormDataUpdate.append("edu_to_year[]", values.edu_to_year || "");
-      bodyFormDataUpdate.append("edu_to_month[]", values.edu_to_month || "");
-    } else {
-      bodyFormDataUpdate.append("update_education", true);
-      bodyFormDataUpdate.append("id", data.id);
-      bodyFormDataUpdate.append("edu_name", values.edu_name);
+      bodyFormDataUpdate.append("userid", userId);
+      bodyFormDataUpdate.append("name", values.edu_name);
       bodyFormDataUpdate.append("college", values.college);
-      bodyFormDataUpdate.append("edu_loc", values.edu_loc);
-      bodyFormDataUpdate.append("edu_from_year", values.edu_from_year || "");
-      bodyFormDataUpdate.append("edu_from_month", values.edu_from_month || "");
-      bodyFormDataUpdate.append("edu_to_year", values.edu_to_year || "");
-      bodyFormDataUpdate.append("edu_to_month", values.edu_to_month || "");
+      bodyFormDataUpdate.append("location", values.edu_loc);
+      bodyFormDataUpdate.append("from_year", values.edu_from_year || "");
+      bodyFormDataUpdate.append("from_month", values.edu_from_month || "");
+      bodyFormDataUpdate.append("to_year", values.edu_to_year || "");
+      bodyFormDataUpdate.append("to_month", values.edu_to_month || "");
+    } else {
+      bodyFormDataUpdate.append("id", data.id);
+      bodyFormDataUpdate.append("userid", userId);
+      bodyFormDataUpdate.append("name", values.edu_name);
+      bodyFormDataUpdate.append("college", values.college);
+      bodyFormDataUpdate.append("location", values.edu_loc);
+      bodyFormDataUpdate.append("from_year", values.edu_from_year || "");
+      bodyFormDataUpdate.append("from_month", values.edu_from_month || "");
+      bodyFormDataUpdate.append("to_year", values.edu_to_year || "");
+      bodyFormDataUpdate.append("to_month", values.edu_to_month || "");
     }
     setLoading(true);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
+      method: !data.id ? "POST" : "PUT",
+      url: `/api/education`,
       data: bodyFormDataUpdate,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
@@ -72,18 +66,21 @@ const UpdateEducation = ({
           setData({});
           form.resetFields();
           setPageLoading("loading");
-          getUserData(dataParams, setUserData, setLoading);
+          getUserData(dataParams, setUserData, setPageLoading);
           setLoading(false);
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            message.error(response.data.error);
+            setLoading(false);
           } else {
-            message.error("Something Went Wrong!", "error");
+            message.error("Something Went Wrong!");
+            setLoading(false);
           }
         }
       })
       .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
+        message.error(response.response.data.error);
+        setLoading(false);
       });
   };
 

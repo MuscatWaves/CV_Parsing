@@ -7,7 +7,6 @@ import { Table, message, Button, Pagination } from "antd";
 import { AiOutlineFileText } from "react-icons/ai";
 import "./rejectedcv.css";
 import moment from "moment";
-import FormData from "form-data";
 import { m } from "framer-motion";
 
 const RejectedCV = () => {
@@ -37,29 +36,28 @@ const RejectedCV = () => {
 
   const reScanCv = async () => {
     setReScanLoading(true);
-    var bodyFormData = new FormData();
-    bodyFormData.append("ReScan_Reject_CV", "ReScan_Reject_CV");
-    selectedRowKeys.forEach((file) => {
-      bodyFormData.append("searchIDs[]", file);
-    });
+    const newData = selectedRowKeys.map((data) => ({
+      id: data,
+    }));
+    var data = JSON.stringify(newData);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormData,
+      method: "PUT",
+      url: `/api/cv/rescan`,
+      data,
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
-          message.success("CV Queued for Rescan.", "success");
+          message.success("CV Queued for Rescan.");
           setSelectedRowKeys([]);
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            message.error(response.data.error);
           } else {
-            message.error("Something Went Wrong!", "error");
+            message.error("Something Went Wrong!");
           }
         }
         setReScanLoading(false);
@@ -73,29 +71,28 @@ const RejectedCV = () => {
 
   const deleteCv = async () => {
     setDeleteLoading(true);
-    var bodyFormData = new FormData();
-    bodyFormData.append("Delete_Reject_CV", "Delete_Reject_CV");
-    selectedRowKeys.forEach((file) => {
-      bodyFormData.append("searchIDs[]", file);
-    });
+    const newData = selectedRowKeys.map((data) => ({
+      id: data,
+    }));
+    var data = JSON.stringify(newData);
     await axios({
-      method: "POST",
-      url: `/api/react-post.php`,
-      data: bodyFormData,
+      method: "DELETE",
+      url: `/api/cv/rescan`,
+      data: data,
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
-          message.success("CV Queued for Delete.", "success");
+          message.success("CV Queued for Delete.");
           setSelectedRowKeys([]);
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            message.error(response.data.error);
           } else {
-            message.error("Something Went Wrong!", "error");
+            message.error("Something Went Wrong!");
           }
         }
         setDeleteLoading(false);
@@ -111,21 +108,19 @@ const RejectedCV = () => {
     setLoading(true);
     await axios({
       method: "GET",
-      url: `/api/rejectcv.php`,
+      url: `/api/cv/reject`,
       headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
       params: {
-        row: page * 10 - 10,
+        page: page,
       },
     })
       .then(function (response) {
         if (response.status === 200) {
           setLoading(false);
           setData(response.data);
-          setTotal(response.data.TotalDisplayRecords);
+          setTotal(response.data.TotalDisplay[0].total);
         } else {
           if (response.status === 201) {
             message.error(response.data.error, "error");
@@ -242,7 +237,7 @@ const RejectedCV = () => {
           <Pagination
             current={page}
             onChange={onChange}
-            total={data.TotalDisplayRecords}
+            total={total}
             showSizeChanger={false}
           />
         </div>

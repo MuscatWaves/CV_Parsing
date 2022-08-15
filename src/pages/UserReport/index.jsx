@@ -3,12 +3,22 @@ import Header from "../../components/Header";
 import axios from "axios";
 import Navigation from "../../components/Navigation";
 import { Table } from "antd";
+import Cookies from "universal-cookie";
 import { m } from "framer-motion";
 import { useQuery } from "react-query";
 
 const UserReport = () => {
-  const { data = [], isFetching } = useQuery(["usermanage"], () =>
-    axios.get("/api/userlist.php")
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const { data = [], isFetching } = useQuery(
+    ["usermanage"],
+    () =>
+      axios.get("/api/user", {
+        headers: {
+          Authorization: token,
+        },
+      }),
+    { refetchOnWindowFocus: false }
   );
 
   useEffect(() => {

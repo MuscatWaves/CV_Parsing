@@ -7,6 +7,7 @@ import maleUserImage from "../images/male-user.png";
 import femaleUserImage from "../images/female-user.png";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
+import axios from "axios";
 
 export const removeUnderScore = (str) => {
   var i,
@@ -274,5 +275,52 @@ export const string = (str, isLoading) => {
 export const skills = (userData, isLoading) =>
   (isLoading === "loaded" &&
     userData.user.skills !== "" &&
-    userData.user.skills.split(/\r\n/)) ||
+    userData.user.skills.split(/\r\n|\n/)) ||
   "";
+
+export const updateStatus = (id, type, list, setList) => {
+  const newArray = list.map((each) => {
+    if (each.id === id) {
+      if (type === "upload") {
+        return { ...each, upload: true };
+      }
+      if (type === "uploaded") {
+        return { ...each, uploaded: true };
+      }
+      if (type === "error") {
+        return { ...each, upload: false };
+      }
+    }
+    return each;
+  });
+  setList(newArray);
+};
+
+export const showPdf = (url, setLoading) => {
+  setLoading && setLoading(true);
+  axios(`${url}`, {
+    method: "GET",
+    responseType: "blob", //Force to receive data in a Blob Format
+  })
+    .then((response) => {
+      //Create a Blob from the PDF Stream
+      const file = new Blob([response.data], { type: "application/pdf" });
+      //Build a URL from the file
+      const fileURL = URL.createObjectURL(file);
+      //Open the URL on new Window
+      window.open(fileURL);
+      setLoading && setLoading(false);
+    })
+    .catch((error) => {
+      message.error(error);
+      setLoading && setLoading(false);
+    });
+};
+
+export const showImage = (data) => {
+  var image = new Image();
+  image.src = data;
+
+  var w = window.open("");
+  w.document.write(image.outerHTML);
+};
