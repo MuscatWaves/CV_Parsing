@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { codeMonth } from "../../../utilities";
 import UpdateEducation from "./UpdateEducation";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import "./buildEdu.css";
 
 const BuildEducation = () => {
@@ -264,6 +265,16 @@ const BuildEducation = () => {
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="next-page-button-edu">
+              <Button
+                type="primary"
+                icon={<ArrowRightOutlined />}
+                shape="round"
+                onClick={() => navigate(`/cv/update/buildEx/${dataParams.id}`)}
+              >
+                Add Experience
+              </Button>
             </div>
           </m.div>
         )) || <Loader minHeight={"65vh"} />}

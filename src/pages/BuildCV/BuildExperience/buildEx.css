@@ -28,3 +28,8 @@
   align-items: center;
   padding: 1rem;
 }
+
+.next-page-button-edu {
+  display: flex;
+  justify-content: center;
+}

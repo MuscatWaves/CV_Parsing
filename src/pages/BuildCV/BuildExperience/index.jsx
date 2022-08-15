@@ -10,6 +10,7 @@ import Loader from "../../../components/Loader";
 import { useNavigate } from "react-router-dom";
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { codeMonth, string } from "../../../utilities";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import UpdateWork from "./UpdateWork";
 import "./buildEx.css";
 
@@ -273,6 +274,18 @@ const BuildEducation = () => {
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="next-page-button-edu">
+              <Button
+                type="primary"
+                icon={<ArrowRightOutlined />}
+                shape="round"
+                onClick={() =>
+                  navigate(`/cv/update/buildCvPic/${dataParams.id}`)
+                }
+              >
+                Upload CV / Pic
+              </Button>
             </div>
           </m.div>
         )) || <Loader minHeight={"65vh"} />}

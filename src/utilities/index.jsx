@@ -275,7 +275,7 @@ export const string = (str, isLoading) => {
 export const skills = (userData, isLoading) =>
   (isLoading === "loaded" &&
     userData.user.skills !== "" &&
-    userData.user.skills.split(/\r\n/)) ||
+    userData.user.skills.split(/\r\n|\n/)) ||
   "";
 
 export const updateStatus = (id, type, list, setList) => {
