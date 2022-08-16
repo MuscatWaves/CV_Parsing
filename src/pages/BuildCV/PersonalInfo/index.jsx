@@ -88,6 +88,8 @@ const BuildCV = () => {
             label: item.category,
             value: item.category,
           }));
+          result.shift();
+          result.shift();
           setJobCategoryResult(result);
           setJobMenuLoading(false);
         } else {
@@ -131,6 +133,7 @@ const BuildCV = () => {
               }
               return false;
             });
+          resultNationality.shift();
           setCountryResult(resultNationality);
           setNationalityResult(resultNationality);
           setCountryMenuLoading(false);

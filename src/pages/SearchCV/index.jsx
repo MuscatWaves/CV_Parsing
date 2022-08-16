@@ -75,11 +75,12 @@ const SearchCV = () => {
       refetchOnWindowFocus: false,
       select: (data) => {
         const newData = data.data.data.map((item) => ({
-          label: `${!item.category ? "None" : item.category} - (${
-            !item.category ? "All" : item.cnt
-          })`,
+          label: `${!item.category ? "None - (All)" : item.category}${
+            item.category && `(${item.cnt})`
+          }`,
           value: `${!item.category ? "" : item.category}`,
         }));
+        newData.shift();
         return newData;
       },
     }

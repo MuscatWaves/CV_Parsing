@@ -32,7 +32,7 @@ const UpdateEducation = ({
       bodyFormDataUpdate.append("userid", userId);
       bodyFormDataUpdate.append("name", values.edu_name);
       bodyFormDataUpdate.append("college", values.college);
-      bodyFormDataUpdate.append("location", values.edu_loc);
+      bodyFormDataUpdate.append("location", values.edu_loc || "");
       bodyFormDataUpdate.append("from_year", values.edu_from_year || "");
       bodyFormDataUpdate.append("from_month", values.edu_from_month || "");
       bodyFormDataUpdate.append("to_year", values.edu_to_year || "");
@@ -42,7 +42,7 @@ const UpdateEducation = ({
       bodyFormDataUpdate.append("userid", userId);
       bodyFormDataUpdate.append("name", values.edu_name);
       bodyFormDataUpdate.append("college", values.college);
-      bodyFormDataUpdate.append("location", values.edu_loc);
+      bodyFormDataUpdate.append("location", values.edu_loc || "");
       bodyFormDataUpdate.append("from_year", values.edu_from_year || "");
       bodyFormDataUpdate.append("from_month", values.edu_from_month || "");
       bodyFormDataUpdate.append("to_year", values.edu_to_year || "");
@@ -133,15 +133,7 @@ const UpdateEducation = ({
         >
           <Input placeholder="College/School Name" />
         </Form.Item>
-        <Form.Item
-          name="edu_loc"
-          label={"Location"}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
+        <Form.Item name="edu_loc" label={"Location"}>
           <Input placeholder="Location" />
         </Form.Item>
         <Form.Item name="edu_from_month" label={"From Month"}>

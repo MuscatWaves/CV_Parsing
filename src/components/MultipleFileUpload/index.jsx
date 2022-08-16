@@ -36,9 +36,20 @@ const MultipleFileUpload = ({
   }, [currentActive]);
 
   const deleteAttachment = (data) => {
-    const newData = list.filter((each) => data.id !== each.id);
+    const deleteData = list.filter((each) => data.id !== each.id);
+    const newData = deleteData.map((each, index) => {
+      return {
+        id: index + 1,
+        category: each.category,
+        file: each.file,
+        upload: each.upload,
+        uploaded: each.uploaded,
+      };
+    });
     setList(newData);
   };
+
+  console.log(list);
 
   const addAttachment = async (data) => {
     updateStatus(data.id, "upload", list, setList);
@@ -169,7 +180,7 @@ const MultipleFileUpload = ({
                       style={{ borderRadius: "30px" }}
                       icon={<DeleteOutlined />}
                       onClick={() => deleteAttachment(eachListItem)}
-                      loading={eachListItem.upload}
+                      disabled={eachListItem.upload}
                     />
                     <Button
                       type="primary"
