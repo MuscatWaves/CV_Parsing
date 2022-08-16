@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Select, Upload, message } from "antd";
 import { categorySelection } from "../../pages/CVProfile/constants";
-import "./multip.css";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { checkCategory, updateStatus } from "../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import "./multip.css";
 
 const MultipleFileUpload = ({
   isUploadModal,
@@ -34,6 +34,11 @@ const MultipleFileUpload = ({
     currentActive && addAttachment(currentActive);
     // eslint-disable-next-line
   }, [currentActive]);
+
+  const deleteAttachment = (data) => {
+    const newData = list.filter((each) => data.id !== each.id);
+    setList(newData);
+  };
 
   const addAttachment = async (data) => {
     updateStatus(data.id, "upload", list, setList);
@@ -158,19 +163,28 @@ const MultipleFileUpload = ({
                     style={{ fontSize: "25px", color: "#1fc264" }}
                   />
                 ) : (
-                  <Button
-                    type="primary"
-                    style={{ borderRadius: "30px" }}
-                    icon={<UploadOutlined />}
-                    onClick={() => {
-                      !currentActive && setCurrentActive(eachListItem);
-                      currentActive &&
-                        message.error(
-                          "Please wait until the active uploading of the other file"
-                        );
-                    }}
-                    loading={eachListItem.upload}
-                  />
+                  <div className="flex-small-gap">
+                    <Button
+                      type="danger"
+                      style={{ borderRadius: "30px" }}
+                      icon={<DeleteOutlined />}
+                      onClick={() => deleteAttachment(eachListItem)}
+                      loading={eachListItem.upload}
+                    />
+                    <Button
+                      type="primary"
+                      style={{ borderRadius: "30px" }}
+                      icon={<UploadOutlined />}
+                      onClick={() => {
+                        !currentActive && setCurrentActive(eachListItem);
+                        currentActive &&
+                          message.error(
+                            "Please wait until the active uploading of the other file"
+                          );
+                      }}
+                      loading={eachListItem.upload}
+                    />
+                  </div>
                 )}
               </div>
             ))}
