@@ -2,19 +2,19 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://api.omanjobs.om/api/:path*"
+        "destination": "https://cvapi.muscatwave.com/api/:path*"
       },
       {
         "source": "/api/:path*/",
-        "destination": "https://api.omanjobs.om/api/:path*/"
+        "destination": "https://cvapi.muscatwave.com/api/:path*/"
       },
       {
         "source": "/files/:path*",
-        "destination": "https://api.omanjobs.om/files/:path*"
+        "destination": "https://cvparse.fra1.cdn.digitaloceanspaces.com/files/:path*"
       },
       {
         "source": "/files/:path*/",
-        "destination": "https://api.omanjobs.om/files/:path*/"
+        "destination": "https://cvparse.fra1.cdn.digitaloceanspaces.com/files/:path*/"
       }
     ]
   }
