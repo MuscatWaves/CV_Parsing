@@ -140,6 +140,7 @@ const SearchCV = () => {
     } catch (err) {
       message.error(err.response.data.error);
       setLoading(false);
+      setData([]);
     }
   };
 
