@@ -67,6 +67,7 @@ const UpdateCvPic = () => {
   };
 
   useEffect(() => {
+    document.title = "CV - Update";
     getUserData(); // eslint-disable-next-line
   }, []);
 

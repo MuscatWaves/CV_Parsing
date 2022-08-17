@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Modal, Input, Select, message } from "antd";
+import { Form, Modal, Input, Select, message, notification } from "antd";
 import { monthSelectionLabel, makeYear } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -79,7 +79,19 @@ const UpdateEducation = ({
         }
       })
       .catch(function (response) {
-        message.error(response.response.data.error);
+        notification.error({
+          message: (
+            <div className="bold text-red">
+              {"Unable to create this education"}
+            </div>
+          ),
+          description: (
+            <div className="bolder">
+              {"Please remove any apostrophe or unicode characters from text!"}
+            </div>
+          ),
+          duration: 6,
+        });
         setLoading(false);
       });
   };

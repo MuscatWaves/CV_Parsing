@@ -32,6 +32,10 @@ const BuildEducation = () => {
   const [isDeleteWeLoading, setDeleteWeLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(2);
 
+  useEffect(() => {
+    document.title = "CV - Experience";
+  }, []);
+
   const deleteWorkExpData = async () => {
     var bodyFormDataDelete = new FormData();
     bodyFormDataDelete.append("id", deleteWeData.id);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Modal, Input, Select, message } from "antd";
+import { Form, Modal, Input, Select, message, notification } from "antd";
 import { monthSelectionLabel, makeYear } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -67,16 +67,28 @@ const UpdateWork = ({
           form.resetFields();
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            message.error(response.data.error);
             setLoading(false);
           } else {
-            message.error("Something Went Wrong!", "error");
+            message.error("Something Went Wrong!");
             setLoading(false);
           }
         }
       })
       .catch(function (response) {
-        message.error(response.data.error);
+        notification.error({
+          message: (
+            <div className="bold text-red">
+              {"Unable to create this education"}
+            </div>
+          ),
+          description: (
+            <div className="bolder">
+              {"Please remove any apostrophe or unicode characters from text!"}
+            </div>
+          ),
+          duration: 6,
+        });
         setLoading(false);
       });
   };

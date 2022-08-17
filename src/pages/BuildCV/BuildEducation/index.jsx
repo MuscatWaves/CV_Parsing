@@ -32,6 +32,10 @@ const BuildEducation = () => {
   const [deleteEduData, setDeleteEduData] = useState("");
   const [isDeleteEduLoading, setDeleteEduLoading] = useState(false);
 
+  useEffect(() => {
+    document.title = "CV - Education";
+  }, []);
+
   const deleteEducationData = async () => {
     var bodyFormDataDelete = new FormData();
     bodyFormDataDelete.append("id", deleteEduData.id);
@@ -53,16 +57,16 @@ const BuildEducation = () => {
           getUserData();
         } else {
           if (response.status === 201) {
-            message.error(response.data.error, "error");
+            message.error(response.data.error);
             setDeleteEduLoading(false);
           } else {
-            message.error("Something Went Wrong!", "error");
+            message.error("Something Went Wrong!");
             setDeleteEduLoading(false);
           }
         }
       })
       .catch(function (response) {
-        message.error("Something Went Wrong!", "error");
+        message.error("Something Went Wrong!");
         setDeleteEduLoading(false);
       });
   };
