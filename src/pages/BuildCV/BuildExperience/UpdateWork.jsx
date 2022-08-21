@@ -87,7 +87,7 @@ const UpdateWork = ({
         notification.error({
           message: (
             <div className="bold text-red">
-              {"Unable to create this education"}
+              {"Unable to create this Experience"}
             </div>
           ),
           description: (
