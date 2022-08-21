@@ -265,7 +265,7 @@ export const string = (str, isLoading) => {
   return (
     isLoading === "loaded" &&
     str
-      .split(/\r\n|\n/)
+      .split(/\r\n|\\r\\n|\n/)
       .map((line, i) =>
         line === "" ? <br key={i} /> : <div key={i}>{line}</div>
       )
