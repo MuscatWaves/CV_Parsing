@@ -14,7 +14,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import UpdateWork from "./UpdateWork";
 import "./buildEx.css";
 
-const BuildEducation = () => {
+const BuildExperience = () => {
   const dataParams = useParams();
   const [userDataLoading, setUserDataLoading] = useState("none");
   const { Step } = Steps;
@@ -299,4 +299,4 @@ const BuildEducation = () => {
   );
 };
 
-export default BuildEducation;
+export default BuildExperience;

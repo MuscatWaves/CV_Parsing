@@ -31,7 +31,11 @@ const UpdateWork = ({
     if (!data.id) {
       bodyFormDataUpdate.append("userid", userId);
       bodyFormDataUpdate.append("name", values.ex_name || "");
-      bodyFormDataUpdate.append("description", values.desc || "");
+      bodyFormDataUpdate.append(
+        "description",
+        // eslint-disable-next-line
+        values.desc.replace(/[^\x00-\x7F]/g, "-") || ""
+      );
       bodyFormDataUpdate.append("designation", values.desg || "");
       bodyFormDataUpdate.append("from_year", values.ex_from_year || "");
       bodyFormDataUpdate.append("from_month", values.ex_from_month || "");
@@ -41,7 +45,11 @@ const UpdateWork = ({
       bodyFormDataUpdate.append("id", data.id);
       bodyFormDataUpdate.append("userid", userId);
       bodyFormDataUpdate.append("name", values.ex_name || "");
-      bodyFormDataUpdate.append("description", values.desc || "");
+      bodyFormDataUpdate.append(
+        "description",
+        // eslint-disable-next-line
+        values.desc.replace(/[^\x00-\x7F]/g, "-") || ""
+      );
       bodyFormDataUpdate.append("designation", values.desg || "");
       bodyFormDataUpdate.append("from_year", values.ex_from_year || "");
       bodyFormDataUpdate.append("from_month", values.ex_from_month || "");

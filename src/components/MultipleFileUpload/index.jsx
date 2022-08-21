@@ -49,8 +49,6 @@ const MultipleFileUpload = ({
     setList(newData);
   };
 
-  console.log(list);
-
   const addAttachment = async (data) => {
     updateStatus(data.id, "upload", list, setList);
     var bodyFormDataAdd = new FormData();
