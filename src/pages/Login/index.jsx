@@ -95,9 +95,16 @@ const Login = () => {
             rules={[
               {
                 required: true,
-                message: "Please enter your Email!",
+                message: "Email Required",
+              },
+              {
+                pattern:
+                  // eslint-disable-next-line
+                  /([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])/,
+                message: "Invalid email",
               },
             ]}
+            normalize={(value, _prevVal, _prevVals) => value.trim()}
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
@@ -117,6 +124,7 @@ const Login = () => {
                 message: "Please enter your Password!",
               },
             ]}
+            normalize={(value, _prevVal, _prevVals) => value.trim()}
           >
             <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
