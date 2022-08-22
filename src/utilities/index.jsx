@@ -265,7 +265,7 @@ export const string = (str, isLoading) => {
   return (
     isLoading === "loaded" &&
     str
-      .split(/\r\n|\\r\\n|\n/)
+      .split(/\r\n|\\r\\n|\n|\\n/)
       .map((line, i) =>
         line === "" ? <br key={i} /> : <div key={i}>{line}</div>
       )
@@ -275,7 +275,7 @@ export const string = (str, isLoading) => {
 export const skills = (userData, isLoading) =>
   (isLoading === "loaded" &&
     userData.user.skills !== "" &&
-    userData.user.skills.split(/\r\n|\n/)) ||
+    userData.user.skills.split(/\r\n|\n|\\n|\\r\\n/)) ||
   "";
 
 export const updateStatus = (id, type, list, setList) => {
@@ -324,3 +324,9 @@ export const showImage = (data) => {
   var w = window.open("");
   w.document.write(image.outerHTML);
 };
+
+export const formatInput = (str) =>
+  (str && str.replace(/ \\ r \\ n/g, `\n`).replace(/\\r\\n/g, `\n`)).replace(
+    /\\n/g,
+    `\n`
+  ) || "";

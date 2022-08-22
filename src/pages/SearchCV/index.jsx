@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import moment from "moment";
-import { makeFiltered, checkImageIcon } from "../../utilities";
+import { makeFiltered, checkImageIcon, formatInput } from "../../utilities";
 import { FaSearch } from "react-icons/fa";
 import { m } from "framer-motion";
 import { useQuery } from "react-query";
@@ -209,7 +209,9 @@ const SearchCV = () => {
     },
     {
       title: "Skills",
-      dataIndex: "skills",
+      render: (record) =>
+        // eslint-disable-next-line
+        formatInput(record.skills).replace(/[^\x00-\x7F]/g, "-"),
       ellipsis: true,
     },
     {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Modal, Input, Select, message, notification } from "antd";
-import { monthSelectionLabel, makeYear } from "../../../utilities";
+import { monthSelectionLabel, makeYear, formatInput } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -10,10 +10,7 @@ const UpdateWork = ({
   visible,
   toggleVisible,
   getUserData,
-  setPageLoading,
   userId,
-  setUserData,
-  dataParams,
 }) => {
   const [form] = Form.useForm();
   const [isLoading, setLoading] = useState(false);
@@ -123,7 +120,7 @@ const UpdateWork = ({
           ex_from_year: data.from_year,
           ex_to_month: data.to_month,
           ex_to_year: data.to_year,
-          desc: data.description,
+          desc: formatInput(data.description),
         }}
       >
         <Form.Item

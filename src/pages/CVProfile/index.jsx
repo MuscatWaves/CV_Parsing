@@ -14,6 +14,7 @@ import {
   string,
   showPdf,
   showImage,
+  formatInput,
 } from "../../utilities";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { GrAttachment } from "react-icons/gr";
@@ -276,8 +277,6 @@ const CVprofile = () => {
       "",
     nationality: userData.user.nationality,
     country: userData.user.country,
-    address: userData.user.presentaddress,
-    language: userData.user.language,
     passport_no: userData.user.passport,
     civil_id_no: userData.user.civil_id,
     height: `${userData.user.height} cm`,
@@ -541,10 +540,25 @@ const CVprofile = () => {
                           {removeUnderScore(keyName)}
                         </div>
                         <div className="text-grey medium-text">
-                          {personalDetail[keyName] || "Not Provided"}
+                          {formatInput(personalDetail[keyName]) ||
+                            "Not Provided"}
                         </div>
                       </div>
                     ))}
+                    <div>
+                      <div className="bolder medium-text">Address</div>
+                      <div className="text-grey medium-text">
+                        {string(userData.user.presentaddress, isLoading) ||
+                          "Not Provided"}
+                      </div>
+                    </div>
+                    <div style={{ gridColumn: "2/4" }}>
+                      <div className="bolder medium-text">Language</div>
+                      <div className="text-grey medium-text">
+                        {string(userData.user.language, isLoading) ||
+                          "Not Provided"}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="video-play-button">

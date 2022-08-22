@@ -16,6 +16,7 @@ import Cookies from "universal-cookie";
 import moment from "moment";
 import Loader from "../../../components/Loader";
 import CustomDatePicker from "../../../components/DatePicker";
+import { formatInput } from "../../../utilities";
 import { m } from "framer-motion";
 import "./buildcv.css";
 
@@ -390,7 +391,7 @@ const BuildCV = () => {
                   civil_id_number: userData.user.civil_id,
                   height: userData.user.height,
                   weight: userData.user.weight,
-                  skills: userData.user.skills,
+                  skills: formatInput(userData.user.skills),
                   education: userData.user.education,
                   work_exp: userData.user.company,
                   address: userData.user.presentaddress,
