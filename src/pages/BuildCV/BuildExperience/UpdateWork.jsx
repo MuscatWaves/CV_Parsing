@@ -120,7 +120,7 @@ const UpdateWork = ({
           ex_from_year: data.from_year,
           ex_to_month: data.to_month,
           ex_to_year: data.to_year,
-          desc: formatInput(data.description),
+          desc: data.description && formatInput(data.description),
         }}
       >
         <Form.Item
