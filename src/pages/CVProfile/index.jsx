@@ -263,7 +263,6 @@ const CVprofile = () => {
   );
 
   const personalDetail = {
-    ...(dataParams.type === "app" && { email: userData.user.email }),
     gender: userData.user.gender,
     ...(dataParams.type === "app" && { mobile: userData.user.mobile }),
     ...(dataParams.type === "app" && {
@@ -275,8 +274,6 @@ const CVprofile = () => {
     DOB:
       (userData.user.DOB && moment(userData.user.DOB).format("D MMMM YYYY")) ||
       "",
-    nationality: userData.user.nationality,
-    country: userData.user.country,
     passport_no: userData.user.passport,
     civil_id_no: userData.user.civil_id,
     height: `${userData.user.height} cm`,
@@ -534,6 +531,15 @@ const CVprofile = () => {
                     Personal Details
                   </div>
                   <div className="cvprofile-header-second-part">
+                    {dataParams.type === "app" && (
+                      <div style={{ gridColumn: "1/3" }}>
+                        <div className="bolder medium-text">Email</div>
+                        <div className="text-grey medium-text">
+                          {string(userData.user.email, isLoading) ||
+                            "Not Provided"}
+                        </div>
+                      </div>
+                    )}
                     {Object.keys(personalDetail).map((keyName, i) => (
                       <div key={keyName} className={"each-box-cv-profile"}>
                         <div className="bolder medium-text">
@@ -546,16 +552,36 @@ const CVprofile = () => {
                       </div>
                     ))}
                     <div>
-                      <div className="bolder medium-text">Address</div>
+                      <div className="bolder medium-text">Nationality</div>
                       <div className="text-grey medium-text">
-                        {string(userData.user.presentaddress, isLoading) ||
+                        {string(userData.user.nationality, isLoading) ||
+                          "Not Provided"}
+                      </div>
+                    </div>
+                    <div
+                      style={
+                        dataParams.type === "app"
+                          ? { gridColumn: "1/4", gridRow: "6" }
+                          : { gridColumn: "2/4" }
+                      }
+                    >
+                      <div className="bolder medium-text">Language</div>
+                      <div className="text-grey medium-text">
+                        {string(userData.user.language, isLoading) ||
+                          "Not Provided"}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="bolder medium-text">Country</div>
+                      <div className="text-grey medium-text">
+                        {string(userData.user.country, isLoading) ||
                           "Not Provided"}
                       </div>
                     </div>
                     <div style={{ gridColumn: "2/4" }}>
-                      <div className="bolder medium-text">Language</div>
+                      <div className="bolder medium-text">Address</div>
                       <div className="text-grey medium-text">
-                        {string(userData.user.language, isLoading) ||
+                        {string(userData.user.presentaddress, isLoading) ||
                           "Not Provided"}
                       </div>
                     </div>
