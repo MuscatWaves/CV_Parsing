@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Result } from "antd";
 import "./page.css";
+import Waves from "../Waves";
 
 const PageNotFound = () => {
   useEffect(() => {
@@ -12,9 +13,13 @@ const PageNotFound = () => {
       <Result
         className="zoom-in-animation"
         status="404"
-        title={<div className="large-text bolder">{"404"}</div>}
+        title={
+          <div className="bolder" style={{ fontSize: "44px" }}>
+            {"404"}
+          </div>
+        }
         subTitle={
-          <div className="medium-text bolder">
+          <div className="medium-text bold">
             {"Sorry, the page you visited does not exist."}
           </div>
         }
@@ -22,6 +27,7 @@ const PageNotFound = () => {
       <div className="copyright text-light-grey slide-in-top-animation">
         @ 2022 Copyright Powered by Oman Jobs
       </div>
+      <Waves />
     </div>
   );
 };

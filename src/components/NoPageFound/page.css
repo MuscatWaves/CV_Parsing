@@ -1,7 +1,6 @@
-.not-page-found{
-    display: grid;
-    grid-template-rows: 80% 20%;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+.not-page-found {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
 }

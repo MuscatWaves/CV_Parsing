@@ -1,20 +1,21 @@
-.loading-data{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* min-height: 70vh; */
+.loading-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  /* min-height: 70vh; */
 }
 
-.inner-loading-data{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+.inner-loading-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
-.loader-image{
-    width: 200px;
-    height: 200px;
-    animation: zoom-in 0.8s;
+.loader-image {
+  width: 150px;
+  height: 150px;
+  animation: zoom-in 0.8s;
 }
