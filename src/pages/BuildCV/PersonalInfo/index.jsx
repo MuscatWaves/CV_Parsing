@@ -394,8 +394,8 @@ const BuildCV = () => {
                   skills: formatInput(userData.user.skills),
                   education: userData.user.education,
                   work_exp: userData.user.company,
-                  address: userData.user.presentaddress,
-                  languages: userData.user.language,
+                  address: formatInput(userData.user.presentaddress),
+                  languages: formatInput(userData.user.language),
                 }),
               }}
             >
