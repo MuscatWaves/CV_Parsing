@@ -546,7 +546,8 @@ const CVprofile = () => {
                           {removeUnderScore(keyName)}
                         </div>
                         <div className="text-grey medium-text">
-                          {formatInput(personalDetail[keyName]) ||
+                          {(personalDetail[keyName] &&
+                            formatInput(personalDetail[keyName])) ||
                             "Not Provided"}
                         </div>
                       </div>
