@@ -582,7 +582,7 @@ const CVprofile = () => {
                     <div style={{ gridColumn: "2/4" }}>
                       <div className="bolder medium-text">Address</div>
                       <div className="text-grey medium-text">
-                        {string(userData.user.presentaddress, isLoading) ||
+                        {formatInput(userData.user.presentaddress, isLoading) ||
                           "Not Provided"}
                       </div>
                     </div>
