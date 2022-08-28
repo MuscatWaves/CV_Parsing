@@ -117,6 +117,9 @@ const BuildExperience = () => {
     if (value === 3) {
       navigate(`/cv/update/buildCvPic/${dataParams.id}`);
     }
+    if (value === 4) {
+      navigate(`/searchcv/profile/app/${dataParams.id}`);
+    }
   };
 
   return (
@@ -189,20 +192,10 @@ const BuildExperience = () => {
               }
             />
             <Step
-              title="Upload CV & Picture"
-              description={
-                <Button
-                  type="primary"
-                  ghost
-                  onClick={() => {
-                    navigate(`/searchcv/profile/app/${dataParams.id}`);
-                  }}
-                  disabled
-                >
-                  Complete Setup
-                </Button>
-              }
+              title="CV & Picture"
+              description={"Updating the Candidate Picture & CV"}
             />
+            <Step title="Complete Setup" />
           </Steps>
         </div>
       </div>

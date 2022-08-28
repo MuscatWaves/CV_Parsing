@@ -264,11 +264,20 @@ export const string = (str, isLoading) => {
   }
   return (
     isLoading === "loaded" &&
-    str
-      .split(/\r\n|\\r\\n|\n|\\n/)
-      .map((line, i) =>
-        line === "" ? <br key={i} /> : <div key={i}>{line}</div>
-      )
+    str.split(/\r\n|\\r\\n|\n|\\n/).map((line, i) => {
+      if (line === "") {
+        return <br key={i} />;
+      } else {
+        if (line.includes("-"))
+          return (
+            <div style={{ display: "flex", gap: "1rem" }} key={i}>
+              <div>{`\u2022`}</div>
+              <div>{line.replace("-", "")}</div>
+            </div>
+          );
+        else return <div key={i}>{line}</div>;
+      }
+    })
   );
 };
 

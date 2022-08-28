@@ -36,6 +36,9 @@ const UpdateCvPic = () => {
     if (value === 2) {
       navigate(`/cv/update/buildEx/${dataParams.id}`);
     }
+    if (value === 4) {
+      navigate(`/searchcv/profile/app/${dataParams.id}`);
+    }
   };
 
   const getUserData = async () => {
@@ -130,17 +133,12 @@ const UpdateCvPic = () => {
                 <div className="bolder text-black">Upload CV & Picture</div>
               }
               description={
-                <Button
-                  type="primary"
-                  ghost
-                  onClick={() => {
-                    navigate(`/searchcv/profile/app/${dataParams.id}`);
-                  }}
-                >
-                  Complete Setup
-                </Button>
+                <div className="text-light-grey">
+                  {`Updating the Candidate Picture & CV`}
+                </div>
               }
             />
+            <Step title={`Complete Setup`} />
           </Steps>
         </div>
       </div>

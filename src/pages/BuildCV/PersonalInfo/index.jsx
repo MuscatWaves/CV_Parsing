@@ -294,6 +294,9 @@ const BuildCV = () => {
     if (value === 3) {
       navigate(`/cv/update/buildCvPic/${dataParams.id}`);
     }
+    if (value === 4) {
+      navigate(`/searchcv/profile/app/${dataParams.id}`);
+    }
   };
 
   return (
@@ -334,20 +337,14 @@ const BuildCV = () => {
               disabled={!dataParams.id}
             />
             <Step
-              title="Upload CV & Picture"
+              title="CV & Picture"
               disabled={!dataParams.id}
-              description={
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    navigate(`/searchcv/profile/app/${dataParams.id}`);
-                  }}
-                  ghost
-                  disabled
-                >
-                  Complete Setup
-                </Button>
-              }
+              description={"Updating the Candidate Picture & CV"}
+            />
+            <Step
+              // title={<div className="bolder text-black">Complete Setup</div>}
+              title="Complete Setup"
+              disabled={!dataParams.id}
             />
           </Steps>
         </div>
