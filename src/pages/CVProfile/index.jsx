@@ -292,7 +292,7 @@ const CVprofile = () => {
         <div key={education.id}>
           <div className="flex-between" style={{ padding: 0 }}>
             <div className="medium-text bolder text-orange">
-              {education.name}
+              {formatInput(education.name)}
             </div>
           </div>
           <div className="medium-text bolder">{education.college}</div>

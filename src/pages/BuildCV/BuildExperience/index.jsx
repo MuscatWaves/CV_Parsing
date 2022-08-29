@@ -9,7 +9,7 @@ import Cookies from "universal-cookie";
 import Loader from "../../../components/Loader";
 import { useNavigate } from "react-router-dom";
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
-import { codeMonth, string } from "../../../utilities";
+import { codeMonth, formatInput, string } from "../../../utilities";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import UpdateWork from "./UpdateWork";
 import "./buildEx.css";
@@ -232,7 +232,7 @@ const BuildExperience = () => {
                   <div key={work.id}>
                     <div className="flex-between" style={{ padding: 0 }}>
                       <div className="medium-2-text bolder text-orange">
-                        {work.name}
+                        {work.name && formatInput(work.name)}
                       </div>
                       <div className="flex-small-gap">
                         <AiFillEdit

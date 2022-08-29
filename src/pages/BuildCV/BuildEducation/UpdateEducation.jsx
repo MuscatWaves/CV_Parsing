@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Modal, Input, Select, message, notification } from "antd";
-import { monthSelectionLabel, makeYear } from "../../../utilities";
+import { monthSelectionLabel, makeYear, formatInput } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -113,7 +113,7 @@ const UpdateEducation = ({
         scrollToFirstError={true}
         initialValues={{
           ...(data.id && {
-            edu_name: data.name,
+            edu_name: data.name && formatInput(data.name),
             college: data.college,
             edu_from_month: data.from_month,
             edu_from_year: data.from_year,

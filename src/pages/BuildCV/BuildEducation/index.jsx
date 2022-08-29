@@ -9,7 +9,7 @@ import Cookies from "universal-cookie";
 import Loader from "../../../components/Loader";
 import { useNavigate } from "react-router-dom";
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
-import { codeMonth } from "../../../utilities";
+import { codeMonth, formatInput } from "../../../utilities";
 import UpdateEducation from "./UpdateEducation";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import "./buildEdu.css";
@@ -225,7 +225,7 @@ const BuildEducation = () => {
                   <div key={education.id}>
                     <div className="flex-between" style={{ padding: 0 }}>
                       <div className="medium-text bolder text-orange">
-                        {education.name}
+                        {formatInput(education.name)}
                       </div>
                       <div className="flex-small-gap">
                         <AiFillEdit

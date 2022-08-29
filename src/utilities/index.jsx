@@ -272,10 +272,10 @@ export const string = (str, isLoading) => {
           return (
             <div style={{ display: "flex", gap: "1rem" }} key={i}>
               <div>{`\u2022`}</div>
-              <div>{line.replace("-", "")}</div>
+              <div>{line.replace("-", "").replace(/\\/g, "")}</div>
             </div>
           );
-        else return <div key={i}>{line}</div>;
+        else return <div key={i}>{line.replace(/\\/g, "")}</div>;
       }
     })
   );
@@ -335,7 +335,6 @@ export const showImage = (data) => {
 };
 
 export const formatInput = (str) =>
-  (str && str.replace(/ \\ r \\ n/g, `\n`).replace(/\\r\\n/g, `\n`)).replace(
-    /\\n/g,
-    `\n`
-  ) || "";
+  (str && str.replace(/ \\ r \\ n/g, `\n`).replace(/\\r\\n/g, `\n`))
+    .replace(/\\n/g, `\n`)
+    .replace(/\\/g, "") || "";

@@ -31,7 +31,7 @@ const UpdateWork = ({
       bodyFormDataUpdate.append(
         "description",
         // eslint-disable-next-line
-        values.desc.replace(/[^\x00-\x7F]/g, "-") || ""
+        (values.desc && values.desc.replace(/[^\x00-\x7F]/g, "-")) || ""
       );
       bodyFormDataUpdate.append("designation", values.desg || "");
       bodyFormDataUpdate.append("from_year", values.ex_from_year || "");
@@ -45,7 +45,7 @@ const UpdateWork = ({
       bodyFormDataUpdate.append(
         "description",
         // eslint-disable-next-line
-        values.desc.replace(/[^\x00-\x7F]/g, "-") || ""
+        (values.desc && values.desc.replace(/[^\x00-\x7F]/g, "-")) || ""
       );
       bodyFormDataUpdate.append("designation", values.desg || "");
       bodyFormDataUpdate.append("from_year", values.ex_from_year || "");
@@ -114,7 +114,7 @@ const UpdateWork = ({
         form={form}
         scrollToFirstError={true}
         initialValues={{
-          ex_name: data.name,
+          ex_name: data.name && formatInput(data.name),
           desg: data.designation,
           ex_from_month: data.from_month,
           ex_from_year: data.from_year,
