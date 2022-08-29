@@ -88,7 +88,7 @@ export const groupBy = (array, property) => {
 
 export const checkWhichFile = (cv) => {
   var n = cv?.split(".");
-  return n[n.length - 1];
+  return n && n[n.length - 1];
 };
 
 export const removeCookie = (navigate) => {
