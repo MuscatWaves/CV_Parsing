@@ -166,6 +166,11 @@ const MultipleFileUpload = ({
                     {checkCategory(eachListItem.category) + `:`}
                   </div>
                   <div>{eachListItem.file.name}</div>
+                  <div>
+                    {eachListItem.file.size / 1000 > 2000 && (
+                      <div className="very-small-text bolder text-red">{`File size greater than 2MB. Please decrease the size!`}</div>
+                    )}
+                  </div>
                 </div>
                 {eachListItem.uploaded ? (
                   <BsCheckCircleFill
@@ -192,6 +197,7 @@ const MultipleFileUpload = ({
                           );
                       }}
                       loading={eachListItem.upload}
+                      disabled={eachListItem.file.size / 1000 > 2000}
                     />
                   </div>
                 )}
