@@ -295,7 +295,7 @@ const CVprofile = () => {
               {formatInput(education.name)}
             </div>
           </div>
-          <div className="medium-text bolder">{education.college}</div>
+          <div className="medium-text bolder">{formatInput(education.college)}</div>
           <div className="text-light-grey bold">{`${
             education.from_month && codeMonth(education.from_month)
           } ${education.from_year && `${education.from_year}`}${

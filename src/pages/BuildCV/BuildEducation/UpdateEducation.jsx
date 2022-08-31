@@ -114,7 +114,7 @@ const UpdateEducation = ({
         initialValues={{
           ...(data.id && {
             edu_name: data.name && formatInput(data.name),
-            college: data.college,
+            college: data.college && formatInput(data.college),
             edu_from_month: data.from_month,
             edu_from_year: data.from_year,
             edu_to_month: data.to_month,

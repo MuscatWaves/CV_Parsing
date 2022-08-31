@@ -247,7 +247,7 @@ const BuildEducation = () => {
                       </div>
                     </div>
                     <div className="medium-text bolder">
-                      {education.college}
+                      {formatInput(education.college)}
                     </div>
                     <div className="text-light-grey bold">{`${
                       education.from_month && codeMonth(education.from_month)
