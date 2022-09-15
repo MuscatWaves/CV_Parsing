@@ -295,7 +295,9 @@ const CVprofile = () => {
               {formatInput(education.name)}
             </div>
           </div>
-          <div className="medium-text bolder">{formatInput(education.college)}</div>
+          <div className="medium-text bolder">
+            {formatInput(education.college)}
+          </div>
           <div className="text-light-grey bold">{`${
             education.from_month && codeMonth(education.from_month)
           } ${education.from_year && `${education.from_year}`}${
@@ -314,9 +316,13 @@ const CVprofile = () => {
       {userData.experience.map((work) => (
         <div key={work.id}>
           <div className="flex-between" style={{ padding: 0 }}>
-            <div className="medium-2-text bolder text-orange">{work.name}</div>
+            <div className="medium-2-text bolder text-orange">
+              {formatInput(work.name)}
+            </div>
           </div>
-          <div className="medium-text bolder">{work.designation}</div>
+          <div className="medium-text bolder">
+            {formatInput(work.designation)}
+          </div>
           <div className="text-light-grey bold">{`${
             work.from_month && codeMonth(work.from_month)
           } ${work.from_year && work.from_year}${
