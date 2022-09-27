@@ -5,6 +5,7 @@ import { message } from "antd";
 import { GiCancel } from "react-icons/gi";
 import maleUserImage from "../images/male-user.png";
 import femaleUserImage from "../images/female-user.png";
+import noGenderImage from "../images/user-no-image.png";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 import axios from "axios";
@@ -208,8 +209,12 @@ export const makeFiltered = (
   </div>
 );
 
-export const checkImageIcon = (gender) =>
-  gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
+export const checkImageIcon = (gender) => {
+  if (!gender) {
+    return noGenderImage;
+  }
+  return gender.toLowerCase() === "male" ? maleUserImage : femaleUserImage;
+};
 
 export const TriggerCvDownload = ({
   setPdfDownloadLoading,

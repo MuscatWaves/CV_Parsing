@@ -477,6 +477,9 @@ const CVprofile = () => {
                     }}
                   />
                 </Tooltip>
+                <p className="text-red bold">
+                  {!userData.user.gender && "Please update the gender!"}
+                </p>
                 <div className="text-orange bolder large-text">
                   {userData.user.name}
                 </div>
