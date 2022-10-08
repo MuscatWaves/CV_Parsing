@@ -227,8 +227,13 @@ const SearchCV = () => {
                 )}&body=${encodeURIComponent("For Recruiter - Write here")}`
               )
             }
+            title={record.email}
+            style={{
+              overflow: "hidden",
+            }}
           >
             <HiMail className="large-text" />
+
             {record.email}
           </div>
           {record.alt_email && (
@@ -241,6 +246,10 @@ const SearchCV = () => {
                   )}&body=${encodeURIComponent("For Recruiter - Write here")}`
                 )
               }
+              style={{
+                overflow: "hidden",
+              }}
+              title={record.alt_email}
             >
               <HiMail className="large-text" />
               {record.alt_email}

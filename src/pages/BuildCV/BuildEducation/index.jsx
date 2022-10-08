@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { m } from "framer-motion";
 import Header from "../../../components/Header";
 import Navigation from "../../../components/Navigation";
-import { Steps, message, Button, Modal } from "antd";
+import { Steps, message, Button, Modal, notification } from "antd";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -119,6 +119,19 @@ const BuildEducation = () => {
     getUserData(); // eslint-disable-next-line
   }, []);
 
+  const displayError = () =>
+    notification.error({
+      message: (
+        <div className="bold text-red">
+          {"Unable to proceed on creation of this profile"}
+        </div>
+      ),
+      description: (
+        <div className="bolder">{"Please have atleast 1 education added"}</div>
+      ),
+      duration: 6,
+    });
+
   return (
     <m.div
       initial={{ opacity: 0 }}
@@ -161,7 +174,13 @@ const BuildEducation = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={currentStep} onChange={changeStep}>
+          <Steps
+            progressDot
+            current={currentStep}
+            onChange={(value) =>
+              userData?.length < 1 ? displayError() : changeStep(value)
+            }
+          >
             <Step
               title={
                 <div className="bolder text-black">Personal Information</div>
@@ -268,7 +287,11 @@ const BuildEducation = () => {
                 type="primary"
                 icon={<ArrowRightOutlined />}
                 shape="round"
-                onClick={() => navigate(`/cv/update/buildEx/${dataParams.id}`)}
+                onClick={() =>
+                  userData.length < 1
+                    ? displayError()
+                    : navigate(`/cv/update/buildEx/${dataParams.id}`)
+                }
               >
                 Add Experience
               </Button>
