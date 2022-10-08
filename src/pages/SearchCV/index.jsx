@@ -228,13 +228,17 @@ const SearchCV = () => {
               )
             }
             title={record.email}
-            style={{
-              overflow: "hidden",
-            }}
           >
             <HiMail className="large-text" />
-
-            {record.email}
+            <div
+              style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {record.email}
+            </div>
           </div>
           {record.alt_email && (
             <div
@@ -246,13 +250,18 @@ const SearchCV = () => {
                   )}&body=${encodeURIComponent("For Recruiter - Write here")}`
                 )
               }
-              style={{
-                overflow: "hidden",
-              }}
               title={record.alt_email}
             >
               <HiMail className="large-text" />
-              {record.alt_email}
+              <div
+                style={{
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {record.alt_email}
+              </div>
             </div>
           )}
         </div>
