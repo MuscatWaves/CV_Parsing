@@ -143,6 +143,12 @@ p {
   align-items: center;
 }
 
+.flex-very-small-gap {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+}
+
 .flex-between {
   display: flex;
   justify-content: space-between;

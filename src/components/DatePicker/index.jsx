@@ -26,7 +26,9 @@ const CustomDatePicker = ({ date, selectDate }) => {
 
   return (
     <div className="custom-datepicker">
-      <div className="bold">Date of Birth</div>
+      <div className="bold flex-small-gap">
+        <span className="text-red">*</span> Date of Birth
+      </div>
       <div className="custom-datepicker-wrapper">
         <Select
           label={"Year"}

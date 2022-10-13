@@ -409,7 +409,15 @@ const BuildCV = () => {
               >
                 <Input placeholder="Email of the candidate*" />
               </Form.Item>
-              <Form.Item name="job_title" label={"Job Title"}>
+              <Form.Item
+                name="job_title"
+                label={"Job Title"}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
                 <Input placeholder="Job Title" />
               </Form.Item>
               <Form.Item name="gender" label={"Gender"}>
