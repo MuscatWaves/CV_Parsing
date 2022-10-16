@@ -141,7 +141,11 @@ const UploadCV = () => {
                         abort("Please select Category");
                       } else {
                         const request = new XMLHttpRequest();
-                        request.open("POST", `/api/cvupload.php`);
+                        request.open("POST", `/api/pond`);
+                        request.setRequestHeader(
+                          "Authorization",
+                          "Bearer" + token
+                        );
                         request.upload.onprogress = (e) => {
                           progress(e.lengthComputable, e.loaded, e.total);
                         };
