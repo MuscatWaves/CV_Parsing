@@ -68,7 +68,7 @@ export const makeYear = (birth) => {
 
 export const codeMonth = (value) => {
   const month = monthSelectionLabel.filter((month) => month.value === value);
-  return month[0].code;
+  return month[0]?.code;
 };
 
 export const checkCategory = (cat, desc) => {
