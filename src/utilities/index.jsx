@@ -340,6 +340,6 @@ export const showImage = (data) => {
 };
 
 export const formatInput = (str) =>
-  (str && str.replace(/ \\ r \\ n/g, `\n`).replace(/\\r\\n/g, `\n`))
-    .replace(/\\n/g, `\n`)
-    .replace(/\\/g, "") || "";
+  (str && str?.replace(/ \\ r \\ n/g, `\n`)?.replace(/\\r\\n/g, `\n`))
+    ?.replace(/\\n/g, `\n`)
+    ?.replace(/\\/g, "") || "";
