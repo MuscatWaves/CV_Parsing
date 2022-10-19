@@ -144,7 +144,7 @@ const UploadCV = () => {
                         request.open("POST", `/api/pond`);
                         request.setRequestHeader(
                           "Authorization",
-                          "Bearer" + token
+                          "Bearer " + token
                         );
                         request.upload.onprogress = (e) => {
                           progress(e.lengthComputable, e.loaded, e.total);
