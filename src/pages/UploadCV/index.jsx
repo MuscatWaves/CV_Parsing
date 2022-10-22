@@ -11,7 +11,9 @@ import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { useQuery } from "react-query";
 import FormData from "form-data";
+import { Spin } from "antd";
 import "./uploadcv.css";
+import { FaCheck } from "react-icons/fa";
 
 const UploadCV = () => {
   const cookies = new Cookies();
@@ -48,7 +50,12 @@ const UploadCV = () => {
     }
   );
 
-  useQuery(
+  useEffect(() => {
+    document.title = "Upload CV";
+    // eslint-disable-next-line
+  }, []);
+
+  const { isFetching: isLoadingUserData } = useQuery(
     ["usermanage"],
     () =>
       axios.get("/api/user", {
@@ -56,7 +63,12 @@ const UploadCV = () => {
           Authorization: token,
         },
       }),
-    { refetchOnWindowFocus: false, onSuccess }
+    {
+      refetchOnWindowFocus: false,
+      onSuccess,
+      // Refetch the data every second
+      refetchInterval: 10000,
+    }
   );
 
   useEffect(() => {
@@ -101,6 +113,17 @@ const UploadCV = () => {
                   </div>
                 </div>
               ))}
+              {isLoadingUserData ? (
+                <div className="flex-small-gap">
+                  <Spin />
+                  <p className="bolder text-blue">Updating the data</p>
+                </div>
+              ) : (
+                <div className="flex-small-gap">
+                  <FaCheck className="large-text text-green" />
+                  <p className="bolder text-green">Updated Recently</p>
+                </div>
+              )}
             </div>
             <div className="status-list upload-box slide-in-right-animation">
               <div className="flex-small-gap-column">
