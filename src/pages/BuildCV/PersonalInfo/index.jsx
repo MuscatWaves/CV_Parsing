@@ -409,7 +409,15 @@ const BuildCV = () => {
               >
                 <Input placeholder="Email of the candidate*" />
               </Form.Item>
-              <Form.Item name="job_title" label={"Job Title"}>
+              <Form.Item
+                name="job_title"
+                label={"Job Title"}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
                 <Input placeholder="Job Title" />
               </Form.Item>
               <Form.Item name="gender" label={"Gender"}>
@@ -482,7 +490,11 @@ const BuildCV = () => {
                   <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
                 </Form.Item>
               )}
-              <Form.Item label="Skills" name="skills" className="two-column">
+              <Form.Item label="Skills" name="skills" className="two-column" rules={[
+                  {
+                    required: true,
+                  },
+                ]}>
                 <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
               </Form.Item>
               <Form.Item label="Address" name="address" className="two-column">

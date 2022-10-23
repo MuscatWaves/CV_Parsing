@@ -68,7 +68,7 @@ export const makeYear = (birth) => {
 
 export const codeMonth = (value) => {
   const month = monthSelectionLabel.filter((month) => month.value === value);
-  return month[0].code;
+  return month[0]?.code;
 };
 
 export const checkCategory = (cat, desc) => {
@@ -340,6 +340,6 @@ export const showImage = (data) => {
 };
 
 export const formatInput = (str) =>
-  (str && str.replace(/ \\ r \\ n/g, `\n`).replace(/\\r\\n/g, `\n`))
-    .replace(/\\n/g, `\n`)
-    .replace(/\\/g, "") || "";
+  (str && str?.replace(/ \\ r \\ n/g, `\n`)?.replace(/\\r\\n/g, `\n`))
+    ?.replace(/\\n/g, `\n`)
+    ?.replace(/\\/g, "") || "";

@@ -22,6 +22,7 @@ import { FaSearch } from "react-icons/fa";
 import { m } from "framer-motion";
 import { useQuery } from "react-query";
 import "./searchcv.css";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 import Filter from "./Filter";
 
 const SearchCV = () => {
@@ -201,17 +202,50 @@ const SearchCV = () => {
         </div>
       ),
     },
-    { title: "Job", dataIndex: "job", width: "250px" },
+    {
+      title: "Job",
+      render: (record) => (
+        <div className="">
+          {record.job ? (
+            formatInput(record.job)
+          ) : (
+            <div className="flex-small-gap text-red">
+              <AiOutlineExclamationCircle style={{ fontSize: "26px" }} />
+              <div className="text-red">Not Provided</div>
+            </div>
+          )}
+        </div>
+      ),
+      width: "250px",
+    },
     {
       title: "Education",
-      dataIndex: "educationname",
+      render: (record) => (
+        <div className="">
+          {record.educationname ? (
+            formatInput(record.educationname)
+          ) : (
+            <div className="flex-small-gap text-red">
+              <AiOutlineExclamationCircle style={{ fontSize: "26px" }} />
+              <div className="text-red">Not Provided</div>
+            </div>
+          )}
+        </div>
+      ),
       ellipsis: true,
     },
     {
       title: "Skills",
       render: (record) =>
-        // eslint-disable-next-line
-        formatInput(record.skills).replace(/[^\x00-\x7F]/g, "-"),
+        record.skills ? (
+          // eslint-disable-next-line
+          formatInput(record.skills).replace(/[^\x00-\x7F]t/g, ",")
+        ) : (
+          <div className="flex-small-gap text-red">
+            <AiOutlineExclamationCircle style={{ fontSize: "26px" }} />
+            <div className="text-red">Not Provided</div>
+          </div>
+        ),
       ellipsis: true,
     },
     {
@@ -272,13 +306,18 @@ const SearchCV = () => {
       title: "Phone",
       render: (record) => (
         <div className="flex-small-gap-column">
-          {record.mobile && (
+          {record.mobile ? (
             <div
               className="pointer link-green flex-small-gap"
               onClick={() => window.open(`https://wa.me/${record.mobile}`)}
             >
               <RiMessage3Fill className="large-text" />
               {record.mobile}
+            </div>
+          ) : (
+            <div className="flex-small-gap text-red">
+              <AiOutlineExclamationCircle style={{ fontSize: "26px" }} />
+              <div className="text-red">Not Provided</div>
             </div>
           )}
           {record.alt_phone && (
