@@ -79,7 +79,7 @@ const RejectedCV = () => {
 
     var config = {
       method: "delete",
-      url: "https://cvapi.muscatwave.com/api/cv",
+      url: "https://cvapi.muscatwave.com/api/cv/rescan",
       headers: {
         Authorization: token,
         "Content-Type": "application/json",
