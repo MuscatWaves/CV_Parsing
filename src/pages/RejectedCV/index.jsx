@@ -70,20 +70,24 @@ const RejectedCV = () => {
   };
 
   const deleteCv = async () => {
-    setDeleteLoading(true);
-    const newData = selectedRowKeys.map((data) => ({
-      id: data,
-    }));
-    var data = JSON.stringify(newData);
-    await axios({
-      method: "DELETE",
-      url: `/api/cv/rescan`,
-      data: data,
+    var axios = require("axios");
+    var data = JSON.stringify(
+      selectedRowKeys.map((data) => ({
+        id: data,
+      }))
+    );
+
+    var config = {
+      method: "delete",
+      url: "https://cvapi.muscatwave.com/api/cv/rescan",
       headers: {
-        Accept: "application/json",
         Authorization: token,
+        "Content-Type": "application/json",
       },
-    })
+      data: data,
+    };
+
+    axios(config)
       .then(function (response) {
         if (response.status === 200) {
           message.success("CV Queued for Delete.");
@@ -98,7 +102,7 @@ const RejectedCV = () => {
         setDeleteLoading(false);
         getAllRejectedCV();
       })
-      .catch(function (response) {
+      .catch(function (error) {
         message.error("Something Went Wrong!", "error");
         setDeleteLoading(false);
       });

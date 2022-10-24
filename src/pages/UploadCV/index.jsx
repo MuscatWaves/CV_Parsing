@@ -67,7 +67,7 @@ const UploadCV = () => {
       refetchOnWindowFocus: false,
       onSuccess,
       // Refetch the data every second
-      refetchInterval: 10000,
+      refetchInterval: 5000,
     }
   );
 
