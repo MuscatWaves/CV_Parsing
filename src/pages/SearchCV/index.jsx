@@ -87,6 +87,21 @@ const SearchCV = () => {
     }
   );
 
+  const { data: userRelatedData } = useQuery(
+    ["users"],
+    () =>
+      axios.get("/api/user", {
+        headers: {
+          Authorization: token,
+        },
+      }),
+    {
+      select: (data) => data.data.data,
+    }
+  );
+
+  console.log(userRelatedData);
+
   const onChange = (page) => {
     localStorage.setItem("page", JSON.stringify(page));
     setPage(page);
@@ -329,6 +344,20 @@ const SearchCV = () => {
               {record.alt_phone}
             </div>
           )}
+        </div>
+      ),
+      width: "200px",
+    },
+    {
+      title: "Created By",
+      render: (record) => (
+        <div>
+          <div className="text-black">
+            {userRelatedData.filter((user) => user.id === record.user)[0]?.name}
+          </div>
+          <div className="very-small-text text-light-grey">
+            {moment(record.created).format("D MMMM YYYY hh:mm a")}
+          </div>
         </div>
       ),
       width: "200px",
