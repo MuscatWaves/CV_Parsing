@@ -112,7 +112,7 @@ const MultipleFileUpload = ({
             <Upload
               name="cv profile"
               listType="picture"
-              accept=".pdf,.docx,.xslx"
+              accept=".pdf,.docx,.xslx,.doc,.jpg,.jpeg,.png"
               maxCount={1}
               beforeUpload={(file) => {
                 setFile(file);
