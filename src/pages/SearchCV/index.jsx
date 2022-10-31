@@ -100,8 +100,6 @@ const SearchCV = () => {
     }
   );
 
-  console.log(userRelatedData);
-
   const onChange = (page) => {
     localStorage.setItem("page", JSON.stringify(page));
     setPage(page);
