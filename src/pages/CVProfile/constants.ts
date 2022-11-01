@@ -28,9 +28,7 @@ export const item = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring",
-      stiffness: 40,
-      damping: 8.5,
+      type: "spring",stiffness: 68, damping: 10, mass: 1.2
     },
   },
 };
