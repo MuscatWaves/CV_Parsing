@@ -22,13 +22,13 @@ export const container = {
 export const item = {
   hidden: {
     opacity: 0,
-    y: "120px",
+    y: "100px",
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring",stiffness: 68, damping: 10, mass: 1.2
+      type: "spring",stiffness: 70, damping: 10, mass: 1.1
     },
   },
 };
