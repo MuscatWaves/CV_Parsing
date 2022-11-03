@@ -111,7 +111,8 @@ export const makeFiltered = (
   <div className="filtered-list">
     {Object.keys(filterData).map(
       (filterValue, index) =>
-        filterData[filterValue] && (
+        filterData[filterValue] &&
+        filterValue !== "name" && (
           <div
             className="each-filter flex-small-gap medium-text slide-in-left-animation"
             key={filterValue}
@@ -167,7 +168,7 @@ export const makeFiltered = (
           </div>
         )
     )}
-    {Object.keys(filterData).filter(
+    {/* {Object.keys(filterData).filter(
       (filterValue, index) => filterData[filterValue]
     ).length > 0 && (
       <div
@@ -205,7 +206,7 @@ export const makeFiltered = (
       >
         Reset All
       </div>
-    )}
+    )} */}
   </div>
 );
 

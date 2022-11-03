@@ -8,6 +8,8 @@ import {
   message,
   notification,
   Steps,
+  Radio,
+  Tag,
 } from "antd";
 import Header from "../../../components/Header";
 import Navigation from "../../../components/Navigation";
@@ -22,6 +24,7 @@ import "./buildcv.css";
 
 const BuildCV = () => {
   const dataParams = useParams();
+  const [form] = Form.useForm();
   const { Step } = Steps;
   const cookies = new Cookies();
   const token = cookies.get("token");
@@ -39,6 +42,8 @@ const BuildCV = () => {
   const [userDataLoading, setUserDataLoading] = useState("none");
   const [currentStep, setCurrentStep] = useState(0);
   const [date, selectDate] = useState();
+
+  console.log(countryResult);
 
   const getUserData = async () => {
     setUserDataLoading("loading");
@@ -358,6 +363,7 @@ const BuildCV = () => {
           >
             <h1>Personal Information</h1>
             <Form
+              form={form}
               className="buildCvForm"
               onSubmit={(e) => e.preventDefault()}
               onFinish={handleSubmit}
@@ -421,10 +427,10 @@ const BuildCV = () => {
                 <Input placeholder="Job Title" />
               </Form.Item>
               <Form.Item name="gender" label={"Gender"}>
-                <Select placeholder="Select Gender">
-                  <Select.Option value="male">Male</Select.Option>
-                  <Select.Option value="female">Female</Select.Option>
-                </Select>
+                <Radio.Group optionType="button" buttonStyle="solid">
+                  <Radio value="male">Male</Radio>
+                  <Radio value="female">Female</Radio>
+                </Radio.Group>
               </Form.Item>
               <Form.Item name="martial_status" label={"Martial Status"}>
                 <Select placeholder="Martial Status">
@@ -441,9 +447,71 @@ const BuildCV = () => {
                   placeholder="Country"
                   options={countryResult}
                   showSearch
-                  disabled={countryMenuLoading}
+                  loading={countryMenuLoading}
                 />
               </Form.Item>
+              <div style={{ marginTop: "10px" }}>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "India",
+                      nationality: "Indian",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  India
+                </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "Pakistan",
+                      nationality: "Pakistani",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Pakistan
+                </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "Bangladesh",
+                      nationality: "Bangladeshi",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Bangladesh
+                </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "Nepal",
+                      nationality: "Nepali, Nepalese",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Nepal
+                </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "Philippines",
+                      nationality: "Philippine, Filipino",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Philipinnes
+                </Tag>
+              </div>
               <Form.Item name="nationality" label={"Nationality"}>
                 <Select
                   placeholder="Select Nationality"
@@ -472,6 +540,9 @@ const BuildCV = () => {
               >
                 <Input placeholder="Alternative Phone Number" type="number" />
               </Form.Item>
+              <Form.Item label="Languages" name="languages">
+                <Input placeholder="Please enter candidate's known language" />
+              </Form.Item>
               {dataParams.id && userData.user.education && (
                 <Form.Item
                   label="Education"
@@ -490,22 +561,20 @@ const BuildCV = () => {
                   <Input.TextArea autoSize={{ minRows: 4, maxRows: 8 }} />
                 </Form.Item>
               )}
-              <Form.Item label="Skills" name="skills" className="two-column" rules={[
+              <Form.Item
+                label="Skills"
+                name="skills"
+                className="two-column"
+                rules={[
                   {
                     required: true,
                   },
-                ]}>
+                ]}
+              >
                 <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
               </Form.Item>
               <Form.Item label="Address" name="address" className="two-column">
                 <Input.TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
-              </Form.Item>
-              <Form.Item
-                className="two-column"
-                label="Languages"
-                name="languages"
-              >
-                <Input.TextArea />
               </Form.Item>
               <Form.Item
                 name="work_portfolio_photos"

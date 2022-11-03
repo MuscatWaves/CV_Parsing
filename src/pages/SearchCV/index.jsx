@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Navigation from "../../components/Navigation";
-import {
-  Table,
-  message,
-  Pagination,
-  Button,
-  Input,
-  Popover,
-  Tooltip,
-} from "antd";
+import { Table, message, Pagination, Button, Input, Tooltip } from "antd";
 import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
 import { RiMessage3Fill } from "react-icons/ri";
@@ -351,7 +343,10 @@ const SearchCV = () => {
       render: (record) => (
         <div>
           <div className="text-black">
-            {userRelatedData.filter((user) => user.id === record.user)[0]?.name}
+            {
+              userRelatedData?.filter((user) => user.id === record.user)[0]
+                ?.name
+            }
           </div>
           <div className="very-small-text text-light-grey">
             {moment(record.created).format("D MMMM YYYY hh:mm a")}
@@ -397,41 +392,6 @@ const SearchCV = () => {
     getData(data, page);
   };
 
-  const searchContainer = () => (
-    <div className="flex-small-gap">
-      <Input
-        placeholder="Type to search..."
-        value={filterData.name}
-        onChange={(e) => setFilterData({ ...filterData, name: e.target.value })}
-        onPressEnter={() => {
-          setPage(1);
-          refresh();
-          localStorage.setItem("page", JSON.stringify(1));
-          localStorage.setItem(
-            "filter",
-            JSON.stringify({ ...filterData, name: filterData.name })
-          );
-          toggleSearchPop(false);
-        }}
-      />
-      <Button
-        type="primary"
-        onClick={() => {
-          setPage(1);
-          refresh();
-          localStorage.setItem("page", JSON.stringify(1));
-          localStorage.setItem(
-            "filter",
-            JSON.stringify({ ...filterData, name: filterData.name })
-          );
-          toggleSearchPop(false);
-        }}
-      >
-        Search
-      </Button>
-    </div>
-  );
-
   return (
     <m.div
       className="searchCV"
@@ -448,22 +408,25 @@ const SearchCV = () => {
           current_page={"Search CV"}
           customFilterButton={
             <div className="flex-small-gap">
-              <Popover
-                placement="rightBottom"
-                title={""}
-                content={searchContainer}
-                trigger="click"
-                visible={isSearchPop}
-                onVisibleChange={toggleSearchPop}
-              >
-                <Button
-                  className="button-primary filter-modal-button"
-                  type="primary"
-                  loading={isLoading}
-                >
-                  <FaSearch className="filter-icon" />
-                </Button>
-              </Popover>
+              <Input
+                placeholder="Type to search..."
+                value={filterData.name}
+                onChange={(e) =>
+                  setFilterData({ ...filterData, name: e.target.value })
+                }
+                onPressEnter={() => {
+                  setPage(1);
+                  refresh();
+                  localStorage.setItem("page", JSON.stringify(1));
+                  localStorage.setItem(
+                    "filter",
+                    JSON.stringify({ ...filterData, name: filterData.name })
+                  );
+                  toggleSearchPop(false);
+                }}
+                prefix={<FaSearch className="filter-icon" />}
+                disabled={isLoading}
+              />
               <Button
                 className="button-primary filter-modal-button"
                 type="primary"
