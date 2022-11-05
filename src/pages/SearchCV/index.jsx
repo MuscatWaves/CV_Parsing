@@ -4,7 +4,7 @@ import Navigation from "../../components/Navigation";
 import { Table, message, Pagination, Button, Input, Tooltip } from "antd";
 import { FaFilter } from "react-icons/fa";
 import { HiMail } from "react-icons/hi";
-import { RiMessage3Fill } from "react-icons/ri";
+import { RiMessage3Fill, RiFilterOffFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -427,6 +427,51 @@ const SearchCV = () => {
                 prefix={<FaSearch className="filter-icon" />}
                 disabled={isLoading}
               />
+              {Object.keys(filterData).filter(
+                (filterValue, index) => filterData[filterValue]
+              ).length > 0 && (
+                <Button
+                  className="filter-modal-button-clear"
+                  type="primary"
+                  size="medium"
+                  onClick={() => {
+                    const newData = {
+                      jobTitle: "",
+                      name: "",
+                      jobCategory: "",
+                      maritalStatus: "",
+                      age: "",
+                      gender: "",
+                      nationality: "",
+                      searchByFromdate: "",
+                      searchByTodate: "",
+                    };
+                    setFilterData(newData);
+                    const data = {
+                      SearchByFromdate: "",
+                      SearchByTodate: "",
+                      JobTitle: "",
+                      Age: "",
+                      JobCategory: "",
+                      Nationality: "",
+                      Gender: "",
+                      MaritalStatus: "",
+                      Search: "",
+                    };
+                    setPage(1);
+                    localStorage.setItem("page", JSON.stringify(1));
+                    localStorage.setItem(
+                      "filter",
+                      JSON.stringify({ ...newData })
+                    );
+                    getData(data, 1);
+                  }}
+                  loading={isLoading}
+                  title={"Reset Filter"}
+                >
+                  <RiFilterOffFill className="filter-icon" />
+                </Button>
+              )}
               <Button
                 className="button-primary filter-modal-button"
                 type="primary"

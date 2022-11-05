@@ -353,7 +353,7 @@ p {
 
 .filter-modal-button {
   margin-top: 0px !important;
-  border-radius: 10px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   padding: 1.1rem;

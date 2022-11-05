@@ -168,45 +168,6 @@ export const makeFiltered = (
           </div>
         )
     )}
-    {/* {Object.keys(filterData).filter(
-      (filterValue, index) => filterData[filterValue]
-    ).length > 0 && (
-      <div
-        className="bolder small-text pointer link"
-        onClick={() => {
-          const newData = {
-            jobTitle: "",
-            name: "",
-            jobCategory: "",
-            maritalStatus: "",
-            age: "",
-            gender: "",
-            nationality: "",
-            searchByFromdate: "",
-            searchByTodate: "",
-          };
-          setFilterData(newData);
-          const data = {
-            SearchByFromdate: "",
-            SearchByTodate: "",
-            JobTitle: "",
-            Age: "",
-            JobCategory: "",
-            Nationality: "",
-            Gender: "",
-            MaritalStatus: "",
-            Search: "",
-          };
-          setPage(1);
-          localStorage.setItem("page", JSON.stringify(1));
-          localStorage.setItem("filter", JSON.stringify({ ...newData }));
-          getData(data, 1);
-        }}
-        style={{ marginBottom: "10px" }}
-      >
-        Reset All
-      </div>
-    )} */}
   </div>
 );
 

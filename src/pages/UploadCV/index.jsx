@@ -4,16 +4,16 @@ import Cookies from "universal-cookie";
 import Header from "../../components/Header";
 import jwt from "jsonwebtoken";
 import Navigation from "../../components/Navigation";
-import { Select } from "antd";
+import { Select, Tag } from "antd";
 import { removeUnderScore } from "../../utilities";
 import Loader from "../../components/Loader";
 import { FilePond } from "react-filepond";
-import "filepond/dist/filepond.min.css";
 import { useQuery } from "react-query";
 import FormData from "form-data";
 import { Spin } from "antd";
-import "./uploadcv.css";
 import { FaCheck } from "react-icons/fa";
+import "filepond/dist/filepond.min.css";
+import "./uploadcv.css";
 
 const UploadCV = () => {
   const cookies = new Cookies();
@@ -21,7 +21,7 @@ const UploadCV = () => {
   const [isLoading, setLoading] = useState("none");
   const [data, setData] = useState({});
   const mainUser = jwt.verify(token, process.env.REACT_APP_JWT_KEY);
-  const [selectedCategory, setSelectedCategory] = useState("Accounting");
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [files, setFiles] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState({});
 
@@ -40,11 +40,12 @@ const UploadCV = () => {
       refetchOnWindowFocus: false,
       select: (data) => {
         const newData = data.data.data.map((item) => ({
-          label: `${!item.category ? "None" : item.category} - (${
-            !item.category ? "All" : item.cnt
-          })`,
+          label: `${!item.category ? "None - (All)" : item.category}${
+            item.category && `(${item.cnt})`
+          }`,
           value: `${!item.category ? "" : item.category}`,
         }));
+        newData.shift();
         return newData;
       },
     }
@@ -85,7 +86,6 @@ const UploadCV = () => {
     email: data.email || "",
     CVs_parsed: data.parsed || 0,
     CVs_pending: data.pending || 0,
-    total_CVs_parsed: data.parsed + data.pending || 0,
   };
 
   return (
@@ -126,8 +126,33 @@ const UploadCV = () => {
               )}
             </div>
             <div className="status-list upload-box slide-in-right-animation">
-              <div className="flex-small-gap-column">
+              <div className="flex-small-gap1-column">
                 <div className="bolder text-grey">{"Job Category"}</div>
+                <div>
+                  <Tag
+                    color="blue"
+                    onClick={() => setSelectedCategory("Accounting & Auditing")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Accounting
+                  </Tag>
+                  <Tag
+                    color="blue"
+                    onClick={() =>
+                      setSelectedCategory("Restaurant/Food Services")
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    Restaurant
+                  </Tag>
+                  <Tag
+                    color="blue"
+                    onClick={() => setSelectedCategory("Engineering")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Engineering
+                  </Tag>
+                </div>
                 <Select
                   placeholder={"Select the Job category"}
                   options={jobCategoryResult}
@@ -142,6 +167,7 @@ const UploadCV = () => {
                   onupdatefiles={setFiles}
                   allowMultiple={true}
                   maxFiles={30}
+                  disabled={!selectedCategory}
                   server={{
                     process: (
                       fieldName,
