@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button, Select, Upload, message } from "antd";
 import { categorySelection } from "../../pages/CVProfile/constants";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -20,20 +20,16 @@ const MultipleFileUpload = ({
   const [category, setCategory] = useState(null);
   const [file, setFile] = useState(null);
   const [list, setList] = useState([]);
-  const [currentActive, setCurrentActive] = useState(null);
+  const [currentActive, setCurrentActive] = useState(true);
   const handleCancel = () => {
     toggleUploadModal(false);
-    setCurrentActive(null);
+    setCurrentActive(true);
     setList([]);
     getUserData(dataParams, setUserData, setLoading);
   };
   const cookies = new Cookies();
   const token = cookies.get("token");
-
-  useEffect(() => {
-    currentActive && addAttachment(currentActive);
-    // eslint-disable-next-line
-  }, [currentActive]);
+  const [uploadAll, setUploadAll] = useState(false);
 
   const deleteAttachment = (data) => {
     const deleteData = list.filter((each) => data.id !== each.id);
@@ -49,8 +45,8 @@ const MultipleFileUpload = ({
     setList(newData);
   };
 
-  const addAttachment = async (data) => {
-    updateStatus(data.id, "upload", list, setList);
+  const addAttachment = async (data, newList, bulk) => {
+    updateStatus(data.id, "upload", newList, setList);
     var bodyFormDataAdd = new FormData();
     bodyFormDataAdd.append("file", data.file);
     bodyFormDataAdd.append("cv", userId);
@@ -68,24 +64,49 @@ const MultipleFileUpload = ({
       .then(function (response) {
         if (response.status === 200) {
           message.success("Attachment has been sucessfully uploaded");
-          updateStatus(data.id, "uploaded", list, setList);
-          setCurrentActive(null);
+          if (bulk) {
+            const newArray = list.map((each) => {
+              if (each.id <= data.id) {
+                return { ...each, uploaded: true };
+              }
+              return each;
+            });
+            const newArray2 = newArray.map((each) => {
+              if (each.id === data.id) {
+                return { ...each, upload: true };
+              }
+              return each;
+            });
+            data.id !== list.length &&
+              addAttachment(list[data.id], newArray2, true);
+            setList(newArray2);
+            if (data.id === list.length) {
+              setUploadAll(false);
+              setCurrentActive(false);
+            }
+          } else {
+            updateStatus(data.id, "uploaded", list, setList);
+            setCurrentActive(false);
+          }
         } else {
           if (response.status === 201) {
             message.error(response.data.error);
-            updateStatus(data.id, "error", list, setList);
-            setCurrentActive(null);
+            updateStatus(data.id, "error", newList, setList);
+            setCurrentActive(false);
+            setUploadAll(false);
           } else {
             message.error("Something Went Wrong!");
-            updateStatus(data.id, "error", list, setList);
-            setCurrentActive(null);
+            updateStatus(data.id, "error", newList, setList);
+            setCurrentActive(false);
+            setUploadAll(false);
           }
         }
       })
       .catch(function (response) {
         message.error(response.response.data.error);
-        updateStatus(data.id, "error", list, setList);
-        setCurrentActive(null);
+        updateStatus(data.id, "error", newList, setList);
+        setCurrentActive(false);
+        setUploadAll(false);
       });
   };
 
@@ -168,7 +189,7 @@ const MultipleFileUpload = ({
                   <div>{eachListItem.file.name}</div>
                   <div>
                     {eachListItem.file.size / 1000 > 2000 && (
-                      <div className="very-small-text bolder text-red">{`File size greater than 2MB. Please decrease the size!`}</div>
+                      <div className="very-small-text bolder text-red">{`File size greater than 2MB. Recommended to decrease the size!`}</div>
                     )}
                   </div>
                 </div>
@@ -177,32 +198,43 @@ const MultipleFileUpload = ({
                     style={{ fontSize: "25px", color: "#1fc264" }}
                   />
                 ) : (
-                  <div className="flex-small-gap">
-                    <Button
-                      type="danger"
-                      style={{ borderRadius: "30px" }}
-                      icon={<DeleteOutlined />}
-                      onClick={() => deleteAttachment(eachListItem)}
-                      disabled={eachListItem.upload}
-                    />
-                    <Button
-                      type="primary"
-                      style={{ borderRadius: "30px" }}
-                      icon={<UploadOutlined />}
-                      onClick={() => {
-                        !currentActive && setCurrentActive(eachListItem);
-                        currentActive &&
-                          message.error(
-                            "Please wait until the active uploading of the other file"
-                          );
-                      }}
-                      loading={eachListItem.upload}
-                      disabled={eachListItem.file.size / 1000 > 2000}
-                    />
-                  </div>
+                  !uploadAll && (
+                    <div className="flex-small-gap">
+                      <Button
+                        type="danger"
+                        style={{ borderRadius: "30px" }}
+                        icon={<DeleteOutlined />}
+                        onClick={() => deleteAttachment(eachListItem)}
+                        disabled={eachListItem.upload}
+                      />
+                      <Button
+                        type="primary"
+                        style={{ borderRadius: "30px" }}
+                        icon={<UploadOutlined />}
+                        onClick={() => {
+                          addAttachment(eachListItem, list);
+                        }}
+                        loading={eachListItem.upload}
+                      />
+                    </div>
+                  )
                 )}
               </div>
             ))}
+            <div className="flex-center small-margin-top ">
+              <Button
+                type="primary"
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  setUploadAll(true);
+                  addAttachment(list[0], list, true);
+                }}
+                loading={uploadAll}
+                disabled={!currentActive || list.length < 1}
+              >
+                Upload All (Beta)
+              </Button>
+            </div>
           </div>
         </div>
       )}

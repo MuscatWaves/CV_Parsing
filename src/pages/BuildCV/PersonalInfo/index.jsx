@@ -43,8 +43,6 @@ const BuildCV = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [date, selectDate] = useState();
 
-  console.log(countryResult);
-
   const getUserData = async () => {
     setUserDataLoading("loading");
     await axios({

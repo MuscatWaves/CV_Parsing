@@ -241,6 +241,12 @@ p {
   gap: 0.5rem;
 }
 
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+
 .link {
   transition: 0.3s;
 }
