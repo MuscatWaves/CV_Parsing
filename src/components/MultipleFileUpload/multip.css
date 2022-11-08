@@ -4,3 +4,12 @@
   gap: 1rem;
   justify-content: center;
 }
+.file_multiple__input-container {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.file_multiple__input-container:nth-last-child() {
+  width: 1;
+}

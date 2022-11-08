@@ -18,7 +18,6 @@ const MultipleFileUpload = ({
   getUserData,
 }) => {
   const [category, setCategory] = useState(null);
-  const [file, setFile] = useState(null);
   const [list, setList] = useState([]);
   const [currentActive, setCurrentActive] = useState(true);
   const handleCancel = () => {
@@ -63,7 +62,6 @@ const MultipleFileUpload = ({
     })
       .then(function (response) {
         if (response.status === 200) {
-          message.success("Attachment has been sucessfully uploaded");
           if (bulk) {
             const newArray = list.map((each) => {
               if (each.id <= data.id) {
@@ -81,10 +79,12 @@ const MultipleFileUpload = ({
               addAttachment(list[data.id], newArray2, true);
             setList(newArray2);
             if (data.id === list.length) {
+              message.success("All Attachment has been sucessfully uploaded");
               setUploadAll(false);
               setCurrentActive(false);
             }
           } else {
+            message.success("Attachment has been sucessfully uploaded");
             updateStatus(data.id, "uploaded", list, setList);
             setCurrentActive(false);
           }
@@ -119,7 +119,7 @@ const MultipleFileUpload = ({
     >
       {isUploadModal && (
         <div className="file_multiple">
-          <div className="flex-small-gap" style={{ width: "100%" }}>
+          <div className="file_multiple__input-container">
             <Select
               placeholder={"Select Category"}
               options={categorySelection}
@@ -127,7 +127,6 @@ const MultipleFileUpload = ({
               style={{
                 overflow: "hidden",
                 textOverflow: "ellipsis",
-                width: "160px",
               }}
             />
             <Upload
@@ -136,31 +135,6 @@ const MultipleFileUpload = ({
               accept=".pdf,.docx,.xslx,.doc,.jpg,.jpeg,.png"
               maxCount={1}
               beforeUpload={(file) => {
-                setFile(file);
-                return false;
-              }}
-              showUploadList={false}
-            >
-              <Button icon={file?.name ? false : <UploadOutlined />}>
-                {file?.name ? (
-                  <div
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      width: "160px",
-                    }}
-                  >
-                    {file.name}
-                  </div>
-                ) : (
-                  `Click to upload`
-                )}
-              </Button>
-            </Upload>
-            <Button
-              className="add_attachment_section"
-              type="primary"
-              onClick={() => {
                 const len = list.length;
                 setList([
                   ...list,
@@ -172,12 +146,13 @@ const MultipleFileUpload = ({
                     uploaded: false,
                   },
                 ]);
-                setFile(null);
+                return false;
               }}
-              disabled={category === null || file === null}
+              showUploadList={false}
+              disabled={category === null}
             >
-              Add Attachment
-            </Button>
+              <Button icon={<UploadOutlined />}>Click to upload</Button>
+            </Upload>
           </div>
           <div className="flex-column-gap">
             {list.map((eachListItem) => (
@@ -221,20 +196,21 @@ const MultipleFileUpload = ({
                 )}
               </div>
             ))}
-            <div className="flex-center small-margin-top ">
-              <Button
-                type="primary"
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  setUploadAll(true);
-                  addAttachment(list[0], list, true);
-                }}
-                loading={uploadAll}
-                disabled={!currentActive || list.length < 1}
-              >
-                Upload All (Beta)
-              </Button>
-            </div>
+            {(currentActive || list.length < 1) && (
+              <div className="flex-center small-margin-top ">
+                <Button
+                  type="primary"
+                  icon={<DeleteOutlined />}
+                  onClick={() => {
+                    setUploadAll(true);
+                    addAttachment(list[0], list, true);
+                  }}
+                  loading={uploadAll}
+                >
+                  Upload All (Beta)
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
