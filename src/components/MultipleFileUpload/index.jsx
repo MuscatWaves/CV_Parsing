@@ -45,6 +45,11 @@ const MultipleFileUpload = ({
   };
 
   const addAttachment = async (data, newList, bulk) => {
+    if (!data) {
+      setUploadAll(false);
+      message.error("Upload All Error, Please refresh your browser");
+      return;
+    }
     updateStatus(data.id, "upload", newList, setList);
     var bodyFormDataAdd = new FormData();
     bodyFormDataAdd.append("file", data.file);
