@@ -16,6 +16,7 @@ import { useQuery } from "react-query";
 import "./searchcv.css";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import Filter from "./Filter";
+import { BsPlusLg } from "react-icons/bs";
 
 const SearchCV = () => {
   const navigate = useNavigate();
@@ -481,6 +482,17 @@ const SearchCV = () => {
                 loading={isLoading}
               >
                 <FaFilter className="filter-icon" />
+              </Button>
+              <Button
+                className="button-primary filter-modal-button"
+                type="primary"
+                onClick={() => {
+                  navigateTo("/cv/create");
+                }}
+                loading={isLoading}
+              >
+                <BsPlusLg className="filter-icon" />
+                <span className="bold">Build CV</span>
               </Button>
             </div>
           }

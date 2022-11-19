@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { Form, Modal, Input, Select, message, notification } from "antd";
+import {
+  Form,
+  Modal,
+  Input,
+  Select,
+  message,
+  notification,
+  Button,
+} from "antd";
 import { monthSelectionLabel, makeYear, formatInput } from "../../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import "../PersonalInfo/buildcv.css";
 
 const UpdateWork = ({
   data,
@@ -103,9 +112,7 @@ const UpdateWork = ({
       title={!data.id ? "Add Work Experience" : "Edit Work Experience"}
       visible={visible}
       onCancel={handleCancel}
-      okText={!data.id ? "Add" : "Update"}
-      onOk={form.submit}
-      confirmLoading={isLoading}
+      footer={false}
     >
       <Form
         size="large"
@@ -188,6 +195,23 @@ const UpdateWork = ({
             placeholder="Description"
           />
         </Form.Item>
+        <div className="flex-at-end">
+          <Button
+            className="button-primary grid-last-btn"
+            type="primary"
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="button-primary grid-last-btn"
+            type="primary"
+            htmlType="submit"
+            loading={isLoading}
+          >
+            {!data.id ? "Add Experience" : "Edit Experience"}
+          </Button>
+        </div>
       </Form>
     </Modal>
   );

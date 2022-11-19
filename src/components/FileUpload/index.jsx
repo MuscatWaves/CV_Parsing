@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Modal, Button, Upload, message } from "antd";
+import { Modal, Button, message, Divider } from "antd";
 import "../MultipleFileUpload/multip.css";
 import { UploadOutlined } from "@ant-design/icons";
 import { checkWhichFile, checkImageIcon } from "../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import Dragger from "antd/lib/upload/Dragger";
 
 const FileUpload = ({
   isUploadModal,
@@ -28,7 +29,7 @@ const FileUpload = ({
   const cookies = new Cookies();
   const token = cookies.get("token");
 
-  const addAttachment = async () => {
+  const addAttachment = async (file) => {
     toggleLoading(true);
     var bodyFormDataAdd = new FormData();
     bodyFormDataAdd.append("id", userId);
@@ -65,6 +66,8 @@ const FileUpload = ({
       });
   };
 
+  console.log(file);
+
   return (
     <Modal
       title={`Update ${cvPicType && cvPicType.toUpperCase()}`}
@@ -74,8 +77,8 @@ const FileUpload = ({
     >
       {isUploadModal && (
         <div className="file_multiple">
-          <div className="flex-small-gap" style={{ width: "100%" }}>
-            <Upload
+          <div style={{ width: "100%" }} className="flex-small-gap1-column">
+            <Dragger
               name="cv profile"
               listType="picture"
               accept={
@@ -83,39 +86,34 @@ const FileUpload = ({
               }
               maxCount={1}
               beforeUpload={(file) => {
-                setFile(file);
+                addAttachment(file);
                 return false;
               }}
               showUploadList={false}
             >
-              <Button icon={file?.name ? false : <UploadOutlined />}>
-                {file?.name ? (
-                  <div
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      width: "160px",
-                    }}
-                  >
-                    {file.name}
-                  </div>
-                ) : (
-                  `Click to upload`
-                )}
-              </Button>
-            </Upload>
-            <Button
-              className="add_attachment_section"
-              type="primary"
-              onClick={addAttachment}
-              disabled={file === null}
-              loading={loading}
-            >
-              Update
-            </Button>
+              <div className="flex-small-gap1-column medium-padding">
+                <UploadOutlined style={{ fontSize: "45px" }} />
+                <p className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Supports only single upload. Avoid dragging multiple files.
+                </p>
+              </div>
+            </Dragger>
+            {loading ? (
+              <div className="text-green bold flex-center">
+                Upload in progress
+              </div>
+            ) : (
+              <div className="text-orange bold flex-center">
+                {"No file selected " || file}
+              </div>
+            )}
           </div>
+          <Divider />
           <div className="flex-column-gap">
-            <div className="bold text-black medium">{`Current ${cvPicType.toUpperCase()}`}</div>
+            <div className="bold text-black medium-text">{`Current ${cvPicType.toUpperCase()}`}</div>
             <div>
               {cvPicType === "dp" ? (
                 <div>

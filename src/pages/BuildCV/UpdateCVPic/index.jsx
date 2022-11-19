@@ -10,6 +10,7 @@ import Loader from "../../../components/Loader";
 import { useNavigate } from "react-router-dom";
 import { checkImageIcon, checkWhichFile, showPdf } from "../../../utilities";
 import FileUpload from "../../../components/FileUpload";
+import "../PersonalInfo/buildcv.css";
 import "./updateCvPic.css";
 
 const UpdateCvPic = () => {

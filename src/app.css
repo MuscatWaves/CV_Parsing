@@ -184,6 +184,10 @@ p {
   animation: zoom-in 0.8s;
 }
 
+.medium-padding {
+  padding: 1rem;
+}
+
 .small-padding-bottom {
   padding-bottom: 1rem;
 }
@@ -245,7 +249,6 @@ p {
   display: flex;
   justify-content: center;
 }
-
 
 .link {
   transition: 0.3s;
