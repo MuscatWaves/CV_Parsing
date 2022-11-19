@@ -66,8 +66,6 @@ const FileUpload = ({
       });
   };
 
-  console.log(file);
-
   return (
     <Modal
       title={`Update ${cvPicType && cvPicType.toUpperCase()}`}
