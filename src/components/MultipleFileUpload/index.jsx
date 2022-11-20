@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Select, Upload, message } from "antd";
+import { Modal, Button, Select, message } from "antd";
 import { categorySelection } from "../../pages/CVProfile/constants";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { BsCheckCircleFill } from "react-icons/bs";
@@ -7,6 +7,7 @@ import { checkCategory, updateStatus } from "../../utilities";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import "./multip.css";
+import Dragger from "antd/lib/upload/Dragger";
 
 const MultipleFileUpload = ({
   isUploadModal,
@@ -134,30 +135,41 @@ const MultipleFileUpload = ({
                 textOverflow: "ellipsis",
               }}
             />
-            <Upload
+            <Dragger
               name="cv profile"
               listType="picture"
               accept=".pdf,.docx,.xslx,.doc,.jpg,.jpeg,.png"
-              maxCount={1}
-              beforeUpload={(file) => {
-                const len = list.length;
-                setList([
-                  ...list,
-                  {
-                    id: len + 1,
+              beforeUpload={(_file, fileList) => {
+                var len = list.length;
+                var build_new_list = fileList.map((file) => {
+                  len = len + 1;
+                  return {
+                    id: len,
                     category: category,
                     file: file,
                     upload: false,
                     uploaded: false,
-                  },
-                ]);
+                  };
+                });
+                const build_main_list = [...list, ...build_new_list];
+                setList(build_main_list);
                 return false;
               }}
               showUploadList={false}
               disabled={category === null}
+              multiple
             >
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
-            </Upload>
+              {/* <Button icon={<UploadOutlined />}>Click to upload</Button> */}
+              <div className="flex-small-gap1-column medium-padding">
+                <UploadOutlined style={{ fontSize: "45px" }} />
+                <p className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Supports only single upload. Avoid dragging multiple files.
+                </p>
+              </div>
+            </Dragger>
           </div>
           <div className="flex-column-gap">
             {list.map((eachListItem) => (
