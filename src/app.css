@@ -29,6 +29,21 @@ p {
 
 /* Global Styles used */
 
+.ant-input {
+  color: grey;
+  font-weight: 600;
+}
+
+.ant-select {
+  color: grey;
+  font-weight: 600;
+}
+
+.ant-select-selection-item {
+  color: grey;
+  font-weight: 600 !important;
+}
+
 .ant-table-thead > tr > th {
   font-weight: 700;
   color: #272727;

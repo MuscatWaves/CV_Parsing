@@ -28,7 +28,7 @@
   cursor: pointer;
   position: relative;
   gap: 0.5rem;
-  max-width: 350px;
+  width: 350px;
   background-color: rgba(255, 255, 255, 0.452);
   border-radius: 4px;
   padding: 1.5rem 2rem;
@@ -128,11 +128,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: fit-content;
   border-radius: 100px;
   width: 80px;
   height: 80px;
-  padding: 1rem;
+  padding: 0.2rem;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
@@ -148,6 +147,10 @@
 }
 
 @media screen and (max-width: 700px) {
+  .card {
+    width: 250px;
+  }
+
   .dashboard-body {
     flex-direction: column;
   }

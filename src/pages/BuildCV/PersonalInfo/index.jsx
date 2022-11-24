@@ -624,7 +624,7 @@ const BuildCV = () => {
                 <Input placeholder="Weight" />
               </Form.Item>
               <Button
-                className="button-primary grid-last-btn"
+                className="button-primary grid-last-btn small-margin-top"
                 type="primary"
                 htmlType="submit"
                 loading={isLoading}
