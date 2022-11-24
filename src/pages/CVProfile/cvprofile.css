@@ -124,6 +124,7 @@
   font-weight: 700;
   border-radius: 20px;
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .each-skill:hover {
@@ -139,6 +140,8 @@
   font-weight: 600;
   border-radius: 5px;
   transition: 0.3s;
+  text-decoration: none;
+  border: #f69f00 solid 1px;
 }
 
 .each-skill-public:hover {
@@ -171,17 +174,6 @@
   margin: 1.5rem;
 }
 
-.plus-button-cv-profile {
-  font-size: 32px;
-  color: #f07d00;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.plus-button-cv-profile:hover {
-  transform: scale(1.2);
-}
-
 .attachments-public-section {
   display: flex;
   justify-content: center;
@@ -203,22 +195,14 @@
   animation: glow 1s infinite alternate;
 }
 
-.custom-profile-button > button {
-  background-color: #f07d00;
-  border: none;
-  color: #fff;
-  border: 1px solid #f07d00;
-  margin: 0.5rem;
-}
-
 .custom-profile-button > button:nth-child(1) {
   width: 80%;
-  border-radius: 20px !important;
+  border-radius: 10px 0 0 10px;
 }
 
 .custom-profile-button > button:nth-child(2) {
   width: 20%;
-  border-radius: 20px !important;
+  border-radius: 0 10px 10px 0;
 }
 
 @media screen and (max-width: 1200px) {

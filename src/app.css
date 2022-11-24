@@ -1,4 +1,4 @@
-@import "~antd/dist/antd.css";
+/* @import "~antd/dist/antd.css"; */
 
 :root {
   --black-color: #272727;
@@ -10,14 +10,15 @@
   --background-card-color: #ecf0f3;
 }
 
-.App {
-  /* background-image: linear-gradient(rgba(0, 0, 0, 0.040), rgba(0, 0, 0, 0.060)), url("./images/main-background.webp"); */
-  background: rgb(221, 221, 221);
+body {
   background: radial-gradient(
     circle,
     rgba(221, 221, 221, 1) 0%,
     rgba(238, 238, 238, 1) 100%
   );
+}
+
+.App {
   min-height: 100vh;
   scroll-behavior: smooth;
 }
@@ -31,26 +32,6 @@ p {
 .ant-table-thead > tr > th {
   font-weight: 700;
   color: #272727;
-}
-
-.button-primary {
-  background-color: #f07d00;
-  border: none;
-  border-radius: 20px;
-  margin-top: 1rem;
-  color: #fff;
-  border: 1px solid #f07d00;
-}
-
-.button-primary:hover {
-  background-color: #fff;
-  color: #f07d00;
-  border: 1px solid #f07d00;
-}
-
-.button-primary:focus {
-  background-color: #f07d00;
-  color: #fff;
 }
 
 .header-log-out-btn {
@@ -248,6 +229,11 @@ p {
 .flex-center {
   display: flex;
   justify-content: center;
+}
+
+.flex-align-center {
+  display: flex;
+  align-items: center;
 }
 
 .link {

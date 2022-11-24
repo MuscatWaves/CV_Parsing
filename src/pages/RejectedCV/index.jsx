@@ -159,6 +159,7 @@ const RejectedCV = () => {
         <Button
           type="primary"
           shape="round"
+          ghost
           onClick={() => window.open(`/files/cv/${record.file}`, "_blank")}
         >
           <AiOutlineFileText className="large-text" />
@@ -205,7 +206,8 @@ const RejectedCV = () => {
             {!isReScanLoading && (
               <Button
                 className="no-margin-top"
-                type="danger"
+                type="primary"
+                danger
                 shape="round"
                 onClick={deleteCv}
                 loading={isDeleteLoading}

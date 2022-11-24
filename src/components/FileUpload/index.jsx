@@ -89,7 +89,7 @@ const FileUpload = ({
               }}
               showUploadList={false}
             >
-              <div className="flex-small-gap1-column medium-padding">
+              <div className="flex-small-gap1-column medium-padding flex-align-center">
                 <UploadOutlined style={{ fontSize: "45px" }} />
                 <p className="ant-upload-text">
                   Click or drag file to this area to upload

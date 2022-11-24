@@ -432,9 +432,9 @@ const SearchCV = () => {
                 (filterValue, index) => filterData[filterValue]
               ).length > 0 && (
                 <Button
-                  className="filter-modal-button-clear"
                   type="primary"
                   size="medium"
+                  danger
                   onClick={() => {
                     const newData = {
                       jobTitle: "",
@@ -474,22 +474,22 @@ const SearchCV = () => {
                 </Button>
               )}
               <Button
-                className="button-primary filter-modal-button"
                 type="primary"
                 onClick={() => {
                   toggleShow(true);
                 }}
                 loading={isLoading}
+                shape={"round"}
               >
                 <FaFilter className="filter-icon" />
               </Button>
               <Button
-                className="button-primary filter-modal-button"
                 type="primary"
                 onClick={() => {
                   navigateTo("/cv/create");
                 }}
                 loading={isLoading}
+                className={"flex-small-gap"}
               >
                 <BsPlusLg className="filter-icon" />
                 <span className="bold">Build CV</span>

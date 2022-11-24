@@ -613,6 +613,7 @@ const CVprofile = () => {
                     onClick={() => navigateTo(`/cv/update/${userData.user.id}`)}
                     overlay={menu}
                     icon={<HiDotsHorizontal style={{ fontSize: "24px" }} />}
+                    type={"primary"}
                   >
                     Edit Profile
                   </Dropdown.Button>
@@ -698,6 +699,8 @@ const CVprofile = () => {
                       Attachments
                     </div>
                     <Button
+                      type="primary"
+                      shape="round"
                       className="button-primary"
                       onClick={() => toggleUploadModal(true)}
                     >

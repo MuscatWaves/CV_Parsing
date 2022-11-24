@@ -124,7 +124,7 @@ const MultipleFileUpload = ({
       footer={false}
     >
       {isUploadModal && (
-        <div className="file_multiple">
+        <div className="file_multiple small-margin-top">
           <div className="file_multiple__input-container">
             <Select
               placeholder={"Select Category"}
@@ -160,7 +160,7 @@ const MultipleFileUpload = ({
               multiple
             >
               {/* <Button icon={<UploadOutlined />}>Click to upload</Button> */}
-              <div className="flex-small-gap1-column medium-padding">
+              <div className="flex-small-gap1-column medium-padding flex-align-center">
                 <UploadOutlined style={{ fontSize: "45px" }} />
                 <p className="ant-upload-text">
                   Click or drag file to this area to upload

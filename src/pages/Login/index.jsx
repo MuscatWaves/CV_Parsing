@@ -137,7 +137,7 @@ const Login = () => {
         <Button
           type="primary"
           htmlType="submit"
-          className="button-primary"
+          className="small-margin-top bold"
           size="large"
           loading={isLoading}
         >

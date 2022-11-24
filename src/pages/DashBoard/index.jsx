@@ -6,10 +6,10 @@ import jwt from "jsonwebtoken";
 import { Button } from "antd";
 import Cookies from "universal-cookie";
 import Authentication from "../../components/Authentication";
-import { m } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import "./DashBoard.css";
 import { removeCookie } from "../../utilities";
-import { animate, cards, c_animate, c_intial, intial } from "./constants";
+import { animate, cards, container, intial, item } from "./constants";
 
 const DashBoard = () => {
   const [isLoggedIn, setLoggedIn] = useState({});
@@ -57,36 +57,46 @@ const DashBoard = () => {
         <m.div initial={intial} animate={animate}>
           <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
         </m.div>
-        <m.div initial={c_intial} animate={c_animate}>
+        {/* <m.div initial={c_intial} animate={c_animate}> */}
+        <m.div>
           <m.span className="welcome-message">
             <h1 className="text-orange bold">Welcome</h1>
             <h1 className="text-grey">{isLoggedIn.name}</h1>
           </m.span>
-          <m.div
-            className={
-              checkNumberOfCards() > 4 ? "main-card grid-3" : "main-card"
-            }
-          >
-            {cards(isLoggedIn).map(
-              (card, index) =>
-                card.permission && (
-                  <m.div
-                    key={card.id}
-                    className="card"
-                    onClick={() => navigateTo(card.path)}
-                  >
-                    <div className="dash-card-icon">
-                      <card.icon style={{ fontSize: "40px" }} />
-                    </div>
-                    <h2>{card.title}</h2>
-                    <p>{card.description}</p>
-                    <div className="go-corner" href="#">
-                      <div className="go-arrow">→</div>
-                    </div>
-                  </m.div>
-                )
-            )}
-          </m.div>
+
+          <AnimatePresence>
+            <m.div
+              className={
+                checkNumberOfCards() > 4 ? "main-card grid-3" : "main-card"
+              }
+              variants={container}
+              initial="hidden"
+              animate="show"
+            >
+              {cards(isLoggedIn).map(
+                (card, index) =>
+                  card.permission && (
+                    <m.div
+                      key={card.id}
+                      className="card"
+                      onClick={() => navigateTo(card.path)}
+                      variants={item}
+                    >
+                      <div className="dash-card-icon">
+                        <card.icon style={{ fontSize: "40px" }} />
+                      </div>
+                      <div>
+                        <h2>{card.title}</h2>
+                        <p>{card.description}</p>
+                      </div>
+                      <div className="go-corner" href="#">
+                        <div className="go-arrow">→</div>
+                      </div>
+                    </m.div>
+                  )
+              )}
+            </m.div>
+          </AnimatePresence>
         </m.div>
       </div>
       <div className="copyright text-grey">

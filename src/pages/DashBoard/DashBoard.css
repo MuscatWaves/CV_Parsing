@@ -28,7 +28,7 @@
   cursor: pointer;
   position: relative;
   gap: 0.5rem;
-  max-width: 400px;
+  max-width: 350px;
   background-color: rgba(255, 255, 255, 0.452);
   border-radius: 4px;
   padding: 1.5rem 2rem;
@@ -36,9 +36,9 @@
   border-radius: 20px;
   text-decoration: none;
   z-index: 0;
+  transition: box-shadow 0.3s;
   overflow: hidden;
   color: var(--light-grey-color);
-  transition: 0.3s;
   box-shadow: var(--shadow-1), var(--shadow-2);
 }
 
@@ -58,11 +58,12 @@
 }
 
 .card:hover::before {
-  transform: scale(30);
+  transform: scale(32);
 }
 
 .card:hover {
   color: #fff;
+  box-shadow: var(--shadow-2), var(--shadow-1);
 }
 
 .welcome-message {
