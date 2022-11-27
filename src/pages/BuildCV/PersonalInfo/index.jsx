@@ -470,6 +470,7 @@ const BuildCV = () => {
                     })
                   }
                   style={{ cursor: "pointer" }}
+                  loading
                 >
                   Pakistan
                 </Tag>

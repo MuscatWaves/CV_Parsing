@@ -6,8 +6,8 @@ import {
   genderSelectOptions,
 } from "./constants.ts";
 import { item } from "../CVProfile/constants";
-import moment from "moment";
 import { Button, Select, Input, DatePicker } from "antd";
+import dayjs from "dayjs";
 
 const Filter = ({
   filterData,
@@ -85,20 +85,34 @@ const Filter = ({
         <div className="each-filter-modal-inner">
           <div className="bolder text-grey">Date Selection</div>
           <RangePicker
-            value={[filterData.searchByFromdate, filterData.searchByTodate]}
-            ranges={{
-              Today: [moment(), moment()],
-              Yesterday: [
-                moment().subtract(1, "day"),
-                moment().subtract(1, "day"),
-              ],
-              "Last 30 Days": [moment().subtract(30, "days"), moment()],
-              "This Month": [moment().startOf("month"), moment()],
-              "Last Month": [
-                moment().subtract(1, "month").startOf("month"),
-                moment().subtract(1, "month").endOf("month"),
-              ],
-            }}
+            value={[
+              (dayjs(filterData.searchByFromdate).isValid() &&
+                dayjs(filterData.searchByFromdate)) ||
+                "",
+              (dayjs(filterData.searchByTodate).isValid() &&
+                dayjs(filterData.searchByTodate)) ||
+                "",
+            ]}
+            presets={[
+              { label: "Today", value: [dayjs(), dayjs()] },
+              {
+                label: "Yesterday",
+                value: [dayjs().add(-1, "d"), dayjs().add(-1, "d")],
+              },
+              { label: "Last 7 Days", value: [dayjs().add(-7, "d"), dayjs()] },
+              {
+                label: "Last 14 Days",
+                value: [dayjs().add(-14, "d"), dayjs()],
+              },
+              {
+                label: "Last 30 Days",
+                value: [dayjs().add(-30, "d"), dayjs()],
+              },
+              {
+                label: "Last 90 Days",
+                value: [dayjs().add(-90, "d"), dayjs()],
+              },
+            ]}
             onChange={onDateChange}
           />
         </div>

@@ -54,11 +54,15 @@ const DashBoard = () => {
         </Button>
       </div>
       <div className="dashboard-body">
-        <m.div initial={intial} animate={animate}>
+        <m.div
+          initial={intial}
+          animate={animate}
+          className="dsh-img-container-main"
+        >
           <img className="oj-image-dashboard" src={ojimage} alt={"Oman Jobs"} />
         </m.div>
         {/* <m.div initial={c_intial} animate={c_animate}> */}
-        <m.div>
+        <m.div className="dsh-card-container-main">
           <m.span className="welcome-message">
             <h1 className="text-orange bold">Welcome</h1>
             <h1 className="text-grey">{isLoggedIn.name}</h1>

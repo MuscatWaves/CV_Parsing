@@ -16,6 +16,7 @@ import { useQuery } from "react-query";
 import "./searchcv.css";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import Filter from "./Filter";
+import dayjs from "dayjs";
 import { BsPlusLg } from "react-icons/bs";
 
 const SearchCV = () => {
@@ -376,11 +377,11 @@ const SearchCV = () => {
     const data = {
       SearchByFromdate:
         (filterData.searchByFromdate &&
-          moment(filterData.searchByFromdate).format("YYYY-MM-DD")) ||
+          dayjs(filterData.searchByFromdate).format("YYYY-MM-DD")) ||
         "",
       SearchByTodate:
         (filterData.searchByTodate &&
-          moment(filterData.searchByTodate).format("YYYY-MM-DD")) ||
+          dayjs(filterData.searchByTodate).format("YYYY-MM-DD")) ||
         "",
       JobTitle: filterData.jobTitle,
       Age: filterData.age,

@@ -8,6 +8,7 @@ import femaleUserImage from "../images/female-user.png";
 import noGenderImage from "../images/user-no-image.png";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
+import dayjs from "dayjs";
 import axios from "axios";
 
 export const removeUnderScore = (str) => {
@@ -121,7 +122,7 @@ export const makeFiltered = (
               (filterValue !== "searchByFromdate" &&
                 filterValue !== "searchByTodate" &&
                 removeUnderScore(filterData[filterValue])) ||
-              filterData[filterValue]
+              dayjs(filterData[filterValue])?.format("ddd, MMM D, YYYY")
             }`}</div>
             {filterValue !== "searchByFromdate" &&
               filterValue !== "searchByTodate" &&

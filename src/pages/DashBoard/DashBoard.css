@@ -5,19 +5,29 @@
 
 .dashboard-body {
   display: flex;
-  align-items: center;
+  width: 100%;
   min-height: 82vh;
+  align-items: center;
   justify-content: center;
 }
 
+.dsh-card-container-main {
+  flex: 0.9;
+}
+
 .main-card {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
 }
 
 .grid-3 {
-  grid-template-columns: repeat(3, auto);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .card {
@@ -28,7 +38,7 @@
   cursor: pointer;
   position: relative;
   gap: 0.5rem;
-  width: 350px;
+  width: 320px;
   background-color: rgba(255, 255, 255, 0.452);
   border-radius: 4px;
   padding: 1.5rem 2rem;

@@ -159,6 +159,7 @@ const UploadCV = () => {
                   loading={isFetching}
                   value={selectedCategory}
                   onChange={(value) => setSelectedCategory(value)}
+                  showSearch
                 />
               </div>
               <div>
