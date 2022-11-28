@@ -7,6 +7,7 @@ import {
   message,
   notification,
   Button,
+  Tag,
 } from "antd";
 import { monthSelectionLabel, makeYear, formatInput } from "../../../utilities";
 import axios from "axios";
@@ -107,7 +108,27 @@ const UpdateEducation = ({
 
   return (
     <Modal
-      title={!data.id ? "Add Education" : "Edit Education"}
+      title={
+        !data.id ? (
+          <div>
+            <div>Add Education</div>
+            <Tag
+              color="blue"
+              className="pointer"
+              onClick={() =>
+                form.setFieldsValue({
+                  edu_name: "N/A",
+                  college: "N/A",
+                })
+              }
+            >
+              N/A
+            </Tag>
+          </div>
+        ) : (
+          "Edit Education"
+        )
+      }
       visible={visible}
       onCancel={handleCancel}
       footer={false}

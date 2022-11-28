@@ -139,6 +139,12 @@ p {
   align-items: center;
 }
 
+.flex-gap {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .flex-very-small-gap {
   display: flex;
   gap: 0.2rem;
