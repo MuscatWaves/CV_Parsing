@@ -35,6 +35,7 @@ const SearchCV = () => {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [filterData, setFilterData] = useState({
+    user: history ? history.user : "",
     jobTitle: history ? history.jobTitle : "",
     name: history ? history.name : "",
     jobCategory: history ? history.jobCategory : "",
@@ -128,6 +129,7 @@ const SearchCV = () => {
         MaritalStatus: data.MaritalStatus,
         FromDate: data.SearchByFromdate,
         ToDate: data.SearchByTodate,
+        user: data.User,
       },
     };
     try {
@@ -390,6 +392,7 @@ const SearchCV = () => {
       Gender: filterData.gender,
       MaritalStatus: filterData.maritalStatus,
       Search: filterData.name,
+      User: filterData.user,
     };
     getData(data, page);
   };
@@ -447,6 +450,7 @@ const SearchCV = () => {
                       nationality: "",
                       searchByFromdate: "",
                       searchByTodate: "",
+                      user: "",
                     };
                     setFilterData(newData);
                     const data = {
@@ -459,6 +463,7 @@ const SearchCV = () => {
                       Gender: "",
                       MaritalStatus: "",
                       Search: "",
+                      User: "",
                     };
                     setPage(1);
                     localStorage.setItem("page", JSON.stringify(1));
@@ -505,6 +510,7 @@ const SearchCV = () => {
               setFilterData={setFilterData}
               jobCategoryResult={jobCategoryResult}
               nationalityResult={nationalityResult}
+              userRelatedData={userRelatedData}
               onDateChange={onDateChange}
               toggleShow={toggleShow}
               refresh={refresh}

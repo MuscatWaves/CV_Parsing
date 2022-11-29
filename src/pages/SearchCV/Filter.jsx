@@ -14,6 +14,7 @@ const Filter = ({
   setFilterData,
   jobCategoryResult,
   nationalityResult,
+  userRelatedData,
   onDateChange,
   toggleShow,
   refresh,
@@ -123,6 +124,18 @@ const Filter = ({
             onChange={(e) =>
               setFilterData({ ...filterData, jobTitle: e.target.value })
             }
+          />
+        </div>
+        <div className="each-filter-modal-inner">
+          <div className="bolder text-grey">Users</div>
+          <Select
+            className="select-options"
+            value={filterData.user}
+            options={userRelatedData.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
+            onChange={(value) => setFilterData({ ...filterData, user: value })}
           />
         </div>
       </div>
