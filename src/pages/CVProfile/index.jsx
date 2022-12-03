@@ -60,7 +60,7 @@ const CVprofile = () => {
   const dataParams = useParams();
   const [form] = Form.useForm();
   const cookies = new Cookies();
-  const token = cookies.get("token");
+  const token = cookies?.get("token");
   const [userData, setUserData] = useState({
     user: {},
     attachments: [],
@@ -88,7 +88,7 @@ const CVprofile = () => {
   const user =
     (dataParams.type === "app" &&
       token &&
-      jwt.verify(token, process.env.REACT_APP_JWT_KEY)) ||
+      jwt?.verify(token, process.env.REACT_APP_JWT_KEY)) ||
     "";
   const navigate = useNavigate();
   const navigateTo = (path) => {

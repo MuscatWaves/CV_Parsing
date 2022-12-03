@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Authentication = () => {
   const cookies = new Cookies();
-  const token = cookies.get("token");
+  const token = cookies?.get("token");
 
   const navigate = useNavigate();
   const navigateTo = (path) => {

@@ -13,12 +13,12 @@ import "./header.css";
 const Header = () => {
   const navigate = useNavigate();
   const cookies = new Cookies();
-  const token = cookies.get("token");
+  const token = cookies?.get("token");
   const navigateTo = (path) => {
     navigate(path);
   };
   const user =
-    (token && jwt.verify(token, process.env.REACT_APP_JWT_KEY)) || "";
+    (token && jwt?.verify(token, process.env.REACT_APP_JWT_KEY)) || "";
 
   return (
     <div className="header">
