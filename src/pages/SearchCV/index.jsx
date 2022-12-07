@@ -174,7 +174,7 @@ const SearchCV = () => {
             alt="user"
             width={90}
             onClick={() => {
-              const name = `${record.name} ${record.job}`
+              const name = `${record.name} ${record.job.replace("/", "-")}`
                 .replace(/\s+/g, "-")
                 .replace(/\./g, "");
               message.success("Link copied to your clipboard");

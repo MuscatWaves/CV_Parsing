@@ -184,7 +184,10 @@ const CVprofile = () => {
           key: "1",
           icon: <FaUserCheck />,
           onClick: () => {
-            const name = `${userData.user.name} ${userData.user.job}`
+            const name = `${userData.user.name} ${userData.user.job.replace(
+              "/",
+              "-"
+            )}`
               .replace(/\s+/g, "-")
               .replace(/\./g, "");
             window.open(`/cv/${dataParams.id}/${name}`, "_blank");
@@ -207,7 +210,10 @@ const CVprofile = () => {
               label: "Clipboard",
               icon: <FaClipboard />,
               onClick: () => {
-                const name = `${userData.user.name} ${userData.user.job}`
+                const name = `${userData.user.name} ${userData.user.job.replace(
+                  "/",
+                  "-"
+                )}`
                   .replace(/\s+/g, "-")
                   .replace(/\./g, "");
                 message.success("Link copied to your clipboard");
@@ -463,7 +469,9 @@ const CVprofile = () => {
                     width={"170px"}
                     height={"170px"}
                     onClick={() => {
-                      const name = `${userData.user.name} ${userData.user.job}`
+                      const name = `${
+                        userData.user.name
+                      } ${userData.user.job.replace("/", "-")}`
                         .replace(/\s+/g, "-")
                         .replace(/\./g, "");
                       dataParams.type === "app" &&
