@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Select, message } from "antd";
+import { Modal, Button, Select, message, Spin } from "antd";
 import { categorySelection } from "../../pages/CVProfile/constants";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { BsCheckCircleFill } from "react-icons/bs";
@@ -48,9 +48,10 @@ const MultipleFileUpload = ({
   const addAttachment = async (data, newList, bulk) => {
     if (!data) {
       setUploadAll(false);
-      message.error("Upload All Error, Please refresh your browser");
+      message.error("No data to upload");
       return;
     }
+
     updateStatus(data.id, "upload", newList, setList);
     var bodyFormDataAdd = new FormData();
     bodyFormDataAdd.append("file", data.file);
@@ -119,7 +120,7 @@ const MultipleFileUpload = ({
   return (
     <Modal
       title="Upload Attachments"
-      visible={isUploadModal}
+      open={isUploadModal}
       onCancel={handleCancel}
       footer={false}
     >
@@ -185,31 +186,31 @@ const MultipleFileUpload = ({
                     )}
                   </div>
                 </div>
-                {eachListItem.uploaded ? (
+                {eachListItem.uploaded && (
                   <BsCheckCircleFill
                     style={{ fontSize: "25px", color: "#1fc264" }}
                   />
-                ) : (
-                  !uploadAll && (
-                    <div className="flex-small-gap">
-                      <Button
-                        type="danger"
-                        style={{ borderRadius: "30px" }}
-                        icon={<DeleteOutlined />}
-                        onClick={() => deleteAttachment(eachListItem)}
-                        disabled={eachListItem.upload}
-                      />
-                      <Button
-                        type="primary"
-                        style={{ borderRadius: "30px" }}
-                        icon={<UploadOutlined />}
-                        onClick={() => {
-                          addAttachment(eachListItem, list);
-                        }}
-                        loading={eachListItem.upload}
-                      />
-                    </div>
-                  )
+                )}
+                {uploadAll && !eachListItem.uploaded && <Spin size="small" />}
+                {!uploadAll && !eachListItem.uploaded && (
+                  <div className="flex-small-gap">
+                    <Button
+                      type="danger"
+                      style={{ borderRadius: "30px" }}
+                      icon={<DeleteOutlined />}
+                      onClick={() => deleteAttachment(eachListItem)}
+                      disabled={eachListItem.upload}
+                    />
+                    <Button
+                      type="primary"
+                      style={{ borderRadius: "30px" }}
+                      icon={<UploadOutlined />}
+                      onClick={() => {
+                        addAttachment(eachListItem, list);
+                      }}
+                      loading={eachListItem.upload}
+                    />
+                  </div>
                 )}
               </div>
             ))}
