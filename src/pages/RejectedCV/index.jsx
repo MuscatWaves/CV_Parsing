@@ -5,9 +5,10 @@ import Cookies from "universal-cookie";
 import Navigation from "../../components/Navigation";
 import { Table, message, Button, Pagination } from "antd";
 import { AiOutlineFileText } from "react-icons/ai";
-import "./rejectedcv.css";
 import moment from "moment";
+import { useQuery } from "react-query";
 import { m } from "framer-motion";
+import "./rejectedcv.css";
 
 const RejectedCV = () => {
   const cookies = new Cookies();
@@ -33,6 +34,19 @@ const RejectedCV = () => {
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
+
+  const { data: userRelatedData } = useQuery(
+    ["users"],
+    () =>
+      axios.get("/api/user", {
+        headers: {
+          Authorization: token,
+        },
+      }),
+    {
+      select: (data) => data.data.data,
+    }
+  );
 
   const reScanCv = async () => {
     setReScanLoading(true);
@@ -70,6 +84,7 @@ const RejectedCV = () => {
   };
 
   const deleteCv = async () => {
+    setDeleteLoading(true);
     var axios = require("axios");
     var data = JSON.stringify(
       selectedRowKeys.map((data) => ({
@@ -152,6 +167,22 @@ const RejectedCV = () => {
     {
       title: "Remarks",
       dataIndex: "remarks",
+    },
+    {
+      title: "Uploaded By",
+      render: (record) => (
+        <div>
+          <div className="text-black">
+            {
+              userRelatedData?.filter((user) => user.id === record.user)[0]
+                ?.name
+            }
+          </div>
+          <div className="very-small-text text-light-grey">
+            {moment(record.created).format("D MMMM YYYY hh:mm a")}
+          </div>
+        </div>
+      ),
     },
     {
       title: "CV View",
