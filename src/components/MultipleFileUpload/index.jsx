@@ -123,6 +123,7 @@ const MultipleFileUpload = ({
       open={isUploadModal}
       onCancel={handleCancel}
       footer={false}
+      centered
     >
       {isUploadModal && (
         <div className="file_multiple small-margin-top">

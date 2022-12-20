@@ -26,6 +26,7 @@ const DashBoard = () => {
       try {
         var user = token && jwt.verify(token, process.env.REACT_APP_JWT_KEY);
         setLoggedIn(user.data[0]);
+        localStorage.setItem("user", JSON.stringify(user.data[0]));
       } catch (err) {}
     }
   }, [token]);

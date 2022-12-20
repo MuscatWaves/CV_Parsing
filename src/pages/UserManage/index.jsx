@@ -98,6 +98,11 @@ const UserManage = () => {
           render: (record) => renderCheckMark(record.userreport_access),
           align: "center",
         },
+        {
+          title: "CV View/Download",
+          render: (record) => renderCheckMark(record.cvView),
+          align: "center",
+        },
       ],
     },
     {

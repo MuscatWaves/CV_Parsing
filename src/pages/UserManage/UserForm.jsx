@@ -61,6 +61,7 @@ const UserForm = ({
       "userreport_access",
       values.userreport_access === true ? 0 : 1
     );
+    bodyFormDataUpdate.append("cvView", values.cvView === true ? 0 : 1);
     editData && bodyFormDataUpdate.append("status", status);
     setLoading(true);
     await axios({
@@ -103,6 +104,7 @@ const UserForm = ({
       buildcv_access: editData?.buildcv_access === 0 ? true : false || false,
       userreport_access:
         editData?.userreport_access === 0 ? true : false || false,
+      cvView: editData?.cvView === 0 ? true : false || false,
     };
     const state = editData.status === 0 ? 1 : 0;
     handleUpdateUser(data, state);
@@ -136,6 +138,7 @@ const UserForm = ({
               editData?.buildcv_access === 0 ? true : false || false,
             userreport_access:
               editData?.userreport_access === 0 ? true : false || false,
+            cvView: editData?.cvView === 0 ? true : false || false,
           }}
         >
           <Form.Item
@@ -235,6 +238,13 @@ const UserForm = ({
             <Form.Item
               name={"userreport_access"}
               label={"User Report access"}
+              valuePropName={"checked"}
+            >
+              <Switch />
+            </Form.Item>
+            <Form.Item
+              name={"cvView"}
+              label={"CV View/Download"}
               valuePropName={"checked"}
             >
               <Switch />

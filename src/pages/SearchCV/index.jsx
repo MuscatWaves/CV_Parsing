@@ -24,6 +24,7 @@ const SearchCV = () => {
   const navigateTo = (path) => {
     navigate(path);
   };
+  const user = JSON.parse(localStorage.getItem("user"));
   const history = JSON.parse(localStorage.getItem("filter"));
   const pageHistory = JSON.parse(localStorage.getItem("page"));
   const [isLoading, setLoading] = useState(false);
@@ -158,12 +159,34 @@ const SearchCV = () => {
     {
       title: "Image",
       width: "120px",
-      render: (record) => (
-        <Tooltip
-          title="Click to copy the Oman Jobs profile"
-          placement="right"
-          mouseEnterDelay={1}
-        >
+      render: (record) =>
+        user.cvView === 0 ? (
+          <Tooltip
+            title="Click to copy the Oman Jobs profile"
+            placement="right"
+            mouseEnterDelay={1}
+          >
+            <img
+              className="image-user pointer"
+              src={
+                record.image
+                  ? `/files/images/${record.image}`
+                  : checkImageIcon(record.gender)
+              }
+              alt="user"
+              width={90}
+              onClick={() => {
+                const name = `${record.name} ${record.job.replace("/", "-")}`
+                  .replace(/\s+/g, "-")
+                  .replace(/\./g, "");
+                message.success("Link copied to your clipboard");
+                navigator.clipboard.writeText(
+                  `https://share.omanjobs.om/cv/${record.id}/${name}`
+                );
+              }}
+            />
+          </Tooltip>
+        ) : (
           <img
             className="image-user"
             src={
@@ -173,18 +196,8 @@ const SearchCV = () => {
             }
             alt="user"
             width={90}
-            onClick={() => {
-              const name = `${record.name} ${record.job.replace("/", "-")}`
-                .replace(/\s+/g, "-")
-                .replace(/\./g, "");
-              message.success("Link copied to your clipboard");
-              navigator.clipboard.writeText(
-                `https://share.omanjobs.om/cv/${record.id}/${name}`
-              );
-            }}
           />
-        </Tooltip>
-      ),
+        ),
     },
     {
       title: "Name",

@@ -96,6 +96,7 @@ export const checkWhichFile = (cv) => {
 export const removeCookie = (navigate) => {
   localStorage.removeItem("filter");
   localStorage.removeItem("page");
+  localStorage.removeItem("user");
   const cookies = new Cookies();
   cookies.set("token", "", { path: "/", expires: new Date(Date.now()) });
   message.success("Logged Out");

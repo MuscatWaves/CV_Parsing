@@ -18,16 +18,7 @@ import {
 } from "../../utilities";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { GrAttachment } from "react-icons/gr";
-import {
-  Button,
-  Dropdown,
-  Menu,
-  message,
-  Table,
-  Modal,
-  Form,
-  Tooltip,
-} from "antd";
+import { Button, Dropdown, message, Table, Modal, Form, Tooltip } from "antd";
 import {
   FaUserCheck,
   FaFileDownload,
@@ -53,12 +44,14 @@ import {
   getAllUserManageList,
   deleteData,
   deleteFullCV,
+  getUserDataPrivate,
 } from "./endpoints";
 import MultipleFileUpload from "../../components/MultipleFileUpload";
 
 const CVprofile = () => {
   const dataParams = useParams();
   const [form] = Form.useForm();
+  const userAccess = JSON.parse(localStorage.getItem("user"));
   const cookies = new Cookies();
   const token = cookies?.get("token");
   const [userData, setUserData] = useState({
@@ -105,7 +98,7 @@ const CVprofile = () => {
       getAllUserManageList(setUserList, token);
     user && getUserData(dataParams, setUserData, setLoading);
     dataParams.type !== "app" &&
-      getUserData(dataParams, setUserData, setLoading);
+      getUserDataPrivate(dataParams, setUserData, setLoading, token);
     // eslint-disable-next-line
   }, []);
 
@@ -176,13 +169,37 @@ const CVprofile = () => {
     },
   ];
 
-  const menu = dataParams.type === "app" && (
-    <Menu
-      items={[
+  const items = [
+    {
+      label: "Download Oman Jobs CV",
+      key: "1",
+      icon: <FaUserCheck />,
+      onClick: () => {
+        const name = `${userData.user.name} ${userData.user.job.replace(
+          "/",
+          "-"
+        )}`
+          .replace(/\s+/g, "-")
+          .replace(/\./g, "");
+        window.open(`/cv/${dataParams.id}/${name}`, "_blank");
+      },
+    },
+    {
+      label: "Download Original CV",
+      key: "2",
+      icon: <FaFileDownload />,
+      onClick: () => {
+        window.open(`/files/cv/${userData.user.cv}`);
+      },
+    },
+    {
+      label: "Share in",
+      key: "3",
+      children: [
         {
-          label: "Download Oman Jobs CV",
-          key: "1",
-          icon: <FaUserCheck />,
+          key: "3-1",
+          label: "Clipboard",
+          icon: <FaClipboard />,
           onClick: () => {
             const name = `${userData.user.name} ${userData.user.job.replace(
               "/",
@@ -190,83 +207,55 @@ const CVprofile = () => {
             )}`
               .replace(/\s+/g, "-")
               .replace(/\./g, "");
-            window.open(`/cv/${dataParams.id}/${name}`, "_blank");
+            message.success("Link copied to your clipboard");
+            return navigator.clipboard.writeText(
+              `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+            );
           },
         },
         {
-          label: "Download Original CV",
-          key: "2",
-          icon: <FaFileDownload />,
+          key: "3-2",
+          label: "Whatsapp",
+          icon: <FaWhatsapp />,
           onClick: () => {
-            window.open(`/files/cv/${userData.user.cv}`);
+            const name = `${userData.user.name} ${userData.user.job}`
+              .replace(/\s+/g, "-")
+              .replace(/\./g, "");
+            window.open(
+              `https://wa.me/?text=${encodeURIComponent(
+                `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+              )}`
+            );
           },
         },
         {
-          label: "Share in",
-          key: "3",
-          children: [
-            {
-              key: "3-1",
-              label: "Clipboard",
-              icon: <FaClipboard />,
-              onClick: () => {
-                const name = `${userData.user.name} ${userData.user.job.replace(
-                  "/",
-                  "-"
-                )}`
-                  .replace(/\s+/g, "-")
-                  .replace(/\./g, "");
-                message.success("Link copied to your clipboard");
-                return navigator.clipboard.writeText(
-                  `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-                );
-              },
-            },
-            {
-              key: "3-2",
-              label: "Whatsapp",
-              icon: <FaWhatsapp />,
-              onClick: () => {
-                const name = `${userData.user.name} ${userData.user.job}`
-                  .replace(/\s+/g, "-")
-                  .replace(/\./g, "");
-                window.open(
-                  `https://wa.me/?text=${encodeURIComponent(
-                    `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-                  )}`
-                );
-              },
-            },
-            {
-              key: "3-3",
-              label: "Mail",
-              icon: <SiGmail />,
-              onClick: () => {
-                const name = `${userData.user.name} ${userData.user.job}`
-                  .replace(/\s+/g, "-")
-                  .replace(/\./g, "");
-                window.open(
-                  `mailto:?subject=&body=${encodeURIComponent(
-                    `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-                  )}`
-                );
-              },
-            },
-          ],
-          icon: <FcShare />,
-        },
-        user.data[0].type === 1 && {
-          label: "Delete CV",
-          key: "7",
-          danger: true,
-          icon: <FaUserEdit />,
+          key: "3-3",
+          label: "Mail",
+          icon: <SiGmail />,
           onClick: () => {
-            setDeleteCVModal(true);
+            const name = `${userData.user.name} ${userData.user.job}`
+              .replace(/\s+/g, "-")
+              .replace(/\./g, "");
+            window.open(
+              `mailto:?subject=&body=${encodeURIComponent(
+                `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+              )}`
+            );
           },
         },
-      ]}
-    />
-  );
+      ],
+      icon: <FcShare />,
+    },
+    user.data[0].type === 1 && {
+      label: "Delete CV",
+      key: "7",
+      danger: true,
+      icon: <FaUserEdit />,
+      onClick: () => {
+        setDeleteCVModal(true);
+      },
+    },
+  ];
 
   const personalDetail = {
     gender: userData.user.gender,
@@ -385,7 +374,7 @@ const CVprofile = () => {
 
       <Modal
         title="Delete Confirmation"
-        visible={deleteModal}
+        open={deleteModal}
         onOk={() =>
           deleteData({
             deletionData,
@@ -409,7 +398,7 @@ const CVprofile = () => {
 
       <Modal
         title="Delete CV Confirmation"
-        visible={deleteCVModal}
+        open={deleteCVModal}
         onOk={() =>
           deleteFullCV(
             userData,
@@ -451,13 +440,7 @@ const CVprofile = () => {
               initial="hidden"
             >
               <m.div className="cvprofile-header-first-part" variants={item}>
-                <Tooltip
-                  title={
-                    dataParams.type === "app"
-                      ? "Click to copy the Oman Jobs profile"
-                      : ""
-                  }
-                >
+                {userAccess.cvView === 1 ? (
                   <img
                     className={"cvprofile-picture"}
                     src={
@@ -468,23 +451,43 @@ const CVprofile = () => {
                     alt="user"
                     width={"170px"}
                     height={"170px"}
-                    onClick={() => {
-                      const name = `${
-                        userData.user.name
-                      } ${userData.user.job.replace("/", "-")}`
-                        .replace(/\s+/g, "-")
-                        .replace(/\./g, "");
-                      dataParams.type === "app" &&
-                        message.success("Link copied to your clipboard");
-                      return (
-                        dataParams.type === "app" &&
-                        navigator.clipboard.writeText(
-                          `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-                        )
-                      );
-                    }}
                   />
-                </Tooltip>
+                ) : (
+                  <Tooltip
+                    title={
+                      dataParams.type === "app"
+                        ? "Click to copy the Oman Jobs profile"
+                        : ""
+                    }
+                  >
+                    <img
+                      className={"cvprofile-picture"}
+                      src={
+                        userData.user.image
+                          ? `/files/images/${userData.user.image}`
+                          : checkImageIcon(userData.user.gender)
+                      }
+                      alt="user"
+                      width={"170px"}
+                      height={"170px"}
+                      onClick={() => {
+                        const name = `${
+                          userData.user.name
+                        } ${userData.user.job.replace("/", "-")}`
+                          .replace(/\s+/g, "-")
+                          .replace(/\./g, "");
+                        dataParams.type === "app" &&
+                          message.success("Link copied to your clipboard");
+                        return (
+                          dataParams.type === "app" &&
+                          navigator.clipboard.writeText(
+                            `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+                          )
+                        );
+                      }}
+                    />
+                  </Tooltip>
+                )}
                 <p className="text-red bold">
                   {!userData.user.gender && "Please update the gender!"}
                 </p>
@@ -616,15 +619,31 @@ const CVprofile = () => {
               </m.div>
               <m.div className="experiences-list" variants={item}>
                 {dataParams.type === "app" && (
-                  <Dropdown.Button
-                    className="custom-profile-button"
-                    onClick={() => navigateTo(`/cv/update/${userData.user.id}`)}
-                    overlay={menu}
-                    icon={<HiDotsHorizontal style={{ fontSize: "24px" }} />}
-                    type={"primary"}
-                  >
-                    Edit Profile
-                  </Dropdown.Button>
+                  <div>
+                    {userAccess.cvView === 0 ? (
+                      <Dropdown.Button
+                        className="custom-profile-button"
+                        onClick={() =>
+                          navigateTo(`/cv/update/${userData.user.id}`)
+                        }
+                        menu={{ items }}
+                        icon={<HiDotsHorizontal style={{ fontSize: "24px" }} />}
+                        type={"primary"}
+                      >
+                        Edit Profile
+                      </Dropdown.Button>
+                    ) : (
+                      <Button
+                        type="primary"
+                        onClick={() =>
+                          navigateTo(`/cv/update/${userData.user.id}`)
+                        }
+                        block
+                      >
+                        Edit Profile
+                      </Button>
+                    )}
+                  </div>
                 )}
                 <m.div className="cvprofile-skills" variants={item}>
                   <div className="bolder large-text text-black">
@@ -726,7 +745,7 @@ const CVprofile = () => {
                   </div>
                 </m.div>
               )}
-              {dataParams.type === "app" && (
+              {dataParams.type === "app" && userAccess.cvView === 0 && (
                 <m.div className="grid-gather" variants={item}>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
                     <div
