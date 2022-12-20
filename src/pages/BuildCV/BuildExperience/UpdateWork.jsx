@@ -110,7 +110,7 @@ const UpdateWork = ({
   return (
     <Modal
       title={!data.id ? "Add Work Experience" : "Edit Work Experience"}
-      visible={visible}
+      open={visible}
       onCancel={handleCancel}
       footer={false}
     >

@@ -17,7 +17,6 @@ import "./buildEx.css";
 const BuildExperience = () => {
   const dataParams = useParams();
   const [userDataLoading, setUserDataLoading] = useState("none");
-  const { Step } = Steps;
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [userData, setUserData] = useState({});
@@ -144,7 +143,7 @@ const BuildExperience = () => {
       )}
       <Modal
         title="Delete Work Experience Confirmation"
-        visible={isDeleteWeModal}
+        open={isDeleteWeModal}
         onOk={() => deleteWorkExpData()}
         onCancel={() => {
           setDeleteWeData("");
@@ -164,39 +163,44 @@ const BuildExperience = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={currentStep} onChange={changeStep}>
-            <Step
-              title={
-                <div className="bolder text-black">Personal Information</div>
-              }
-              description={
-                <div className="text-light-grey">
-                  Basic Information of the candidate
-                </div>
-              }
-            />
-            <Step
-              title={<div className="bolder text-black">Education</div>}
-              description={
-                <div className="text-light-grey">
-                  Education details of the candidate
-                </div>
-              }
-            />
-            <Step
-              title={<div className="bolder text-black">Experience</div>}
-              description={
-                <div className="text-light-grey">
-                  Work Experience of the candidate
-                </div>
-              }
-            />
-            <Step
-              title="CV & Picture"
-              description={"Updating the Candidate Picture & CV"}
-            />
-            <Step title="Complete Setup" />
-          </Steps>
+          <Steps
+            progressDot
+            current={currentStep}
+            onChange={changeStep}
+            items={[
+              {
+                title: (
+                  <div className="bolder text-black">Personal Information</div>
+                ),
+                description: (
+                  <div className="text-light-grey">
+                    Basic Information of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: <div className="bolder text-black">Education</div>,
+                description: (
+                  <div className="text-light-grey">
+                    Education details of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: <div className="bolder text-black">Experience</div>,
+                description: (
+                  <div className="text-light-grey">
+                    Work Experience of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: "CV & Picture",
+                description: "Updating the Candidate Picture & CV",
+              },
+              { title: "Complete Setup" },
+            ]}
+          ></Steps>
         </div>
       </div>
       <div className="buildCvExForm--wrapper-whole-body">

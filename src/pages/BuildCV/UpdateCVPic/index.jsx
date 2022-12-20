@@ -16,7 +16,6 @@ import "./updateCvPic.css";
 const UpdateCvPic = () => {
   const dataParams = useParams();
   const [userDataLoading, setUserDataLoading] = useState("none");
-  const { Step } = Steps;
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [userData, setUserData] = useState({});
@@ -25,6 +24,7 @@ const UpdateCvPic = () => {
   const [cvPicType, setCvPicType] = useState(false);
   const [cvLoading, setCvLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(3);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const changeStep = (value) => {
     setCurrentStep(value);
@@ -102,45 +102,50 @@ const UpdateCvPic = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={currentStep} onChange={changeStep}>
-            <Step
-              title={
-                <div className="bolder text-black">Personal Information</div>
-              }
-              description={
-                <div className="text-light-grey">
-                  Basic Information of the candidate
-                </div>
-              }
-            />
-            <Step
-              title={<div className="bolder text-black">Education</div>}
-              description={
-                <div className="text-light-grey">
-                  Education details of the candidate
-                </div>
-              }
-            />
-            <Step
-              title={<div className="bolder text-black">Experience</div>}
-              description={
-                <div className="text-light-grey">
-                  Work Experience of the candidate
-                </div>
-              }
-            />
-            <Step
-              title={
-                <div className="bolder text-black">Upload CV & Picture</div>
-              }
-              description={
-                <div className="text-light-grey">
-                  {`Updating the Candidate Picture & CV`}
-                </div>
-              }
-            />
-            <Step title={`Complete Setup`} />
-          </Steps>
+          <Steps
+            progressDot
+            current={currentStep}
+            onChange={changeStep}
+            items={[
+              {
+                title: (
+                  <div className="bolder text-black">Personal Information</div>
+                ),
+                description: (
+                  <div className="text-light-grey">
+                    Basic Information of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: <div className="bolder text-black">Education</div>,
+                description: (
+                  <div className="text-light-grey">
+                    Education details of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: <div className="bolder text-black">Experience</div>,
+                description: (
+                  <div className="text-light-grey">
+                    Work Experience of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: (
+                  <div className="bolder text-black">Upload CV & Picture</div>
+                ),
+                description: (
+                  <div className="text-light-grey">
+                    {`Updating the Candidate Picture & CV`}
+                  </div>
+                ),
+              },
+              { title: "Complete Setup" },
+            ]}
+          ></Steps>
         </div>
       </div>
       <div className="buildCvExForm--wrapper-whole-body">
@@ -198,58 +203,62 @@ const UpdateCvPic = () => {
                 />
               </div>
             </div>
-            <Divider />
-            <div>
-              <div className="medium-text text-grey bolder">
-                Current Uploaded CV
-              </div>
-              <div
-                style={{
-                  margin: "20px",
-                  width:
-                    (checkWhichFile(userData.cv) === "docx" ||
-                      checkWhichFile(userData.cv) === "doc") &&
-                    "40vw",
-                }}
-              >
-                {checkWhichFile(userData.cv) === "pdf" && (
+            {user.cvView === 0 && (
+              <>
+                <Divider />
+                <div>
+                  <div className="medium-text text-grey bolder">
+                    Current Uploaded CV
+                  </div>
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "center",
+                      margin: "20px",
+                      width:
+                        (checkWhichFile(userData.cv) === "docx" ||
+                          checkWhichFile(userData.cv) === "doc") &&
+                        "40vw",
                     }}
                   >
-                    <Button
-                      type="primary"
-                      onClick={() =>
-                        showPdf(
-                          `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}#view=fitH`,
-                          setCvLoading
-                        )
-                      }
-                      loading={cvLoading}
-                    >
-                      View Original PDF
-                    </Button>
+                    {checkWhichFile(userData.cv) === "pdf" && (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Button
+                          type="primary"
+                          onClick={() =>
+                            showPdf(
+                              `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}#view=fitH`,
+                              setCvLoading
+                            )
+                          }
+                          loading={cvLoading}
+                        >
+                          View Original PDF
+                        </Button>
+                      </div>
+                    )}
+                    {(checkWhichFile(userData.cv) === "docx" ||
+                      checkWhichFile(userData.cv) === "doc") && (
+                      <iframe
+                        title={"DOC file for Candidate Resume"}
+                        src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}`}
+                        width="100%"
+                        height="800px"
+                        frameborder="0"
+                      ></iframe>
+                    )}
+                    {userData.cv === "" && (
+                      <div className="medium-text text-light-grey">
+                        No CV uploaded
+                      </div>
+                    )}
                   </div>
-                )}
-                {(checkWhichFile(userData.cv) === "docx" ||
-                  checkWhichFile(userData.cv) === "doc") && (
-                  <iframe
-                    title={"DOC file for Candidate Resume"}
-                    src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}`}
-                    width="100%"
-                    height="800px"
-                    frameborder="0"
-                  ></iframe>
-                )}
-                {userData.cv === "" && (
-                  <div className="medium-text text-light-grey">
-                    No CV uploaded
-                  </div>
-                )}
-              </div>
-            </div>
+                </div>
+              </>
+            )}
           </m.div>
         )) || <Loader minHeight={"65vh"} />}
       </div>

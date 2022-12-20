@@ -115,7 +115,7 @@ const UserForm = ({
       title={editData ? "Update the User Profile" : "Create a New User"}
       placement="right"
       onClose={onClose}
-      visible={isModalOpen}
+      open={isModalOpen}
     >
       {isModalOpen && (
         <Form

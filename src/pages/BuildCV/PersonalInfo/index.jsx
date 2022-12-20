@@ -25,7 +25,6 @@ import "./buildcv.css";
 const BuildCV = () => {
   const dataParams = useParams();
   const [form] = Form.useForm();
-  const { Step } = Steps;
   const cookies = new Cookies();
   const token = cookies.get("token");
   const navigate = useNavigate();
@@ -316,38 +315,40 @@ const BuildCV = () => {
       />
       <div className="steps-holder-wrapper">
         <div className="steps-holder">
-          <Steps progressDot current={currentStep} onChange={changeStep}>
-            <Step
-              title={
-                <div className="bolder text-black">Personal Information</div>
-              }
-              description={
-                <div className="text-light-grey">
-                  Basic Information of the candidate
-                </div>
-              }
-            />
-            <Step
-              title="Education"
-              description="Education details of the candidate"
-              disabled={!dataParams.id}
-            />
-            <Step
-              title="Experience"
-              description="Work Experience of the candidate"
-              disabled={!dataParams.id}
-            />
-            <Step
-              title="CV & Picture"
-              disabled={!dataParams.id}
-              description={"Updating the Candidate Picture & CV"}
-            />
-            <Step
-              // title={<div className="bolder text-black">Complete Setup</div>}
-              title="Complete Setup"
-              disabled={!dataParams.id}
-            />
-          </Steps>
+          <Steps
+            progressDot
+            current={currentStep}
+            onChange={changeStep}
+            items={[
+              {
+                title: (
+                  <div className="bolder text-black">Personal Information</div>
+                ),
+                description: (
+                  <div className="text-light-grey">
+                    Basic Information of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: "Education",
+                description: "Education details of the candidate",
+              },
+              {
+                title: "Experience",
+                description: "Work Experience of the candidate",
+              },
+              {
+                title: "CV & Picture",
+                description: "Updating the Candidate Picture & CV",
+              },
+              {
+                title: "Complete Setup",
+                description: "",
+                disabled: !dataParams.id,
+              },
+            ]}
+          ></Steps>
         </div>
       </div>
       <div className="buildCvForm--wrapper-whole-body">
@@ -470,7 +471,6 @@ const BuildCV = () => {
                     })
                   }
                   style={{ cursor: "pointer" }}
-                  loading
                 >
                   Pakistan
                 </Tag>

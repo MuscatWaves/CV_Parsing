@@ -17,7 +17,6 @@ import "./buildEdu.css";
 const BuildEducation = () => {
   const dataParams = useParams();
   const [userDataLoading, setUserDataLoading] = useState("none");
-  const { Step } = Steps;
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [userData, setUserData] = useState({});
@@ -154,7 +153,7 @@ const BuildEducation = () => {
       )}
       <Modal
         title="Delete Education Confirmation"
-        visible={isDeleteEduModal}
+        open={isDeleteEduModal}
         onOk={deleteEducationData}
         onCancel={() => {
           setDeleteEduData("");
@@ -180,35 +179,38 @@ const BuildEducation = () => {
             onChange={(value) =>
               userData?.length < 1 ? displayError() : changeStep(value)
             }
-          >
-            <Step
-              title={
-                <div className="bolder text-black">Personal Information</div>
-              }
-              description={
-                <div className="text-light-grey">
-                  Basic Information of the candidate
-                </div>
-              }
-            />
-            <Step
-              title={<div className="bolder text-black">Education</div>}
-              description={
-                <div className="text-light-grey">
-                  Education details of the candidate
-                </div>
-              }
-            />
-            <Step
-              title="Experience"
-              description="Work Experience of the candidate"
-            />
-            <Step
-              title="CV & Picture"
-              description={"Updating the Candidate Picture & CV"}
-            />
-            <Step title="Complete Setup" />
-          </Steps>
+            items={[
+              {
+                title: (
+                  <div className="bolder text-black">Personal Information</div>
+                ),
+                description: (
+                  <div className="text-light-grey">
+                    Basic Information of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: <div className="bolder text-black">Education</div>,
+                description: (
+                  <div className="text-light-grey">
+                    Education details of the candidate
+                  </div>
+                ),
+              },
+              {
+                title: "Experience",
+                description: "Work Experience of the candidate",
+              },
+              {
+                title: "CV & Picture",
+                description: "Updating the Candidate Picture & CV",
+              },
+              {
+                title: "Complete Setup",
+              },
+            ]}
+          ></Steps>
         </div>
       </div>
       <div className="buildCvEduForm--wrapper-whole-body">

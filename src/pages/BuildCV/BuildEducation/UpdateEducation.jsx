@@ -129,7 +129,7 @@ const UpdateEducation = ({
           "Edit Education"
         )
       }
-      visible={visible}
+      open={visible}
       onCancel={handleCancel}
       footer={false}
     >

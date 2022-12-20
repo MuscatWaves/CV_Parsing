@@ -28,6 +28,7 @@ const FileUpload = ({
   };
   const cookies = new Cookies();
   const token = cookies.get("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const addAttachment = async (file) => {
     toggleLoading(true);
@@ -69,7 +70,7 @@ const FileUpload = ({
   return (
     <Modal
       title={`Update ${cvPicType && cvPicType.toUpperCase()}`}
-      visible={isUploadModal}
+      open={isUploadModal}
       onCancel={handleCancel}
       footer={false}
     >
@@ -109,59 +110,63 @@ const FileUpload = ({
               </div>
             )}
           </div>
-          <Divider />
-          <div className="flex-column-gap">
-            <div className="bold text-black medium-text">{`Current ${cvPicType.toUpperCase()}`}</div>
-            <div>
-              {cvPicType === "dp" ? (
+          {user.cvView === 0 && (
+            <>
+              <Divider />
+              <div className="flex-column-gap">
+                <div className="bold text-black medium-text">{`Current ${cvPicType.toUpperCase()}`}</div>
                 <div>
-                  <img
-                    className={"cvprofile-picture"}
-                    src={
-                      userData.image
-                        ? `/files/images/${userData.image}`
-                        : checkImageIcon(userData.gender)
-                    }
-                    alt="user"
-                    width={"170px"}
-                    height={"170px"}
-                  />
-                </div>
-              ) : (
-                <div>
-                  {checkWhichFile(userData.cv) === "pdf" && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Button
-                        type="primary"
-                        onClick={() =>
-                          showPdf(
-                            `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}#view=fitH`
-                          )
+                  {cvPicType === "dp" ? (
+                    <div>
+                      <img
+                        className={"cvprofile-picture"}
+                        src={
+                          userData.image
+                            ? `/files/images/${userData.image}`
+                            : checkImageIcon(userData.gender)
                         }
-                      >
-                        View Original PDF
-                      </Button>
+                        alt="user"
+                        width={"170px"}
+                        height={"170px"}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      {checkWhichFile(userData.cv) === "pdf" && (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Button
+                            type="primary"
+                            onClick={() =>
+                              showPdf(
+                                `https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}#view=fitH`
+                              )
+                            }
+                          >
+                            View Original PDF
+                          </Button>
+                        </div>
+                      )}
+                      {(checkWhichFile(userData.cv) === "docx" ||
+                        checkWhichFile(userData.cv) === "doc") && (
+                        <iframe
+                          title={"DOC file for Candidate Resume"}
+                          src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}`}
+                          width="100%"
+                          height="800px"
+                          frameborder="0"
+                        ></iframe>
+                      )}
                     </div>
                   )}
-                  {(checkWhichFile(userData.cv) === "docx" ||
-                    checkWhichFile(userData.cv) === "doc") && (
-                    <iframe
-                      title={"DOC file for Candidate Resume"}
-                      src={`https://view.officeapps.live.com/op/embed.aspx?src=https://cvparse.fra1.cdn.digitaloceanspaces.com/files/cv/${userData.cv}`}
-                      width="100%"
-                      height="800px"
-                      frameborder="0"
-                    ></iframe>
-                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </Modal>

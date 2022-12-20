@@ -96,9 +96,10 @@ const CVprofile = () => {
     dataParams.type === "app" &&
       user &&
       getAllUserManageList(setUserList, token);
-    user && getUserData(dataParams, setUserData, setLoading);
+    user && getUserDataPrivate(dataParams, setUserData, setLoading, token);
     dataParams.type !== "app" &&
-      getUserDataPrivate(dataParams, setUserData, setLoading, token);
+      getUserData(dataParams, setUserData, setLoading);
+
     // eslint-disable-next-line
   }, []);
 
@@ -362,15 +363,6 @@ const CVprofile = () => {
       )}
 
       {/* Attachments Section Modals*/}
-      <MultipleFileUpload
-        isUploadModal={isUploadModal}
-        toggleUploadModal={toggleUploadModal}
-        userId={dataParams.id}
-        dataParams={dataParams}
-        setUserData={setUserData}
-        setLoading={setLoading}
-        getUserData={getUserData}
-      />
 
       <Modal
         title="Delete Confirmation"
@@ -783,6 +775,15 @@ const CVprofile = () => {
                 </m.div>
               )}
             </m.div>
+            <MultipleFileUpload
+              isUploadModal={isUploadModal}
+              toggleUploadModal={toggleUploadModal}
+              userId={dataParams.id}
+              dataParams={dataParams}
+              setUserData={setUserData}
+              setLoading={setLoading}
+              getUserData={getUserData}
+            />
             <m.div
               className="attachments-public-section-wrapper"
               variants={item}
