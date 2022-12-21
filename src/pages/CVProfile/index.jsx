@@ -425,7 +425,7 @@ const CVprofile = () => {
               initial="hidden"
             >
               <m.div className="cvprofile-header-first-part" variants={item}>
-                {userAccess.cvView === 1 ? (
+                {userAccess?.cvView === 1 ? (
                   <img
                     className={"cvprofile-picture"}
                     src={
@@ -605,7 +605,7 @@ const CVprofile = () => {
               <m.div className="experiences-list" variants={item}>
                 {dataParams.type === "app" && (
                   <div>
-                    {userAccess.cvView === 0 ? (
+                    {userAccess?.cvView === 0 ? (
                       <Dropdown.Button
                         className="custom-profile-button"
                         onClick={() =>
@@ -730,7 +730,7 @@ const CVprofile = () => {
                   </div>
                 </m.div>
               )}
-              {dataParams.type === "app" && userAccess.cvView === 0 && (
+              {dataParams.type === "app" && userAccess?.cvView === 0 && (
                 <m.div className="grid-gather" variants={item}>
                   {checkWhichFile(userData.user.cv) === "pdf" && (
                     <div
