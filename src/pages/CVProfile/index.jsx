@@ -27,7 +27,6 @@ import {
   FaUserEdit,
 } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
-import { FcShare } from "react-icons/fc";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import Cookies from "universal-cookie";
 import moment from "moment";
@@ -194,68 +193,62 @@ const CVprofile = () => {
       },
     },
     {
-      label: "Share in",
-      key: "3",
-      children: [
-        {
-          key: "3-1",
-          label: "Clipboard",
-          icon: <FaClipboard />,
-          onClick: () => {
-            const name = `${userData.user.name} ${userData.user.job.replace(
-              "/",
-              "-"
-            )}`
-              .replace(/\s+/g, "-")
-              .replace(/\./g, "");
-            message.success("Link copied to your clipboard");
-            return navigator.clipboard.writeText(
-              `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-            );
-          },
-        },
-        {
-          key: "3-2",
-          label: "Whatsapp",
-          icon: <FaWhatsapp />,
-          onClick: () => {
-            const name = `${userData.user.name} ${userData.user.job}`
-              .replace(/\s+/g, "-")
-              .replace(/\./g, "");
-            window.open(
-              `https://wa.me/?text=${encodeURIComponent(
-                `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-              )}`
-            );
-          },
-        },
-        {
-          key: "3-3",
-          label: "Mail",
-          icon: <SiGmail />,
-          onClick: () => {
-            const name = `${userData.user.name} ${userData.user.job}`
-              .replace(/\s+/g, "-")
-              .replace(/\./g, "");
-            window.open(
-              `mailto:?subject=&body=${encodeURIComponent(
-                `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
-              )}`
-            );
-          },
-        },
-      ],
-      icon: <FcShare />,
-    },
-    user.data[0].type === 1 && {
-      label: "Delete CV",
-      key: "7",
-      danger: true,
-      icon: <FaUserEdit />,
+      key: "4",
+      label: "Share in Clipboard",
+      icon: <FaClipboard />,
       onClick: () => {
-        setDeleteCVModal(true);
+        const name = `${userData.user.name} ${userData.user.job.replace(
+          "/",
+          "-"
+        )}`
+          .replace(/\s+/g, "-")
+          .replace(/\./g, "");
+        message.success("Link copied to your clipboard");
+        return navigator.clipboard.writeText(
+          `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+        );
       },
     },
+    {
+      key: "5",
+      label: "Share in Whatsapp",
+      icon: <FaWhatsapp />,
+      onClick: () => {
+        const name = `${userData.user.name} ${userData.user.job}`
+          .replace(/\s+/g, "-")
+          .replace(/\./g, "");
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(
+            `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+          )}`
+        );
+      },
+    },
+    {
+      key: "6",
+      label: "Share in Mail",
+      icon: <SiGmail />,
+      onClick: () => {
+        const name = `${userData.user.name} ${userData.user.job}`
+          .replace(/\s+/g, "-")
+          .replace(/\./g, "");
+        window.open(
+          `mailto:?subject=&body=${encodeURIComponent(
+            `https://share.omanjobs.om/cv/${dataParams.id}/${name}`
+          )}`
+        );
+      },
+    },
+    dataParams.type === "app" &&
+      user?.data[0]?.type === 1 && {
+        label: "Delete CV",
+        key: "7",
+        danger: true,
+        icon: <FaUserEdit />,
+        onClick: () => {
+          setDeleteCVModal(true);
+        },
+      },
   ];
 
   const personalDetail = {
