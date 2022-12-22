@@ -333,14 +333,17 @@ const BuildCV = () => {
               {
                 title: "Education",
                 description: "Education details of the candidate",
+                disabled: !dataParams.id,
               },
               {
                 title: "Experience",
                 description: "Work Experience of the candidate",
+                disabled: !dataParams.id,
               },
               {
                 title: "CV & Picture",
                 description: "Updating the Candidate Picture & CV",
+                disabled: !dataParams.id,
               },
               {
                 title: "Complete Setup",
