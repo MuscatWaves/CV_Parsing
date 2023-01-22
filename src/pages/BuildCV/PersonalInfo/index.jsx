@@ -513,6 +513,42 @@ const BuildCV = () => {
                 >
                   Philipinnes
                 </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "Egypt",
+                      nationality: "Egyptian",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Egypt
+                </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "United Arab Emirates",
+                      nationality: "United Arab Emirates",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  UAE
+                </Tag>
+                <Tag
+                  color="blue"
+                  onClick={() =>
+                    form.setFieldsValue({
+                      country: "Sudan",
+                      nationality: "Sudanese",
+                    })
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  Sudan
+                </Tag>
               </div>
               <Form.Item name="nationality" label={"Nationality"}>
                 <Select
