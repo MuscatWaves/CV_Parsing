@@ -1,0 +1,2 @@
+/api/*  https://cvapi.muscatwave.com/api/:splat  200
+/files/*  https://cvparse.fra1.cdn.digitaloceanspaces.com/files/:splat  200
