@@ -84,7 +84,11 @@ const DashBoard = () => {
                     <m.div
                       key={card.id}
                       className="card"
-                      onClick={() => navigateTo(card.path)}
+                      onClick={() =>
+                        card.direct
+                          ? window.open(card.path)
+                          : navigateTo(card.path)
+                      }
                       variants={item}
                     >
                       <div className="dash-card-icon">
@@ -107,6 +111,7 @@ const DashBoard = () => {
       <div className="copyright text-grey">
         @ 2022 Copyright Powered by Oman Jobs
       </div>
+      {console.log(isLoggedIn)}
     </m.div>
   );
 };
