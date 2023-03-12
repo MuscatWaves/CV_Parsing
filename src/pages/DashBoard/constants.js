@@ -67,7 +67,7 @@ export const cards = (isLoggedIn) => [
     title: "Software Description",
     description: "View the Software Description",
     permission: isLoggedIn.id === 1 || isLoggedIn.id === 14 ? true : false,
-    path: "https://docs.google.com/document/d/1cWI0aQopRbOA3VD_ct_yPPeQOwx12V7Ic-UfOPiC_JA/edit?usp=sharing",
+    path: "https://cvparse.fra1.cdn.digitaloceanspaces.com/guides%2FSoftware%20Description%20for%20CV%20parsing.pdf",
     direct: true,
   },
   {
@@ -77,7 +77,7 @@ export const cards = (isLoggedIn) => [
     title: "User Guide for Recruiters",
     description: "View the User Guide for Recruiters",
     permission: isLoggedIn.id === 3 || isLoggedIn.id === 13 ? true : false,
-    path: "https://docs.google.com/document/d/1EbXIpJOE40pP6lNsDYgWRamtwT7L4gU4tGfBUHO3B9g/edit?usp=sharing",
+    path: "https://cvparse.fra1.cdn.digitaloceanspaces.com/guides%2FCV%20Parsing%20-%20User%20Guide%20for%20Recruiters.pdf",
     direct: true,
   },
   {
@@ -87,7 +87,7 @@ export const cards = (isLoggedIn) => [
     title: "User Guide for IT",
     description: "View the User Guide for IT",
     permission: isLoggedIn.id === 14 ? true : false,
-    path: "https://docs.google.com/document/d/1-U8qIqKR8kxj1VMm_UA6s0Xqe8Q_qpYQI9MXy1VEqn8/edit?usp=sharing",
+    path: "https://cvparse.fra1.cdn.digitaloceanspaces.com/guides%2FCV%20Parsing%20-%20User%20Guide%20for%20IT.pdf",
     direct: true,
   },
   {
@@ -97,7 +97,7 @@ export const cards = (isLoggedIn) => [
     title: "User Guide for Main Admin",
     description: "View the User Guide for Main Admin",
     permission: isLoggedIn.id === 1 ? true : false,
-    path: "https://docs.google.com/document/d/1XP7AwSZHj-SsFAG1wrG0CYIrhFgeZVGIX3ddYwe1VdY/edit?usp=sharing",
+    path: "https://cvparse.fra1.cdn.digitaloceanspaces.com/guides%2FCV%20Parsing%20-%20User%20Guide%20for%20Main%20Admin.pdf",
     direct: true,
   },
 ];

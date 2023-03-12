@@ -342,6 +342,15 @@ const CVprofile = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      <MultipleFileUpload
+        isUploadModal={isUploadModal}
+        toggleUploadModal={toggleUploadModal}
+        userId={dataParams.id}
+        dataParams={dataParams}
+        setUserData={setUserData}
+        setLoading={setLoading}
+        getUserData={getUserData}
+      />
       {dataParams.type === "app" && (
         <>
           <Header />
@@ -714,7 +723,10 @@ const CVprofile = () => {
                       type="primary"
                       shape="round"
                       className="button-primary"
-                      onClick={() => toggleUploadModal(true)}
+                      onClick={() => {
+                        window.scrollTo(0, 0, "auto");
+                        toggleUploadModal(true);
+                      }}
                     >
                       Upload
                     </Button>
@@ -768,15 +780,6 @@ const CVprofile = () => {
                 </m.div>
               )}
             </m.div>
-            <MultipleFileUpload
-              isUploadModal={isUploadModal}
-              toggleUploadModal={toggleUploadModal}
-              userId={dataParams.id}
-              dataParams={dataParams}
-              setUserData={setUserData}
-              setLoading={setLoading}
-              getUserData={getUserData}
-            />
             <m.div
               className="attachments-public-section-wrapper"
               variants={item}

@@ -301,7 +301,6 @@ const BuildEducation = () => {
           </m.div>
         )) || <Loader minHeight={"65vh"} />}
       </div>
-      <div className="copyright-1">@ 2022 Copyright Powered by Oman Jobs</div>
     </m.div>
   );
 };

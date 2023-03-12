@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "antd";
-import ojimage from "../../images/oj-small.png";
+import { Button, Tooltip } from "antd";
+import ojimage from "../../images/oj.png";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import Authentication from "../../components/Authentication";
@@ -34,16 +34,17 @@ const Header = () => {
         <div className="text-light-grey bolder">
           {user?.data ? user.data[0].name : ""}
         </div>
-        <Button
-          className="header-log-out-btn"
-          type="primary"
-          danger
-          onClick={() => removeCookie(navigate)}
-          shape={"round"}
-          title={"Log Off"}
-        >
-          <AiOutlinePoweroff className="large-text" />
-        </Button>
+        <Tooltip title="Log out of the application" placement="bottomRight">
+          <Button
+            className="header-log-out-btn"
+            type="primary"
+            danger
+            onClick={() => removeCookie(navigate)}
+            shape={"round"}
+          >
+            <AiOutlinePoweroff className="large-text" />
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );

@@ -448,71 +448,76 @@ const SearchCV = () => {
               {Object.keys(filterData).filter(
                 (filterValue, index) => filterData[filterValue]
               ).length > 0 && (
+                <Tooltip title="Clear the filters">
+                  <Button
+                    type="primary"
+                    size="medium"
+                    danger
+                    onClick={() => {
+                      const newData = {
+                        jobTitle: "",
+                        name: "",
+                        jobCategory: "",
+                        maritalStatus: "",
+                        age: "",
+                        gender: "",
+                        nationality: "",
+                        searchByFromdate: "",
+                        searchByTodate: "",
+                        user: "",
+                      };
+                      setFilterData(newData);
+                      const data = {
+                        SearchByFromdate: "",
+                        SearchByTodate: "",
+                        JobTitle: "",
+                        Age: "",
+                        JobCategory: "",
+                        Nationality: "",
+                        Gender: "",
+                        MaritalStatus: "",
+                        Search: "",
+                        User: "",
+                      };
+                      setPage(1);
+                      localStorage.setItem("page", JSON.stringify(1));
+                      localStorage.setItem(
+                        "filter",
+                        JSON.stringify({ ...newData })
+                      );
+                      getData(data, 1);
+                    }}
+                    loading={isLoading}
+                  >
+                    <RiFilterOffFill className="filter-icon" />
+                  </Button>
+                </Tooltip>
+              )}
+              <Tooltip title="Filter with parameters">
                 <Button
                   type="primary"
-                  size="medium"
-                  danger
                   onClick={() => {
-                    const newData = {
-                      jobTitle: "",
-                      name: "",
-                      jobCategory: "",
-                      maritalStatus: "",
-                      age: "",
-                      gender: "",
-                      nationality: "",
-                      searchByFromdate: "",
-                      searchByTodate: "",
-                      user: "",
-                    };
-                    setFilterData(newData);
-                    const data = {
-                      SearchByFromdate: "",
-                      SearchByTodate: "",
-                      JobTitle: "",
-                      Age: "",
-                      JobCategory: "",
-                      Nationality: "",
-                      Gender: "",
-                      MaritalStatus: "",
-                      Search: "",
-                      User: "",
-                    };
-                    setPage(1);
-                    localStorage.setItem("page", JSON.stringify(1));
-                    localStorage.setItem(
-                      "filter",
-                      JSON.stringify({ ...newData })
-                    );
-                    getData(data, 1);
+                    toggleShow(true);
                   }}
                   loading={isLoading}
-                  title={"Reset Filter"}
+                  shape={"round"}
                 >
-                  <RiFilterOffFill className="filter-icon" />
+                  <FaFilter className="filter-icon" />
                 </Button>
-              )}
-              <Button
-                type="primary"
-                onClick={() => {
-                  toggleShow(true);
-                }}
-                loading={isLoading}
-                shape={"round"}
-              >
-                <FaFilter className="filter-icon" />
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => {
-                  navigateTo("/cv/create");
-                }}
-                loading={isLoading}
-                className={"flex-small-gap"}
-              >
-                <BsPlusLg className="filter-icon" />
-                <span className="bold">Build CV</span>
-              </Button>
+              </Tooltip>
+              <Tooltip title="Create or Build a CV" placement="topRight">
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    navigateTo("/cv/create");
+                  }}
+                  loading={isLoading}
+                  className={"flex-small-gap"}
+                >
+                  <BsPlusLg className="filter-icon" />
+                  <span className="bold">Build CV</span>
+                </Button>
+              </Tooltip>
             </div>
           }
         />

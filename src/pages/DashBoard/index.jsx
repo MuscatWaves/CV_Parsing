@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ojimage from "../../images/oj-small.png";
+import ojimage from "../../images/oj.png";
 import { AiOutlinePoweroff } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import jwt from "jsonwebtoken";
@@ -7,9 +7,9 @@ import { Button } from "antd";
 import Cookies from "universal-cookie";
 import Authentication from "../../components/Authentication";
 import { AnimatePresence, m } from "framer-motion";
-import "./DashBoard.css";
-import { removeCookie } from "../../utilities";
+import { removeCookie, showPdf } from "../../utilities";
 import { animate, cards, container, intial, item } from "./constants";
+import "./DashBoard.css";
 
 const DashBoard = () => {
   const [isLoggedIn, setLoggedIn] = useState({});
@@ -85,9 +85,7 @@ const DashBoard = () => {
                       key={card.id}
                       className="card"
                       onClick={() =>
-                        card.direct
-                          ? window.open(card.path)
-                          : navigateTo(card.path)
+                        card.direct ? showPdf(card.path) : navigateTo(card.path)
                       }
                       variants={item}
                     >
